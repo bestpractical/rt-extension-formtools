@@ -1,0 +1,85 @@
+<%args>
+$name
+$label => undef
+$render_as => 'normal'
+$default => undef
+$cols => undef
+$empty_allowed => 1
+</%args>
+<%init>
+my $NamePrefix = "Object-RT::Ticket--CustomField-";
+my $queue      = $m->notes('queue');
+my $field_type = 'custom';
+my $field_label ||= $label;
+my $cf;
+if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
+    $field_type = 'core';
+    $m->notes(
+        core_fields_on_page => ( $m->notes('core_fields_on_page'), $name ) );
+    $field_label ||= $name;
+} else {
+
+    $cf = RT::CustomField->new( $session{'CurrentUser'} );
+    $cf->LoadByName( Name => $name, Queue => $queue->id );
+    unless ( $cf->id ) {
+        die "Could not find a custom field called $name for the queue "
+            . $queue->Name;
+    }
+
+    $m->notes( cfs_on_page => ( $m->notes('cfs_on_page'), $cf->id ) );
+    $field_label ||= $cf->Name;
+}
+
+</%init>
+<table style="display: inline; "><tr><th valign="top"><label><%$field_label%></label></th><td style="display:block;">
+% if ($field_type eq 'core') {
+<input type="text" name=<%$name%> size="20" value="<%$default%>">
+% } else {
+
+
+% if ($render_as eq 'normal') {
+    <& /Elements/EditCustomField, Object => $queue, CustomField => $cf, NamePrefix => $NamePrefix, 
+            ($cf->Type =~ /text/i) ? (Rows => 6, Cols => $cols ||60) : (),
+            ($cf->Type =~ /freeform/i) ? (Rows => 6, Cols => $cols ||30) : (),
+            
+            
+            &>
+% } elsif ($render_as =~ /^radio/)  {
+%       my $selected = 0;
+%       my $id = $NamePrefix . $cf->Id;
+% if ($empty_allowed) {
+        <input type="radio" name="<%$id%>-Values" value="" <% !$default ?  'CHECKED' : '' %>><&|/l&>(no value)</&>
+%        if ($render_as =~ /vertical/) { 
+            <br/>
+%        }
+
+% }
+% my $CFVs = $cf->Values;
+% while ($CFVs and my $value = $CFVs->Next ) {
+        <input type="radio" name="<%$id%>-Values"  value="<%$value->Name%>" 
+%  if ($default) {
+            <% ($default eq $value->Name) ? 'CHECKED' : '' %>
+% }
+            ><% $value->Name%> 
+
+%        if ($render_as =~ /vertical/) { 
+            <br/>
+%        }
+
+% }
+% } elsif ($render_as =~  /^check/i)  {
+%       my $id = $NamePrefix . $cf->Id;
+% my $CFVs = $cf->Values;
+% while ($CFVs and my $value = $CFVs->Next ) {
+        <input type="checkbox" name="<%$id%>-Values"  value="<%$value->Name%>" 
+%  if ($default) {
+            <% ($default eq $value->Name) ? 'CHECKED' : '' %>
+% }
+            ><% $value->Name%><br/>
+% }
+% } else {
+% die "'$render_as' isn't a valid rendering option for field '$name'";
+%}
+
+% }
+</td></tr></table>

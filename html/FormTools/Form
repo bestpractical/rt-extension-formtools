@@ -1,0 +1,39 @@
+<%args>
+$next
+</%args>
+<%init>
+my $content = $m->content;
+
+my %cfs = map { $_ => 1} $m->notes('cfs_on_page') || ();
+my %core_fields = map { $_ => 1} $m->notes('core_fields_on_page') || ();
+
+my %request_args = $m->request_args;
+
+foreach my $key (keys %request_args) {
+   next unless ($key =~ /CustomField-(\d+)/ );
+   my $cf = $1;
+   delete $request_args{$key} if ($cfs{$cf});
+}
+
+foreach my $key (keys %request_args) {
+   next unless ($key =~ /CoreField-(\d+)/ );
+   my $field = $1;
+   delete $request_args{$key} if ($core_fields{$field});
+}
+
+</%init>
+<& /Elements/Header, Title => $m->notes('page_title') &>
+
+<& /Elements/PageLayout, title => $m->notes('page_title') &>
+
+<form method="POST" action="<%$next%>">
+<%$content|n%>
+
+% foreach my $key (keys %request_args) {
+% foreach my $val ( ref ($request_args{$key}) ? @{$request_args{$key}} : ($request_args{$key})) {
+
+<input type="hidden" name="<%$key%>" value="<%$val%>" />
+% }
+% }
+
+</form>
