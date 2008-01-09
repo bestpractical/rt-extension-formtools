@@ -77,6 +77,8 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
 % }
             ><% $value->Name%><br/>
 % }
+% } elsif ($render_as =~  /^date/i)  {
+<& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0 &>
 % } else {
 % die "'$render_as' isn't a valid rendering option for field '$name'";
 %}
