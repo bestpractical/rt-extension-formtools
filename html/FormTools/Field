@@ -75,7 +75,11 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
 %  if ($default) {
             <% ($default eq $value->Name) ? 'CHECKED' : '' %>
 % }
-            ><% $value->Name%><br/>
+            ><% $value->Name%>
+%        if ($render_as =~ /vertical/) { 
+            <br/>
+%        }
+
 % }
 % } elsif ($render_as =~  /^date/i)  {
 <& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0 &>
