@@ -1,5 +1,6 @@
 <%args>
 $next
+$include_header => 1
 </%args>
 <%init>
 my $content = $m->content;
@@ -22,9 +23,10 @@ foreach my $key (keys %request_args) {
 }
 
 </%init>
+% if ($include_header) {
 <& /Elements/Header, Title => $m->notes('page_title') &>
-
 <& /Elements/PageLayout, title => $m->notes('page_title') &>
+% }
 
 <form method="POST" action="<%$next%>">
 <%$content|n%>
