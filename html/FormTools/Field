@@ -30,6 +30,17 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
     $field_label ||= $cf->Name;
 }
 
+unless ( $default ) {
+    my $request_args = $m->request_args();
+    if ( $field_type eq 'core' && $request_args->{$name} ) {
+        $default = $request_args->{$name};
+    } elsif ( $cf->Id ) {
+        $default = ($request_args->{$NamePrefix.$cf->Id."-Value"} || 
+                    $request_args->{$NamePrefix.$cf->Id."-Values"} );
+    }
+    $RT::Logger->error("default $default for name $name") if $default;
+}
+
 </%init>
 <table style="display: inline; "><tr><th valign="top"><label><%$field_label%></label></th><td style="display:block;">
 % if ($field_type eq 'core') {
@@ -41,7 +52,7 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
     <& /Elements/EditCustomField, Object => $queue, CustomField => $cf, NamePrefix => $NamePrefix, 
             ($cf->Type =~ /text/i) ? (Rows => 6, Cols => $cols ||60) : (),
             ($cf->Type =~ /freeform/i) ? (Rows => 6, Cols => $cols ||30) : (),
-            
+            ($default ? (Default => $default) : ())
             
             &>
 % } elsif ($render_as =~ /^radio/)  {
@@ -58,7 +69,11 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
 % while ($CFVs and my $value = $CFVs->Next ) {
         <input type="radio" name="<%$id%>-Values"  value="<%$value->Name%>" 
 %  if ($default) {
+%       if (ref $default) {
+            <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
+%       } else {
             <% ($default eq $value->Name) ? 'CHECKED' : '' %>
+%       }
 % }
             ><% $value->Name%> 
 
@@ -73,7 +88,11 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
 % while ($CFVs and my $value = $CFVs->Next ) {
         <input type="checkbox" name="<%$id%>-Values"  value="<%$value->Name%>" 
 %  if ($default) {
+%       if (ref $default) {
+            <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
+%       } else {
             <% ($default eq $value->Name) ? 'CHECKED' : '' %>
+%       }
 % }
             ><% $value->Name%>
 %        if ($render_as =~ /vertical/) { 
