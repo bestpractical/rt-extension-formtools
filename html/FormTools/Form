@@ -28,10 +28,11 @@ foreach my $key (keys %request_args) {
 <& /Elements/PageLayout, title => $m->notes('page_title') &>
 % }
 
-<form method="POST" action="<%$next%>">
+<form method="POST" action="<%$next%>" enctype="multipart/form-data">
 <%$content|n%>
 
 % foreach my $key (keys %request_args) {
+% next if (ref $request_args{$key} ne 'ARRAY');
 % foreach my $val ( ref ($request_args{$key}) ? @{$request_args{$key}} : ($request_args{$key})) {
 
 <input type="hidden" name="<%$key%>" value="<%$val%>" />
