@@ -32,7 +32,7 @@ foreach my $key (keys %request_args) {
 <%$content|n%>
 
 % foreach my $key (keys %request_args) {
-% next if (ref $request_args{$key} ne 'ARRAY');
+% next if (ref $request_args{$key} && ref $request_args{$key} ne 'ARRAY');
 % foreach my $val ( ref ($request_args{$key}) ? @{$request_args{$key}} : ($request_args{$key})) {
 
 <input type="hidden" name="<%$key%>" value="<%$val%>" />
