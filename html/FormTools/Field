@@ -38,7 +38,6 @@ unless ( $default ) {
         $default = ($request_args->{$NamePrefix.$cf->Id."-Value"} || 
                     $request_args->{$NamePrefix.$cf->Id."-Values"} );
     }
-    $RT::Logger->error("default $default for name $name") if $default;
 }
 
 </%init>
