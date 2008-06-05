@@ -34,7 +34,7 @@ unless ( $default ) {
     my $request_args = $m->request_args();
     if ( $field_type eq 'core' && $request_args->{$name} ) {
         $default = $request_args->{$name};
-    } elsif ( $cf->Id ) {
+    } elsif ( $field_type eq 'custom' &&  $cf->Id ) {
         $default = ($request_args->{$NamePrefix.$cf->Id."-Value"} || 
                     $request_args->{$NamePrefix.$cf->Id."-Values"} );
     }
