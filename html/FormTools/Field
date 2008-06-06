@@ -30,6 +30,7 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
     $field_label ||= $cf->Name;
 }
 
+
 unless ( $default ) {
     my $request_args = $m->request_args();
     if ( $field_type eq 'core' && $request_args->{$name} ) {
@@ -100,7 +101,8 @@ unless ( $default ) {
 
 % }
 % } elsif ($render_as =~  /^date/i)  {
-<& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0 &>
+<& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0, 
+                         ($default ? (Default => $default) : ()) &>
 % } else {
 % die "'$render_as' isn't a valid rendering option for field '$name'";
 %}
