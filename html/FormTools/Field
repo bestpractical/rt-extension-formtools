@@ -12,7 +12,8 @@ my $queue      = $m->notes('queue');
 my $field_type = 'custom';
 my $field_label ||= $label;
 my $cf;
-if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
+
+if ( RT::Extension::FormTools::is_core_field($name) ) {
     $field_type = 'core';
     my $res = $m->notes(
         core_fields_on_page => [ @{$m->notes('core_fields_on_page')||[]}, $name ] );
