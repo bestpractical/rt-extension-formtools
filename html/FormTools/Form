@@ -5,8 +5,8 @@ $include_header => 1
 <%init>
 my $content = $m->content;
 
-my %cfs = map { $_ => 1} $m->notes('cfs_on_page') || ();
-my %core_fields = map { $_ => 1} $m->notes('core_fields_on_page') || ();
+my %cfs = map { $_ => 1} @{ $m->notes('cfs_on_page') || [] };
+my %core_fields = map { $_ => 1} @{ $m->notes('core_fields_on_page') || [] };
 
 my %request_args = $m->request_args;
 

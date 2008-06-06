@@ -14,8 +14,8 @@ my $field_label ||= $label;
 my $cf;
 if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
     $field_type = 'core';
-    $m->notes(
-        core_fields_on_page => ( $m->notes('core_fields_on_page'), $name ) );
+    my $res = $m->notes(
+        core_fields_on_page => [ @{$m->notes('core_fields_on_page')||[]}, $name ] );
     $field_label ||= $name;
 } else {
 
@@ -26,7 +26,7 @@ if ( $name =~ /^(Requestors|Cc|AdminCc|Subject)$/i ) {
             . $queue->Name;
     }
 
-    $m->notes( cfs_on_page => ( $m->notes('cfs_on_page'), $cf->id ) );
+    $m->notes( cfs_on_page => [ @{$m->notes('cfs_on_page')||[]}, $cf->id ] );
     $field_label ||= $cf->Name;
 }
 
