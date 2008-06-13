@@ -3,6 +3,7 @@ $next
 $include_header => 1
 </%args>
 <%init>
+use RT::Extension::FormTools;
 my $content = $m->content;
 
 my %cfs = map { $_ => 1} @{ $m->notes('cfs_on_page') || [] };
