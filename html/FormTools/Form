@@ -19,8 +19,7 @@ foreach my $key (keys %request_args) {
 
 foreach my $key (keys %request_args) {
    next unless RT::Extension::FormTools::is_core_field($key);
-   my $field = $1;
-   delete $request_args{$key} if ($core_fields{$field});
+   delete $request_args{$key} if ($core_fields{$key});
 }
 
 </%init>
