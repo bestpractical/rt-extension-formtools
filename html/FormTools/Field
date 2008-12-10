@@ -44,9 +44,19 @@ unless ( $default ) {
 }
 
 </%init>
+
+% if ($field_type eq 'core' && $name eq 'UpdateContent') {
+
+<& /Elements/MessageBox, Name => $name, IncludeSignature => 0 &>
+
+% } else {
+
 <table style="display: inline; "><tr><th valign="top"><label><%$field_label%></label></th><td style="display:block;">
+
 % if ($field_type eq 'core') {
+
 <input type="text" name=<%$name%> size="20" value="<%$default%>">
+
 % } else {
 
 
@@ -111,3 +121,4 @@ unless ( $default ) {
 
 % }
 </td></tr></table>
+% }
