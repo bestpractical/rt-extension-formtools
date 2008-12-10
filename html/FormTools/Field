@@ -55,9 +55,18 @@ unless ( $default ) {
 
 % if ($field_type eq 'core') {
 
-<input type="text" name=<%$name%> size="20" value="<%$default%>">
+% if ($name eq 'Attach') {
+
+<input name="<%$name%>" type="file" />
+<input type="hidden" class="hidden" name="UpdateAttach" value="1" />
 
 % } else {
+
+<input type="text" name=<%$name%> size="20" value="<%$default%>">
+
+% }
+
+% } else { # CF
 
 
 % if ($render_as eq 'normal') {

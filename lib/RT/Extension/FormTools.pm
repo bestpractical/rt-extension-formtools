@@ -18,7 +18,7 @@ serious pain with FormTools
 =cut
 
 sub is_core_field {
-   return $_[0] =~ /^(Requestors|Cc|AdminCc|Subject|UpdateContent)$/;
+   return $_[0] =~ /^(Requestors|Cc|AdminCc|Subject|UpdateContent|Attach)$/;
 }
 
 1;
