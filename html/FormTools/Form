@@ -1,6 +1,7 @@
 <%args>
 $next
 $include_header => 1
+$validation => 0
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -10,6 +11,30 @@ my %cfs = map { $_ => 1} @{ $m->notes('cfs_on_page') || [] };
 my %core_fields = map { $_ => 1} @{ $m->notes('core_fields_on_page') || [] };
 
 my %request_args = $m->request_args;
+
+my @results;
+my $real_next = delete $request_args{_form_tools_next};
+if ($validation && $real_next) {
+    my $queue = $m->notes('queue');
+    foreach my $key (keys %request_args) {
+        next if $key =~ /Values-Magic$/;
+        next unless ($key =~ /CustomField-(\d+)/ );
+        my $id = $1;
+        my $cf = RT::CustomField->new($session{'CurrentUser'});
+        $cf->Load($id);
+        next unless exists $request_args{"Object-RT::Ticket--CustomField-@{[ $cf->Id ]}-Values-Magic"};
+        my ($ok, @res) = RT::Extension::FormTools::validate_cf($cf, \%request_args);
+        push @results, @res unless $ok;
+
+    }
+    unless (@results) {
+        my $next_comp = $real_next;
+        $real_next = $m->caller(1)->dir_path . '/' . $real_next
+            unless $real_next =~ m'^/';
+        $m->subexec("$real_next", %ARGS, %request_args);
+        $m->abort;
+    }
+}
 
 foreach my $key (keys %request_args) {
    next unless ($key =~ /CustomField-(\d+)/ );
@@ -28,9 +53,17 @@ foreach my $key (keys %request_args) {
 <& /Elements/PageLayout, title => $m->notes('page_title') &>
 % }
 
-<form method="POST" action="<%$next%>" enctype="multipart/form-data">
+<& /Elements/ListActions, actions => \@results &>
+
+<form method="POST" action="<% $validation ? $m->caller(1)->path : $next %>" enctype="multipart/form-data">
+% if ($validation) {
+<input type="hidden" name="_form_tools_next" value="<%$next%>" />
+% }
 <%$content|n%>
 
+%# XXX: we should only pass CFs and core fields.  this is causing
+%# username/password to be bypassed if we are logining directly on a
+%# formtool page.
 % foreach my $key (keys %request_args) {
 % next if (ref $request_args{$key} && ref $request_args{$key} ne 'ARRAY');
 % foreach my $val ( ref ($request_args{$key}) ? @{$request_args{$key}} : ($request_args{$key})) {
