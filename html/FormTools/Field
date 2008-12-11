@@ -76,6 +76,10 @@ unless ( $default ) {
             ($default ? (Default => $default) : ())
             
             &>
+% if ($cf->FriendlyPattern) {
+    <% loc("Input must match [_1]", $cf->FriendlyPattern) %>
+%}
+
 % } elsif ($render_as =~ /^radio/)  {
 %       my $selected = 0;
 %       my $id = $NamePrefix . $cf->Id;
