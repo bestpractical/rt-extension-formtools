@@ -46,7 +46,7 @@ unless ( $default ) {
 
 </%init>
 
-% if ($field_type eq 'core' && $name eq 'UpdateContent') {
+% if ($field_type eq 'core' && $name eq 'Content') {
 
 <& /Elements/MessageBox, Name => $name, IncludeSignature => 0 &>
 

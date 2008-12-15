@@ -22,7 +22,7 @@ my %is_core_field = map { $_ => 1 } qw(
     Cc
     AdminCc
     Subject
-    UpdateContent
+    Content
     Attach
 );
 
