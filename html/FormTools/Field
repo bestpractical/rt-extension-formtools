@@ -5,6 +5,7 @@ $render_as => 'normal'
 $default => undef
 $cols => undef
 $empty_allowed => 1
+$show_validation => 0
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -76,7 +77,7 @@ unless ( $default ) {
             ($default ? (Default => $default) : ())
             
             &>
-% if ($cf->FriendlyPattern) {
+% if ($show_validation && $cf->FriendlyPattern) {
     <% loc("Input must match [_1]", $cf->FriendlyPattern) %>
 %}
 
