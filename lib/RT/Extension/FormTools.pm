@@ -17,8 +17,17 @@ serious pain with FormTools
 
 =cut
 
+my %is_core_field = map { $_ => 1 } qw(
+    Requestors
+    Cc
+    AdminCc
+    Subject
+    UpdateContent
+    Attach
+);
+
 sub is_core_field {
-   return $_[0] =~ /^(Requestors|Cc|AdminCc|Subject|UpdateContent|Attach)$/;
+   return $is_core_field{ $_[0] };
 }
 
 sub validate_cf {
