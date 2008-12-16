@@ -74,4 +74,12 @@ sub validate_cf {
     return ($valid, @res);
 }
 
+sub email_is_privileged {
+    my $email = shift;
+    my $user = RT::User->new($RT::SystemUser);
+    $user->LoadByEmail($email);
+    return (1) if ($user->id && $user->Privileged);
+    return (0, "Invalid account: $email");
+}
+
 1;

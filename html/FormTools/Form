@@ -16,6 +16,21 @@ my @results;
 my $real_next = delete $request_args{_form_tools_next};
 if ($validation && $real_next) {
     my $queue = $m->notes('queue');
+    # registered validation
+    if (my $validation = $m->notes('validation')) {
+        while (my ($key, $validator) = each (%$validation)) {
+            if (!ref $validator) {
+                my $code = RT::Extension::FormTools->can($validator);
+                my ($ok, $res) = $code->($request_args{$key});
+                push @results, "$key: $res" unless $ok;
+            }
+            else {
+                warn "unknown validator for $key, ignoring."
+            }
+        }
+    }
+
+    # cf validation based on record pattern
     foreach my $key (keys %request_args) {
         next if $key =~ /Values-Magic$/;
         next unless ($key =~ /CustomField-(\d+)/ );
