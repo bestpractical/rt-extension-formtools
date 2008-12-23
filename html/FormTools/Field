@@ -1,6 +1,7 @@
 <%args>
 $name
 $label => undef
+$item_labels => {}
 $render_as => 'normal'
 $default => undef
 $cols => undef
@@ -121,6 +122,11 @@ unless ( $default ) {
 %       }
 % }
             ><% $value->Name%>
+
+% if (defined $item_labels->{$value->Name}) {
+    <% $item_labels->{$value->Name} %>
+% }
+
 %        if ($render_as =~ /vertical/) { 
             <br/>
 %        }
