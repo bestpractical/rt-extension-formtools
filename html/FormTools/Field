@@ -53,7 +53,9 @@ unless ( $default ) {
 
 % } else {
 
+% if ($render_as ne 'hidden') { # no label if hidden
 <table style="display: inline; "><tr><th valign="top"><label><%$field_label%></label></th><td style="display:block;">
+% }
 
 % if ($field_type eq 'core') {
 
@@ -61,6 +63,10 @@ unless ( $default ) {
 
 <input name="<%$name%>" type="file" />
 <input type="hidden" class="hidden" name="UpdateAttach" value="1" />
+
+% } elsif ($render_as eq 'hidden') {
+
+<input type="hidden" name=<%$name%> value="<%$default%>">
 
 % } else {
 
