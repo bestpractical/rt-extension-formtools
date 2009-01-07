@@ -40,7 +40,7 @@ sub validate_cf {
     if ($ARGSRef->{"${field}s-Magic"} and exists $ARGSRef->{"${field}s"}) {
         $value = $ARGSRef->{"${field}s"};
         # We only validate Single Combos -- multis can never be user input
-        next if ref $value;
+        return ($valid) if ref $value;
     }
     else {
         $value = $ARGSRef->{$field};
