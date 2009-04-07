@@ -68,6 +68,10 @@ unless ( $default ) {
 
 <input type="hidden" name=<%$name%> value="<%$default%>">
 
+% } elsif ($render_as eq 'readonly') {
+
+<% $default %>
+
 % } else {
 
 <input type="text" name=<%$name%> size="20" value="<%$default%>">
@@ -141,6 +145,9 @@ unless ( $default ) {
 % } elsif ($render_as =~  /^date/i)  {
 <& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0, 
                          ($default ? (Default => $default) : ()) &>
+
+% } elsif ($render_as eq 'readonly') {
+    <% $default %>
 % } else {
 % die "'$render_as' isn't a valid rendering option for field '$name'";
 %}
