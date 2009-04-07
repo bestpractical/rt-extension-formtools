@@ -1,1 +1,1 @@
-<& /Elements/Submit &>
+<& /Elements/Submit, %ARGS &>
