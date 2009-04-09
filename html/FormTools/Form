@@ -19,14 +19,20 @@ if ($validation && $real_next) {
     # registered validation
     if (my $validation = $m->notes('validation')) {
         while (my ($key, $validator) = each (%$validation)) {
-            if (!ref $validator) {
-                my $code = RT::Extension::FormTools->can($validator);
-                my ($ok, $res) = $code->($request_args{$key});
-                push @results, "$key: $res" unless $ok;
+            if (ref($validator) eq 'CODE') {
+                # no op
+            }
+            elsif (!ref($validator)) {
+                 my $method_name = $validator;
+                 $validator = RT::Extension::FormTools->can($method_name);
             }
             else {
-                warn "unknown validator for $key, ignoring."
+                warn "unknown validator for $key, ignoring.";
+                next;
             }
+
+            my ($ok, $res) = $code->($request_args{$key});
+            push @results, "$key: $res" unless $ok;
         }
     }
 
