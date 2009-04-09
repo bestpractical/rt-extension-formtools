@@ -82,4 +82,10 @@ sub email_is_privileged {
     return (0, "Invalid account: $email");
 }
 
+sub has_value {
+    my $value = shift;
+    return 1 if defined($value) && length($value) > 0;
+    return (0, "You must provide a value for this field");
+}
+
 1;
