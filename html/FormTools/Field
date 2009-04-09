@@ -10,7 +10,6 @@ $show_validation => 0
 </%args>
 <%init>
 use RT::Extension::FormTools;
-my $NamePrefix = "Object-RT::Ticket--CustomField-";
 my $queue      = $m->notes('queue');
 my $ticket     = $m->notes('ticket');
 if ($ticket && $ticket->Id) {
@@ -22,6 +21,10 @@ my $cf;
 
 $queue = $ticket->QueueObj
     if !$queue && $ticket;
+
+my $NamePrefix = "Object-RT::Ticket-"
+               . ($ticket ? $ticket->id : '')
+               . "-CustomField-";
 
 if ( RT::Extension::FormTools::is_core_field($name) ) {
     $field_type = 'core';
