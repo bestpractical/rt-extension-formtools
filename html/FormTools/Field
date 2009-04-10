@@ -59,7 +59,12 @@ unless ( $default ) {
 
 % if ($field_type eq 'core' && $name eq 'Content') {
 
-<& /Elements/MessageBox, Name => $name, IncludeSignature => 0 &>
+<& /Elements/MessageBox,
+    Name => $name,
+    ($rows ? (Rows => $rows) : ()),
+    ($cols ? (Cols => $cols) : ()),
+    IncludeSignature => 0,
+&>
 
 % } else {
 
