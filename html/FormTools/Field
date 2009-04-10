@@ -5,6 +5,7 @@ $item_labels => {}
 $render_as => 'normal'
 $default => undef
 $cols => undef
+$rows => undef
 $empty_allowed => 1
 $show_validation => 0
 </%args>
@@ -95,10 +96,10 @@ unless ( $default ) {
 
 % if ($render_as eq 'normal') {
     <& /Elements/EditCustomField, Object => $queue, CustomField => $cf, NamePrefix => $NamePrefix, 
-            ($cf->Type =~ /text/i) ? (Rows => 6, Cols => $cols ||60) : (),
-            ($cf->Type =~ /freeform/i) ? (Rows => 6, Cols => $cols ||30) : (),
+            ($cf->Type =~ /text/i) ? (Cols => $cols ||60) : (),
+            ($cf->Type =~ /freeform/i) ? (Cols => $cols ||30) : (),
+            Rows => $rows || 6,
             ($default ? (Default => $default) : ())
-            
             &>
 % if ($show_validation && $cf->FriendlyPattern) {
     <% loc("Input must match [_1]", $cf->FriendlyPattern) %>
