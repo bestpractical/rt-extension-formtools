@@ -106,7 +106,7 @@ unless ( $default ) {
 %       my $selected = 0;
 %       my $id = $NamePrefix . $cf->Id;
 % if ($empty_allowed) {
-        <input type="radio" name="<%$id%>-Values" value="" <% !$default ?  'CHECKED' : '' %>><&|/l&>(no value)</&>
+        <input type="radio" name="<%$id%>-Values" value="" <% !$default ?  'CHECKED' : '' %>><span class="radio-label"><&|/l&>(no value)</&></span>
 %        if ($render_as =~ /vertical/) { 
             <br/>
 %        }
@@ -122,7 +122,7 @@ unless ( $default ) {
             <% ($default eq $value->Name) ? 'CHECKED' : '' %>
 %       }
 % }
-            ><% $value->Name%> 
+            ><span class="radio-label"><% $value->Name%></span>
 
 %        if ($render_as =~ /vertical/) { 
             <br/>
