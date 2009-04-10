@@ -31,7 +31,7 @@ if ($validation && $real_next) {
                 next;
             }
 
-            my ($ok, $res) = $validator->($request_args{$key});
+            my ($ok, $res) = $validator->($request_args{$key}, \%request_args);
             push @results, "$key: $res" unless $ok;
         }
     }
