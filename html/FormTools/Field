@@ -13,9 +13,6 @@ $show_validation => 0
 use RT::Extension::FormTools;
 my $queue      = $m->notes('queue');
 my $ticket     = $m->notes('ticket');
-if ($ticket && $ticket->Id) {
-    $NamePrefix = "Object-RT::Ticket-".$ticket->Id."-CustomField-";
-}
 my $field_type = 'custom';
 my $field_label ||= $label;
 my $cf;
