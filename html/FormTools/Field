@@ -61,8 +61,8 @@ unless ( $default ) {
 
 <& /Elements/MessageBox,
     Name => $name,
-    ($rows ? (Rows => $rows) : ()),
-    ($cols ? (Cols => $cols) : ()),
+    ($rows ? (Height => $rows) : ()),
+    ($cols ? (Width => $cols) : ()),
     IncludeSignature => 0,
 &>
 
