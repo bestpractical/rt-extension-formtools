@@ -160,7 +160,7 @@ unless ( $default ) {
                          ($default ? (Default => $default) : ()) &>
 
 % } elsif ($render_as eq 'readonly') {
-    <% $default %>
+    <span class="readonly"><% $default %></span>
 % } else {
 % die "'$render_as' isn't a valid rendering option for field '$name'";
 %}
