@@ -83,7 +83,7 @@ unless ( $default ) {
 
 % } elsif ($render_as eq 'readonly') {
 
-<% $default %>
+<span class="readonly"><% $default %></span>
 
 % } else {
 
