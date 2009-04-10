@@ -17,6 +17,8 @@ my $field_type = 'custom';
 my $field_label ||= $label;
 my $cf;
 
+my @values;
+
 $queue = $ticket->QueueObj
     if !$queue && $ticket;
 
@@ -41,7 +43,11 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
 
     $m->notes( cfs_on_page => [ @{$m->notes('cfs_on_page')||[]}, $cf->id ] );
     $field_label ||= $cf->Name;
-    $default ||= $ticket->FirstCustomFieldValue($name) if $ticket;
+
+    if ($ticket) {
+        @values = map { $_->Content } @{ $cf->ValuesForObject($ticket)->ItemsArrayRef };
+        $default ||= $values[0];
+    }
 }
 
 
@@ -85,7 +91,15 @@ unless ( $default ) {
 
 % } elsif ($render_as eq 'readonly') {
 
-<span class="readonly"><% $default %></span>
+% if (@values > 1) {
+    <ul>
+% for (@values) {
+    <li class="readonly"><% $_ %></span>
+% }
+    </ul>
+% } else {
+    <span class="readonly"><% $default %></span>
+% }
 
 % } else {
 
@@ -162,7 +176,17 @@ unless ( $default ) {
                          ($default ? (Default => $default) : ()) &>
 
 % } elsif ($render_as eq 'readonly') {
+
+% if (@values > 1) {
+    <ul>
+% for (@values) {
+    <li class="readonly"><% $_ %></span>
+% }
+    </ul>
+% } else {
     <span class="readonly"><% $default %></span>
+% }
+
 % } else {
 % die "'$render_as' isn't a valid rendering option for field '$name'";
 %}
