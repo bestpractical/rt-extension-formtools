@@ -2,6 +2,7 @@
 $next
 $next_for_validation => undef
 $include_header => 1
+$include_page_layout => 1
 $validation => 0
 </%args>
 <%init>
@@ -74,7 +75,9 @@ $next_for_validation ||= $m->caller(1)->path;
 </%init>
 % if ($include_header) {
 <& /Elements/Header, Title => $m->notes('page_title') &>
+% if ($include_page_layout) {
 <& /Elements/PageLayout, title => $m->notes('page_title') &>
+% }
 % }
 
 <& /Elements/ListActions, actions => \@results &>
