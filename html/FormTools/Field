@@ -70,6 +70,7 @@ unless ( $default ) {
     ($rows ? (Height => $rows) : ()),
     ($cols ? (Width => $cols) : ()),
     IncludeSignature => 0,
+    Default => $default,
 &>
 
 % } else {
