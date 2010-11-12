@@ -106,7 +106,7 @@ unless ( $default ) {
 
 % } else {
 
-<input type="text" name=<%$name%> size="20" value="<%$default%>">
+<input type="text" name=<%$name%> size="<% $cols || 20 %>" value="<%$default%>">
 
 % }
 
