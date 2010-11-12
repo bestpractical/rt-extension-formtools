@@ -24,6 +24,7 @@ my %is_core_field = map { $_ => 1 } qw(
     Subject
     Content
     Attach
+    Due
 );
 
 sub is_core_field {
