@@ -194,5 +194,7 @@ unless ( $default ) {
 %}
 
 % }
+% if ($render_as ne 'hidden') {
 </td></tr></table>
+% }
 % }
