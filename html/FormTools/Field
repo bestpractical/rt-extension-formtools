@@ -8,6 +8,7 @@ $cols => undef
 $rows => undef
 $empty_allowed => 1
 $show_validation => 0
+$show_label => 1
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -76,7 +77,7 @@ unless ( $default ) {
 
 % } else {
 
-% if ($render_as ne 'hidden') { # no label if hidden
+% if ($render_as ne 'hidden' && $show_label) { # no label if hidden
 <table style="display: inline; "><tr><th valign="top"><label><%$field_label%></label></th><td style="display:block;">
 % }
 
@@ -194,7 +195,7 @@ unless ( $default ) {
 %}
 
 % }
-% if ($render_as ne 'hidden') {
+% if ($render_as ne 'hidden' && $show_label) {
 </td></tr></table>
 % }
 % }
