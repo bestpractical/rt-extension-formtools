@@ -174,6 +174,18 @@ unless ( $default ) {
 %        }
 
 % }
+% } elsif ($render_as =~  /^boolean/i)  {
+%       my $id = $NamePrefix . $cf->Id;
+%       my $value = 'Yes';
+        <input type="checkbox" name="<% $id %>-Values"  value="<% $value %>"
+%  if ($default) {
+%       if (ref $default) {
+            <% (grep { $_ eq $value} @$default) ? 'CHECKED' : '' %>
+%       } else {
+            <% ($default eq $value) ? 'CHECKED' : '' %>
+%       }
+% }
+        >
 % } elsif ($render_as =~  /^date/i)  {
 <& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0, 
                          ($default ? (Default => $default) : ()) &>
