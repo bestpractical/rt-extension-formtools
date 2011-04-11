@@ -195,7 +195,7 @@ unless ( $default ) {
 % if (@values > 1) {
     <ul>
 % for (@values) {
-    <li class="readonly"><% $_ %></span>
+    <li class="readonly"><% $_ %></li>
 % }
     </ul>
 % } else {
