@@ -9,6 +9,7 @@ $rows => undef
 $empty_allowed => 1
 $show_validation => 0
 $show_label => 1
+$disables => {}
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -64,6 +65,19 @@ unless ( $default ) {
 }
 
 </%init>
+
+% if ( keys %$disables ) {
+    <script>
+    function disable_form_field(disable, selector) {
+        if ( disable ) {
+            jQuery(selector).addClass('hidden').find('input').attr('disabled', 'disabled');
+        }
+        else {
+            jQuery(selector).removeClass('hidden').find('input').removeAttr('disabled');
+        }
+    }
+    </script>
+% }
 
 % if ($field_type eq 'core' && $name eq 'Content') {
 
@@ -178,14 +192,22 @@ unless ( $default ) {
 %       my $id = $NamePrefix . $cf->Id;
 %       my $value = 'Yes';
         <input type="checkbox" name="<% $id %>-Values"  value="<% $value %>"
+% my $checked = 0;
 %  if ($default) {
-%       if (ref $default) {
-            <% (grep { $_ eq $value} @$default) ? 'CHECKED' : '' %>
-%       } else {
-            <% ($default eq $value) ? 'CHECKED' : '' %>
-%       }
+%       $checked = ref $default? (grep { $_ eq $value} @$default) : $default eq $value;
 % }
-        >
+        <% $checked? 'CHECKED' : '' %>
+% if ( my $disable = $disables->{$value} ) {
+        onclick="disable_form_field(this.checked, '<% $disable %>');"
+% }
+        />
+
+% if ( $checked and my $disable = $disables->{$value} ) {
+    <script>
+        jQuery(function() { disable_form_field(true, '<% $disable %>') } );
+    </script>
+% }
+
 % } elsif ($render_as =~  /^date/i)  {
 <& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0, 
                          ($default ? (Default => $default) : ()) &>
@@ -198,8 +220,19 @@ unless ( $default ) {
     <li class="readonly"><% $_ %></li>
 % }
     </ul>
+    <script>
+% foreach my $disable ( grep $_, map $disables->{$_}, @values ) {
+        jQuery(function() { disable_form_field(true, '<% $disable %>') } );
+% }
+    </script>
+
 % } else {
     <span class="readonly"><% $default %></span>
+% if ( my $disable = $disables->{ $default } ) {
+    <script>
+        jQuery(function() { disable_form_field(true, '<% $disable %>') } );
+    </script>
+% }
 % }
 
 % } else {
