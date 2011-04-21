@@ -10,6 +10,8 @@ $empty_allowed => 1
 $show_validation => 0
 $show_label => 1
 $disables => {}
+$enabled_by => []
+$container_selector => undef
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -70,16 +72,30 @@ unless ( $default ) {
 
 </%init>
 
-% if ( keys %$disables ) {
+% if ( @$enabled_by ) {
+%    my $escape = sub { my $res = shift; $res =~ s/'/\\'/; "'$res'" };
     <script>
-    function disable_form_field(disable, selector) {
-        if ( disable ) {
-            jQuery(selector).addClass('hidden').find('input').attr('disabled', 'disabled');
+    jQuery(function () {
+        var fields = [<% join ', ', map $escape->($_->{'field'}), @$enabled_by |n %>];
+        var values = new Array();
+% foreach my $e ( @$enabled_by ) {
+        values[<% $escape->($e->{'field'}) |n %>] = [<% join ', ', map $escape->($_), ref($e->{'value'})? (@{ $e->{'value'} }) : ($e->{'value'}) |n %>];
+% }
+        for ( var i = 0; i<fields.length; i++ ) {
+            var field = fields[i];
+            jQuery('input[name="'+ field +'"], input[name="'+ field +'s"]').change( function(e) {
+                disable_form_field( should_disable_form_field(fields, values), <% $escape->( $container_selector ) |n %> );
+            });
         }
-        else {
-            jQuery(selector).removeClass('hidden').find('input').removeAttr('disabled');
-        }
-    }
+    });
+    jQuery(function () {
+        var fields = [<% join ', ', map $escape->($_->{'field'}), @$enabled_by |n %>];
+        var values = new Array();
+% foreach my $e ( @$enabled_by ) {
+        values[<% $escape->($e->{'field'}) |n %>] = [<% join ', ', map $escape->($_), ref($e->{'value'})? (@{ $e->{'value'} }) : ($e->{'value'}) |n %>];
+% }
+        disable_form_field( should_disable_form_field(fields, values), <% $escape->( $container_selector ) |n %> );
+    });
     </script>
 % }
 
