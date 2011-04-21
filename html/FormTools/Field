@@ -28,12 +28,14 @@ my $NamePrefix = "Object-RT::Ticket-"
                . ($ticket ? $ticket->id : '')
                . "-CustomField-";
 
+my $input_name = '';
 if ( RT::Extension::FormTools::is_core_field($name) ) {
     $field_type = 'core';
     my $res = $m->notes(
         core_fields_on_page => [ @{$m->notes('core_fields_on_page')||[]}, $name ] );
     $field_label ||= $name;
     $default ||= $ticket->$name if $ticket && $ticket->can($name);
+    $input_name = $name;
 } else {
 
     $cf = RT::CustomField->new( $session{'CurrentUser'} );
@@ -51,6 +53,8 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
         @values = map { $_->Content } @{ $cf->ValuesForObject($ticket)->ItemsArrayRef };
         $default ||= $values[0];
     }
+
+    $input_name = $NamePrefix . $cf->id .'-Value';
 }
 
 
@@ -59,8 +63,8 @@ unless ( $default ) {
     if ( $field_type eq 'core' && $request_args->{$name} ) {
         $default = $request_args->{$name};
     } elsif ( $field_type eq 'custom' &&  $cf->Id ) {
-        $default = ($request_args->{$NamePrefix.$cf->Id."-Value"} || 
-                    $request_args->{$NamePrefix.$cf->Id."-Values"} );
+        $default = ($request_args->{ $input_name } || 
+                    $request_args->{ $input_name .'s' } );
     }
 }
 
@@ -140,9 +144,8 @@ unless ( $default ) {
 
 % } elsif ($render_as =~ /^radio/)  {
 %       my $selected = 0;
-%       my $id = $NamePrefix . $cf->Id;
 % if ($empty_allowed) {
-        <input type="radio" name="<%$id%>-Values" value="" <% !$default ?  'CHECKED' : '' %>><span class="radio-label"><&|/l&>(no value)</&></span>
+        <input type="radio" name="<% $input_name %>s" value="" <% !$default ?  'CHECKED' : '' %>><span class="radio-label"><&|/l&>(no value)</&></span>
 %        if ($render_as =~ /vertical/) { 
             <br/>
 %        }
@@ -150,7 +153,7 @@ unless ( $default ) {
 % }
 % my $CFVs = $cf->Values;
 % while ($CFVs and my $value = $CFVs->Next ) {
-        <input type="radio" name="<%$id%>-Values"  value="<%$value->Name%>" 
+        <input type="radio" name="<% $input_name %>s"  value="<%$value->Name%>" 
 %  if ($default) {
 %       if (ref $default) {
             <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
@@ -166,10 +169,9 @@ unless ( $default ) {
 
 % }
 % } elsif ($render_as =~  /^check/i)  {
-%       my $id = $NamePrefix . $cf->Id;
 % my $CFVs = $cf->Values;
 % while ($CFVs and my $value = $CFVs->Next ) {
-        <input type="checkbox" name="<%$id%>-Values"  value="<%$value->Name%>" 
+        <input type="checkbox" name="<% $input_name %>s"  value="<%$value->Name%>" 
 %  if ($default) {
 %       if (ref $default) {
             <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
@@ -189,9 +191,8 @@ unless ( $default ) {
 
 % }
 % } elsif ($render_as =~  /^boolean/i)  {
-%       my $id = $NamePrefix . $cf->Id;
 %       my $value = 'Yes';
-        <input type="checkbox" name="<% $id %>-Values"  value="<% $value %>"
+        <input type="checkbox" name="<% $input_name %>s"  value="<% $value %>"
 % my $checked = 0;
 %  if ($default) {
 %       $checked = ref $default? (grep { $_ eq $value} @$default) : $default eq $value;
@@ -209,7 +210,7 @@ unless ( $default ) {
 % }
 
 % } elsif ($render_as =~  /^date/i)  {
-<& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0, 
+<& /Elements/SelectDate, Name => $input_name .'s', current => 0, 
                          ($default ? (Default => $default) : ()) &>
 
 % } elsif ($render_as eq 'readonly') {
