@@ -1,7 +1,9 @@
+html/Callbacks/FormTools/Elements/Header/Head
 html/FormTools/Field
 html/FormTools/Form
 html/FormTools/Next
 html/FormTools/ShowChoices
+html/NoAuth/js/form_tools.js
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
