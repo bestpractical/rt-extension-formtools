@@ -16,7 +16,7 @@ function should_disable_form_field( fields, values ) {
         var active = jQuery('input:enabled[name="'+ field +'"], input:enabled[name="'+ field +'s"]').filter(function() {
             var value = this.value;
             if ( this.type == 'radio' || this.type == 'checkbox' ) {
-                if ( jQuery(this).attr('checked') === undefined ) return 0;
+                if ( !jQuery(this).is(':checked') ) return 0;
             }
             for ( var i = 0; i < values[field].length; i++ ) {
                 if ( value == values[field][i] ) { return 1 }
