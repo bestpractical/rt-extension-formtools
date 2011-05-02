@@ -234,7 +234,7 @@ unless ( $default ) {
 % if (@values > 1) {
     <ul>
 % for (@values) {
-    <li class="readonly"><% $_ %></li>
+    <li name="<% $input_name %>" class="readonly"><% $_ %></li>
 % }
     </ul>
     <script>
@@ -244,7 +244,7 @@ unless ( $default ) {
     </script>
 
 % } else {
-    <span class="readonly"><% $default %></span>
+    <span name="<% $input_name %>" class="readonly"><% $default %></span>
 % if ( my $disable = $disables->{ $default } ) {
     <script>
         jQuery(function() { disable_form_field(true, '<% $disable %>') } );
