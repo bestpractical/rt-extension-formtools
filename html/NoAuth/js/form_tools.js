@@ -13,10 +13,18 @@ function disable_form_field(disable, selector) {
 function should_disable_form_field( fields, values ) {
     for ( var i = 0; i<fields.length; i++ ) {
         var field = fields[i];
-        var active = jQuery('input:enabled[name="'+ field +'"], input:enabled[name="'+ field +'s"]').filter(function() {
-            var value = this.value;
-            if ( this.type == 'radio' || this.type == 'checkbox' ) {
+        var selector = 'input:enabled[name="'+ field +'"]'
+            +', input:enabled[name="'+ field +'s"]'
+            +', span.readonly[name="'+ field +'"]'
+            +', li.readonly[name="'+ field +'"]'
+        ;
+        var active = jQuery( selector ).filter(function() {
+            var value;
+            if ( this.tagName == 'SPAN' || this.tagName == 'LI' ) {
+                value = jQuery(this).text();
+            } else if ( this.type == 'radio' || this.type == 'checkbox' ) {
                 if ( !jQuery(this).is(':checked') ) return 0;
+                value = this.value;
             }
             for ( var i = 0; i < values[field].length; i++ ) {
                 if ( value == values[field][i] ) { return 1 }
