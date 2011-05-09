@@ -147,7 +147,9 @@ unless ( $default ) {
 % } else { # CF
 
 
-% if ($render_as eq 'normal') {
+% if ($render_as eq 'hidden') {
+    <input type="hidden" class="hidden" name=<% $input_name %> value="<% $default %>">
+% } elsif ($render_as eq 'normal') {
     <& /Elements/EditCustomField, Object => $queue, CustomField => $cf, NamePrefix => $NamePrefix, 
             ($cf->Type =~ /text/i) ? (Cols => $cols ||60) : (),
             ($cf->Type =~ /freeform/i) ? (Cols => $cols ||30) : (),
