@@ -25,6 +25,8 @@ function should_disable_form_field( fields, values ) {
             } else if ( this.type == 'radio' || this.type == 'checkbox' ) {
                 if ( !jQuery(this).is(':checked') ) return 0;
                 value = this.value;
+            } else if ( this.type == 'hidden' ) {
+                value = this.value;
             }
             for ( var i = 0; i < values[field].length; i++ ) {
                 if ( value == values[field][i] ) { return 1 }
