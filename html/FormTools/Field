@@ -42,7 +42,7 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
 
     $cf = RT::CustomField->new( $session{'CurrentUser'} );
     $cf->SetContextObject($ticket) if $cf->can('SetContextObject');
-    $cf->LoadByName( Name => $name );
+    $cf->LoadByName( Name => $name, Queue => $queue->id );
     unless ( $cf->id ) {
         die "Could not find a custom field called $name for the queue "
             . $queue->Name;
