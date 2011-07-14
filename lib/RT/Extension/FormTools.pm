@@ -3,7 +3,7 @@ use strict;
 
 package RT::Extension::FormTools;
 
-our $VERSION = '0.07_06';
+our $VERSION = '0.07_07';
 
 =head2 is_core_field
 
