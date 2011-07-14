@@ -13,12 +13,15 @@ function disable_form_field(disable, selector) {
 function should_disable_form_field( fields, values ) {
     for ( var i = 0; i<fields.length; i++ ) {
         var field = fields[i];
-        var selector = 'input:enabled[name="'+ field +'"]'
-            +', input:enabled[name="'+ field +'s"]'
+        var selector = 'input[name="'+ field +'"]'
+            +', input[name="'+ field +'s"]'
             +', span.readonly[name="'+ field +'"]'
             +', li.readonly[name="'+ field +'"]'
         ;
         var active = jQuery( selector ).filter(function() {
+            if ( jQuery(this).attr('disabled') ) {
+                return 0;
+            }
             var value;
             if ( this.tagName == 'SPAN' || this.tagName == 'LI' ) {
                 value = jQuery(this).text();
