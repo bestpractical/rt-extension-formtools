@@ -91,13 +91,11 @@ $next_for_validation ||= $m->caller(1)->path;
 % }
 <%$content|n%>
 
-%# XXX: we should only pass CFs and core fields.  this is causing
-%# username/password to be bypassed if we are logining directly on a
-%# formtool page.
 % foreach my $key (keys %request_args) {
 % next if (ref $request_args{$key} && ref $request_args{$key} ne 'ARRAY');
 % foreach my $val ( ref ($request_args{$key}) ? @{$request_args{$key}} : ($request_args{$key})) {
 % next if $forbid_persisting->{$key};
+% next if ($key eq 'user' or $key eq 'pass');
 <input type="hidden" name="<%$key%>" value="<%$val%>" />
 % }
 % }

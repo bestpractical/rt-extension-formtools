@@ -9,6 +9,9 @@ $rows => undef
 $empty_allowed => 1
 $show_validation => 0
 $show_label => 1
+$disables => {}
+$enabled_by => []
+$container_selector => undef
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -27,17 +30,24 @@ my $NamePrefix = "Object-RT::Ticket-"
                . ($ticket ? $ticket->id : '')
                . "-CustomField-";
 
+my $input_name = '';
 if ( RT::Extension::FormTools::is_core_field($name) ) {
     $field_type = 'core';
     my $res = $m->notes(
         core_fields_on_page => [ @{$m->notes('core_fields_on_page')||[]}, $name ] );
     $field_label ||= $name;
     $default ||= $ticket->$name if $ticket && $ticket->can($name);
+    $input_name = $name;
 } else {
 
     $cf = RT::CustomField->new( $session{'CurrentUser'} );
     $cf->SetContextObject($ticket) if $cf->can('SetContextObject');
-    $cf->LoadByName( Name => $name );
+
+    # try loading CFs for this Queue, followed by Global
+    $cf->LoadByName( Name => $name, Queue => $queue->id );
+    unless ( $cf->id ) {
+        $cf->LoadByName( Name => $name, Queue => 0 );
+    }
     unless ( $cf->id ) {
         die "Could not find a custom field called $name for the queue "
             . $queue->Name;
@@ -50,6 +60,8 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
         @values = map { $_->Content } @{ $cf->ValuesForObject($ticket)->ItemsArrayRef };
         $default ||= $values[0];
     }
+
+    $input_name = $NamePrefix . $cf->id .'-Value';
 }
 
 
@@ -58,12 +70,39 @@ unless ( $default ) {
     if ( $field_type eq 'core' && $request_args->{$name} ) {
         $default = $request_args->{$name};
     } elsif ( $field_type eq 'custom' &&  $cf->Id ) {
-        $default = ($request_args->{$NamePrefix.$cf->Id."-Value"} || 
-                    $request_args->{$NamePrefix.$cf->Id."-Values"} );
+        $default = ($request_args->{ $input_name } || 
+                    $request_args->{ $input_name .'s' } );
     }
 }
 
 </%init>
+
+% if ( @$enabled_by ) {
+%    my $escape = sub { my $res = shift; $res =~ s/'/\\'/; "'$res'" };
+    <script>
+    jQuery(function () {
+        var fields = [<% join ', ', map $escape->($_->{'field'}), @$enabled_by |n %>];
+        var values = new Array();
+% foreach my $e ( @$enabled_by ) {
+        values[<% $escape->($e->{'field'}) |n %>] = [<% join ', ', map $escape->($_), ref($e->{'value'})? (@{ $e->{'value'} }) : ($e->{'value'}) |n %>];
+% }
+        for ( var i = 0; i<fields.length; i++ ) {
+            var field = fields[i];
+            jQuery('input[name="'+ field +'"], input[name="'+ field +'s"]').change( function(e) {
+                disable_form_field( should_disable_form_field(fields, values), <% $escape->( $container_selector ) |n %> );
+            });
+        }
+    });
+    jQuery(function () {
+        var fields = [<% join ', ', map $escape->($_->{'field'}), @$enabled_by |n %>];
+        var values = new Array();
+% foreach my $e ( @$enabled_by ) {
+        values[<% $escape->($e->{'field'}) |n %>] = [<% join ', ', map $escape->($_), ref($e->{'value'})? (@{ $e->{'value'} }) : ($e->{'value'}) |n %>];
+% }
+        disable_form_field( should_disable_form_field(fields, values), <% $escape->( $container_selector ) |n %> );
+    });
+    </script>
+% }
 
 % if ($field_type eq 'core' && $name eq 'Content') {
 
@@ -117,7 +156,9 @@ unless ( $default ) {
 % }
 
 
-% if ($render_as eq 'normal') {
+% if ($render_as eq 'hidden') {
+    <input type="hidden" class="hidden" name=<% $input_name %> value="<% $default %>">
+% } elsif ($render_as eq 'normal') {
     <& /Elements/EditCustomField, Object => $queue, CustomField => $cf, NamePrefix => $NamePrefix, 
             ($cf->Type =~ /text/i) ? (Cols => $cols ||60) : (),
             ($cf->Type =~ /freeform/i) ? (Cols => $cols ||30) : (),
@@ -130,9 +171,8 @@ unless ( $default ) {
 
 % } elsif ($render_as =~ /^radio/)  {
 %       my $selected = 0;
-%       my $id = $NamePrefix . $cf->Id;
 % if ($empty_allowed) {
-        <input type="radio" name="<%$id%>-Values" value="" <% !$default ?  'CHECKED' : '' %>><span class="radio-label"><&|/l&>(no value)</&></span>
+        <input type="radio" name="<% $input_name %>s" value="" <% !$default ?  'CHECKED' : '' %>><span class="radio-label"><&|/l&>(no value)</&></span>
 %        if ($render_as =~ /vertical/) { 
             <br/>
 %        }
@@ -140,7 +180,7 @@ unless ( $default ) {
 % }
 % my $CFVs = $cf->Values;
 % while ($CFVs and my $value = $CFVs->Next ) {
-        <input type="radio" name="<%$id%>-Values"  value="<%$value->Name%>" 
+        <input type="radio" name="<% $input_name %>s"  value="<%$value->Name%>" 
 %  if ($default) {
 %       if (ref $default) {
             <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
@@ -156,10 +196,9 @@ unless ( $default ) {
 
 % }
 % } elsif ($render_as =~  /^check/i)  {
-%       my $id = $NamePrefix . $cf->Id;
 % my $CFVs = $cf->Values;
 % while ($CFVs and my $value = $CFVs->Next ) {
-        <input type="checkbox" name="<%$id%>-Values"  value="<%$value->Name%>" 
+        <input type="checkbox" name="<% $input_name %>s"  value="<%$value->Name%>" 
 %  if ($default) {
 %       if (ref $default) {
             <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
@@ -179,19 +218,26 @@ unless ( $default ) {
 
 % }
 % } elsif ($render_as =~  /^boolean/i)  {
-%       my $id = $NamePrefix . $cf->Id;
 %       my $value = 'Yes';
-        <input type="checkbox" name="<% $id %>-Values"  value="<% $value %>"
+        <input type="checkbox" name="<% $input_name %>s"  value="<% $value %>"
+% my $checked = 0;
 %  if ($default) {
-%       if (ref $default) {
-            <% (grep { $_ eq $value} @$default) ? 'CHECKED' : '' %>
-%       } else {
-            <% ($default eq $value) ? 'CHECKED' : '' %>
-%       }
+%       $checked = ref $default? (grep { $_ eq $value} @$default) : $default eq $value;
 % }
-        >
+        <% $checked? 'CHECKED' : '' %>
+% if ( my $disable = $disables->{$value} ) {
+        onclick="disable_form_field(this.checked, '<% $disable %>');"
+% }
+        />
+
+% if ( $checked and my $disable = $disables->{$value} ) {
+    <script>
+        jQuery(function() { disable_form_field(true, '<% $disable %>') } );
+    </script>
+% }
+
 % } elsif ($render_as =~  /^date/i)  {
-<& /Elements/SelectDate, Name => $NamePrefix.$cf->Id."-Values", current => 0, 
+<& /Elements/SelectDate, Name => $input_name .'s', current => 0, 
                          ($default ? (Default => $default) : ()) &>
 
 % } elsif ($render_as eq 'readonly') {
@@ -199,11 +245,22 @@ unless ( $default ) {
 % if (@values > 1) {
     <ul>
 % for (@values) {
-    <li class="readonly"><% $_ %></li>
+    <li name="<% $input_name %>" class="readonly"><% $_ %></li>
 % }
     </ul>
+    <script>
+% foreach my $disable ( grep $_, map $disables->{$_}, @values ) {
+        jQuery(function() { disable_form_field(true, '<% $disable %>') } );
+% }
+    </script>
+
 % } else {
-    <span class="readonly"><% $default %></span>
+    <span name="<% $input_name %>" class="readonly"><% $default %></span>
+% if ( my $disable = $disables->{ $default } ) {
+    <script>
+        jQuery(function() { disable_form_field(true, '<% $disable %>') } );
+    </script>
+% }
 % }
 
 % } else {
