@@ -6,3 +6,4 @@ Makefile.old
 SIGNATURE
 blib/
 pm_to_blib
+MYMETA.*
