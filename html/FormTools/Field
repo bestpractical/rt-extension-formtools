@@ -1,16 +1,16 @@
 <%args>
 $name
-$label => undef
-$item_labels => {}
-$render_as => 'normal'
-$default => undef
-$cols => undef
-$rows => undef
-$empty_allowed => 1
-$show_validation => 0
-$show_label => 1
-$disables => {}
-$enabled_by => []
+$label              => undef
+$item_labels        => {}
+$render_as          => 'normal'
+$default            => undef
+$cols               => undef
+$rows               => undef
+$empty_allowed      => 1
+$show_validation    => 0
+$show_label         => 1
+$disables           => {}
+$enabled_by         => []
 $container_selector => undef
 </%args>
 <%init>
