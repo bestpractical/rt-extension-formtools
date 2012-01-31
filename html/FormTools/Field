@@ -43,14 +43,14 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
     $cf = RT::CustomField->new( $session{'CurrentUser'} );
     $cf->SetContextObject($ticket) if $cf->can('SetContextObject');
 
-    # try loading CFs for this Queue, followed by Global
-    $cf->LoadByName( Name => $name, Queue => $queue->id );
+    # try loading CFs for this Queue, followed by Global, followed by any CF of given $name
+    $cf->LoadByName( Name => $name, Queue => $queue->id ) if (defined $queue);
+    $cf->LoadByName( Name => $name, Queue => 0 ) unless ( $cf->id );
+    $cf->LoadByName( Name => $name ) unless ( $cf->id );
     unless ( $cf->id ) {
-        $cf->LoadByName( Name => $name, Queue => 0 );
-    }
-    unless ( $cf->id ) {
-        die "Could not find a custom field called $name for the queue "
-            . $queue->Name;
+        my $msg = "Could not find a custom field called $name";
+        $msg .= " for the queue ".$queue->Name if (defined $queue);
+        die $msg;
     }
 
     $m->notes( cfs_on_page => [ @{$m->notes('cfs_on_page')||[]}, $cf->id ] );
