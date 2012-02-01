@@ -131,16 +131,22 @@ unless ( $default ) {
 
 <input type="hidden" name=<%$name%> value="<%$default%>">
 
-% } elsif ($render_as eq 'readonly') {
+% } elsif ($render_as eq 'readonly' or $render_as eq 'readonly_plus_values') {
 
 % if (@values > 1) {
     <ul>
 % for (@values) {
     <li class="readonly"><% $_ %></span>
+%   if ($render_as eq 'readonly_plus_values') {
+    <input type="hidden" name="<% $input_name %>" value="<% $_ %>"/>
+%   }
 % }
     </ul>
 % } else {
     <span class="readonly"><% $default %></span>
+%   if ($render_as eq 'readonly_plus_values') {
+    <input type="hidden" name="<% $input_name %>" value="<% $default %>"/>
+%   }
 % }
 
 % } else {
@@ -240,12 +246,15 @@ unless ( $default ) {
 <& /Elements/SelectDate, Name => $input_name .'s', current => 0, 
                          ($default ? (Default => $default) : ()) &>
 
-% } elsif ($render_as eq 'readonly') {
+% } elsif ($render_as eq 'readonly' or $render_as eq 'readonly_plus_values') {
 
 % if (@values > 1) {
     <ul>
 % for (@values) {
     <li name="<% $input_name %>" class="readonly"><% $_ %></li>
+%   if ($render_as eq 'readonly_plus_values') {
+    <input type="hidden" name="<% $input_name %>" value="<% $_ %>"/>
+%   }
 % }
     </ul>
     <script>
@@ -256,6 +265,9 @@ unless ( $default ) {
 
 % } else {
     <span name="<% $input_name %>" class="readonly"><% $default %></span>
+%   if ($render_as eq 'readonly_plus_values') {
+    <input type="hidden" name="<% $input_name %>" value="<% $default %>"/>
+%   }
 % if ( my $disable = $disables->{ $default } ) {
     <script>
         jQuery(function() { disable_form_field(true, '<% $disable %>') } );
