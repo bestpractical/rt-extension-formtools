@@ -15,6 +15,8 @@ function should_disable_form_field( fields, values ) {
         var field = fields[i];
         var selector = 'input[name="'+ field +'"]'
             +', input[name="'+ field +'s"]'
+            +', select[name="'+ field +'"]>option'
+            +', select[name="'+ field +'s"]>option'
             +', span.readonly[name="'+ field +'"]'
             +', li.readonly[name="'+ field +'"]'
         ;
@@ -25,10 +27,15 @@ function should_disable_form_field( fields, values ) {
             var value;
             if ( this.tagName == 'SPAN' || this.tagName == 'LI' ) {
                 value = jQuery(this).text();
-            } else if ( this.type == 'radio' || this.type == 'checkbox' ) {
-                if ( !jQuery(this).is(':checked') ) return 0;
-                value = this.value;
-            } else if ( this.type == 'hidden' ) {
+            } else if ( this.tagName == 'INPUT' ) {
+                if ( this.type == 'radio' || this.type == 'checkbox' ) {
+                    if ( !jQuery(this).is(':checked') ) return 0;
+                    value = this.value;
+                } else if ( this.type == 'hidden' ) {
+                    value = this.value;
+                }
+            } else if ( this.tagName == 'OPTION' ) {
+                if ( !jQuery(this).is(':selected') ) return 0;
                 value = this.value;
             }
             for ( var i = 0; i < values[field].length; i++ ) {
