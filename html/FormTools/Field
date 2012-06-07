@@ -75,6 +75,8 @@ unless ( $default ) {
     }
 }
 
+$default = '' unless defined $default;
+
 </%init>
 
 % if ( @$enabled_by ) {
