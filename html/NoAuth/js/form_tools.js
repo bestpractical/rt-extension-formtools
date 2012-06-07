@@ -1,10 +1,10 @@
 function disable_form_field(disable, selector) {
     if ( disable ) {
-        jQuery(selector).addClass('hidden').find('input,select').attr('disabled', 'disabled');
+        jQuery(selector).addClass('hidden').find('input,select,textarea,button').attr('disabled', 'disabled');
     }
     else {
         jQuery(selector).removeClass('hidden');
-        jQuery(selector).find('input,select').filter( function() {
+        jQuery(selector).find('input,select,textarea,button').filter( function() {
             return jQuery(this).closest('.hidden').length == 0
         } ).removeAttr('disabled');
     }
