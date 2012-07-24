@@ -75,6 +75,8 @@ unless ( $default ) {
     }
 }
 
+$default = '' unless defined $default;
+
 </%init>
 
 % if ( @$enabled_by ) {
@@ -88,7 +90,7 @@ unless ( $default ) {
 % }
         for ( var i = 0; i<fields.length; i++ ) {
             var field = fields[i];
-            jQuery('input[name="'+ field +'"], input[name="'+ field +'s"]').change( function(e) {
+            jQuery('*[name="'+ field +'"], *[name="'+ field +'s"]').filter('input,select').change( function(e) {
                 disable_form_field( should_disable_form_field(fields, values), <% $escape->( $container_selector ) |n %> );
             });
         }
