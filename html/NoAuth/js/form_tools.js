@@ -1,12 +1,19 @@
 function disable_form_field(disable, selector) {
     if ( disable ) {
-        jQuery(selector).addClass('hidden').find('input,select,textarea,button').attr('disabled', 'disabled');
-    }
-    else {
+        jQuery(selector).addClass('hidden')
+            .find('input,select,textarea,button')
+            .add(jQuery(selector).filter('input,select,textarea,button,option'))
+            .attr('disabled', 'disabled')
+            .filter('option').attr('selected', false);
+    } else {
         jQuery(selector).removeClass('hidden');
-        jQuery(selector).find('input,select,textarea,button').filter( function() {
-            return jQuery(this).closest('.hidden').length == 0
-        } ).removeAttr('disabled');
+        jQuery(selector)
+            .find('input,select,textarea,button,option')
+            .add(jQuery(selector).filter('input,select,textarea,button,option'))
+            .filter( function() {
+                return jQuery(this).closest('.hidden').length == 0
+            } )
+            .removeAttr('disabled');
     }
 }
 
