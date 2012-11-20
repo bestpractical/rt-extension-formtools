@@ -12,6 +12,8 @@ $show_label         => 1
 $disables           => {}
 $enabled_by         => []
 $container_selector => undef
+$after_label        => ''
+$after_input        => ''
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -119,7 +121,7 @@ $default = '' unless defined $default;
 % } else {
 
 % if ($render_as ne 'hidden' && $show_label) { # no label if hidden
-<table style="display: inline; "><tr><th valign="top"><label><%$field_label%></label></th><td style="display:block;">
+<table style="display: inline; "><tr><th valign="top"><label><%$field_label%></label><% $after_label |n %></th><td style="display:block;">
 % }
 
 % if ($field_type eq 'core') {
@@ -283,6 +285,6 @@ $default = '' unless defined $default;
 
 % }
 % if ($render_as ne 'hidden' && $show_label) {
-</td></tr></table>
+</td><% $after_input |n %></tr></table>
 % }
 % }
