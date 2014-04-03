@@ -153,7 +153,9 @@ $default = '' unless defined $default;
 %   }
 % }
 
-% } else {
+% } elsif ( $name eq "Due" ) {
+<& /Elements/SelectDate, Name => $name, Default => $default, current => 0, Size => ($cols || 20) &>
+$ } else {
 
 <input type="text" name=<%$name%> size="<% $cols || 20 %>" value="<%$default%>">
 
