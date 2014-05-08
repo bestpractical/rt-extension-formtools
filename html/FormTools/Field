@@ -28,10 +28,6 @@ my @values;
 $queue = $ticket->QueueObj
     if !$queue && $ticket;
 
-my $NamePrefix = "Object-RT::Ticket-"
-               . ($ticket ? $ticket->id : '')
-               . "-CustomField-";
-
 my $input_name = '';
 if ( RT::Extension::FormTools::is_core_field($name) ) {
     $field_type = 'core';
@@ -63,7 +59,17 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
         $default ||= $values[0];
     }
 
-    $input_name = $NamePrefix . $cf->id .'-Value';
+    if (RT::Interface::Web->can("GetCustomFieldInputName")) {
+        $input_name = GetCustomFieldInputName(
+            Object      => $ticket,
+            CustomField => $cf,
+        );
+    } else {
+        $input_name = "Object-RT::Ticket-"
+                       . ($ticket ? $ticket->id : '')
+                       . "-CustomField-" . $cf->id .'-Value';
+        $input_name .= "s" if $render_as =~ /^(radio|check|boolean)/
+    }
 }
 
 
@@ -164,14 +170,14 @@ $ } else {
 % } else { # CF
 
 % unless ($render_as eq 'normal') {
-<input type="hidden" class="hidden" name="<%$NamePrefix . $cf->Id %>-Values-Magic" value="1" />
+<input type="hidden" class="hidden" name="<% $input_name %>-Magic" value="1" />
 % }
 
 
 % if ($render_as eq 'hidden') {
     <input type="hidden" class="hidden" name=<% $input_name %> value="<% $default %>">
 % } elsif ($render_as eq 'normal') {
-    <& /Elements/EditCustomField, Object => $queue, CustomField => $cf, NamePrefix => $NamePrefix, 
+    <& /Elements/EditCustomField, Object => $queue, CustomField => $cf,
             ($cf->Type =~ /text/i) ? (Cols => $cols ||60) : (),
             ($cf->Type =~ /freeform/i) ? (Cols => $cols ||30) : (),
             Rows => $rows || 6,
@@ -184,7 +190,7 @@ $ } else {
 % } elsif ($render_as =~ /^radio/)  {
 %       my $selected = 0;
 % if ($empty_allowed) {
-        <input type="radio" name="<% $input_name %>s" value="" <% !$default ?  'CHECKED' : '' %>><span class="radio-label"><&|/l&>(no value)</&></span>
+        <input type="radio" name="<% $input_name %>" value="" <% !$default ?  'CHECKED' : '' %>><span class="radio-label"><&|/l&>(no value)</&></span>
 %        if ($render_as =~ /vertical/) { 
             <br/>
 %        }
@@ -192,7 +198,7 @@ $ } else {
 % }
 % my $CFVs = $cf->Values;
 % while ($CFVs and my $value = $CFVs->Next ) {
-        <input type="radio" name="<% $input_name %>s"  value="<%$value->Name%>" 
+        <input type="radio" name="<% $input_name %>"  value="<%$value->Name%>" 
 %  if ($default) {
 %       if (ref $default) {
             <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
@@ -210,7 +216,7 @@ $ } else {
 % } elsif ($render_as =~  /^check/i)  {
 % my $CFVs = $cf->Values;
 % while ($CFVs and my $value = $CFVs->Next ) {
-        <input type="checkbox" name="<% $input_name %>s"  value="<%$value->Name%>" 
+        <input type="checkbox" name="<% $input_name %>"  value="<%$value->Name%>" 
 %  if ($default) {
 %       if (ref $default) {
             <% (grep { $_ eq $value->Name} @$default) ? 'CHECKED' : '' %>
@@ -231,7 +237,7 @@ $ } else {
 % }
 % } elsif ($render_as =~  /^boolean/i)  {
 %       my $value = 'Yes';
-        <input type="checkbox" name="<% $input_name %>s"  value="<% $value %>"
+        <input type="checkbox" name="<% $input_name %>"  value="<% $value %>"
 % my $checked = 0;
 %  if ($default) {
 %       $checked = ref $default? (grep { $_ eq $value} @$default) : $default eq $value;
