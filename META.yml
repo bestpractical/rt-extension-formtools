@@ -16,4 +16,4 @@ no_index:
   directory:
     - html
     - inc
-version: 0.14
+version: 0.16
