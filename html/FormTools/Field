@@ -34,7 +34,7 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
     my $res = $m->notes(
         core_fields_on_page => [ @{$m->notes('core_fields_on_page')||[]}, $name ] );
     $field_label ||= $name;
-    $default ||= $ticket->$name if $ticket && $ticket->can($name);
+    $default ||= $ticket->$name if $ticket && $ticket->_Accessible($name, 'read');
     $input_name = $name;
 } else {
 
