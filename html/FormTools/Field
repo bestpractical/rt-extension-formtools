@@ -167,7 +167,7 @@ $default = '' unless defined $default;
 <& /Elements/EmailInput, Name => $name, Size => ($cols||20), Default => $default, AutocompleteMultiple => 1 &>
 % } elsif ( $name eq "Due" ) {
 <& /Elements/SelectDate, Name => $name, Default => $default, current => 0, Size => ($cols || 20) &>
-$ } else {
+% } else {
 <input type="text" name="<%$name%>" size="<% $cols || 20 %>" value="<%$default%>">
 % }
 
