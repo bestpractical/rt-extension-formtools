@@ -3,6 +3,7 @@ $next
 $next_for_validation => undef
 $include_header      => 1
 $include_page_layout => 1
+$include_tabs        => 0
 $ShowBar             => 1
 $validation          => 0
 $forbid_persisting   => {}
@@ -86,10 +87,19 @@ $next_for_validation ||= $m->caller(1)->path;
 
 </%init>
 % if ($include_header) {
-<& $header_component, Title => $m->notes('page_title'), ShowBar => $ShowBar &>
-% if (! $self_service && $include_page_layout) {
-<& /Elements/PageLayout, title => $m->notes('page_title') &>
-% }
+      <& $header_component, Title => $m->notes('page_title'), ShowBar => $ShowBar &>
+%     # SelfService Header already calls /Elements/Tabs (which calls /Elements/PageLayout)
+%     # Thus it only makes sense to display either the Tabs or the PageLayout if we
+%     # are not rendering the SelfService environment.
+%     if (! $self_service) {
+%         if ($include_tabs) {
+              <& /Elements/Tabs &>
+%         } elsif ($include_page_layout) {
+%             # /Elements/Tabs already unconditionally calls the PageLayout component.
+%             # Thus it only makes sense to call it if we aren't "including" the tabs.
+              <& /Elements/PageLayout &>
+%         }
+%     }
 % }
 
 <& /Elements/ListActions, actions => \@results &>
