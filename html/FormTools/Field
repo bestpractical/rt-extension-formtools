@@ -165,7 +165,12 @@ $default = '' unless defined $default;
 % }
 
 % } elsif ($name =~ /^(Requestors|Cc|AdminCc)$/ ) {
-<& /Elements/EmailInput, Name => $name, Size => ($cols||20), Default => $default, AutocompleteMultiple => 1 &>
+<& /Elements/EmailInput,
+    Name                 => $name,
+    Default              => $default,
+    AutocompleteMultiple => 1,
+    (exists $ARGS{cols} ? (Size => $cols) : ()),
+&>
 % } elsif ( $name eq "Due" ) {
 <& /Elements/SelectDate, Name => $name, Default => $default, current => 0, Size => ($cols || 20) &>
 % } else {
