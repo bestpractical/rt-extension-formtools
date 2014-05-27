@@ -45,8 +45,9 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
     $cf->LoadByName( Name => $name, Queue => $queue->id ) if (defined $queue);
     $cf->LoadByName( Name => $name, Queue => 0 ) unless ( $cf->id );
     unless ( $cf->Id ) {
-        # Reset context object to ticket because previous call made it global
-        $cf->SetContextObject($ticket) if $cf->can('SetContextObject');
+        # Clear context object because previous call made it global
+        # Not needed for RT >= 4.2.5 where this is fixed in LoadByName
+        $cf->SetContextObject(undef) if $cf->can('SetContextObject');
         $cf->LoadByName( Name => $name );
     }
     unless ( $cf->id ) {
