@@ -172,7 +172,7 @@ $default = '' unless defined $default;
     (exists $ARGS{cols} ? (Size => $cols) : ()),
 &>
 % } elsif ( $name eq "Due" ) {
-<& /Elements/SelectDate, Name => $name, Default => $default, current => 0, Size => ($cols || 20) &>
+<& /Elements/SelectDate, Name => $name, Default => $default, current => 0, (defined $cols ? (Size => $cols) : ()) &>
 % } else {
 <input type="text" name="<%$name%>" size="<% $cols || 20 %>" value="<%$default%>">
 % }
