@@ -20,7 +20,7 @@ $form_id   = $m->interp->apply_escapes( $form_id,   'h')
 $form_name = $m->interp->apply_escapes( $form_name, 'h')
     if defined $form_name;
 
-my $header_component = $self_service ? '/SelfService/Elements/Header/' : '/Elements/Header';
+my $header_component = $self_service ? '/SelfService/Elements/Header' : '/Elements/Header';
 
 my %cfs = map { $_ => 1} @{ $m->notes('cfs_on_page') || [] };
 my %core_fields = map { $_ => 1} @{ $m->notes('core_fields_on_page') || [] };
