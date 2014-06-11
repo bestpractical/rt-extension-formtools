@@ -187,7 +187,7 @@ $default = '' unless defined $default;
 % if ($render_as eq 'hidden') {
     <input type="hidden" class="hidden" name=<% $input_name %> value="<% $default %>">
 % } elsif ($render_as eq 'normal') {
-    <& /Elements/EditCustomField, Object => $queue, CustomField => $cf,
+    <& /Elements/EditCustomField, CustomField => $cf,
             ($cf->Type =~ /text/i) ? (Cols => $cols ||60) : (),
             ($cf->Type =~ /freeform/i) ? (Cols => $cols ||30) : (),
             Rows => $rows || 6,
