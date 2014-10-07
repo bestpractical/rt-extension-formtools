@@ -191,6 +191,7 @@ $default = '' unless defined $default;
             ($cf->Type =~ /text/i) ? (Cols => $cols ||60) : (),
             ($cf->Type =~ /freeform/i) ? (Cols => $cols ||30) : (),
             Rows => $rows || 6,
+            QueueObj => $queue,
             ($default ? (Default => $default) : ())
             &>
 % if ($show_validation && $cf->FriendlyPattern) {
