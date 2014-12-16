@@ -3,7 +3,7 @@ use strict;
 
 package RT::Extension::FormTools;
 
-our $VERSION = '0.17';
+our $VERSION = '0.50';
 
 =head1 NAME
 

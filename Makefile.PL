@@ -1,7 +1,8 @@
 use inc::Module::Install;
 RTx('RT-Extension-FormTools');
 
-all_from('lib/RT/Extension/FormTools.pm');
+repository('https://github.com/bestpractical/rt-extension-formtools');
 
+sign();
 WriteAll();
 
