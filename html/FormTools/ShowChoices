@@ -15,8 +15,12 @@
             next if ( $element->{'arguments'}{'render_as'} // '' ) eq 'hidden';
             if ( RT::Extension::FormTools::is_core_field($name) ) {
                 $input_name = $name;
-            }
-            else {
+            } elsif ($field =~ /CustomRole-(\d+)/) {
+                my $id = $1;
+                my $role = RT::CustomRole->new($session{'CurrentUser'});
+                $role->Load($id);
+                $input_name = $role->Name;
+            } else {
                 my $cf = RT::CustomField->new( $session{'CurrentUser'} );
                 $cf->LoadByName( Name => $name, Queue => $queue->Id );
                 $cf->LoadByName( Name => $name, Queue => 0 ) unless $cf->Id;

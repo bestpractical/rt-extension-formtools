@@ -14,6 +14,7 @@ $enabled_by         => []
 $container_selector => undef
 $after_label        => ''
 $after_input        => ''
+$custom_role        => 0
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -22,6 +23,7 @@ my $ticket     = $m->notes('ticket');
 my $field_type = 'custom';
 my $field_label ||= $label;
 my $cf;
+my $role;
 
 my @values;
 
@@ -29,7 +31,24 @@ $queue = $ticket->QueueObj
     if !$queue && $ticket;
 
 my $input_name = '';
-if ( RT::Extension::FormTools::is_core_field($name) ) {
+if ( $custom_role ) {
+    unless ( defined $queue && $queue->id ) {
+        my $msg = "You must specify a queue to use a custom role field";
+        die $msg;
+    }
+
+    $role = RT::CustomRole->new( $session{'CurrentUser'} );
+    $role->Load( $name );
+
+    unless ( $role->id && $role->IsAdded( $queue->id ) ) {
+        my $msg = "Could not find a custom field called $name for the queue ".$queue->Name;
+        die $msg;
+    }
+
+    my $res = $m->notes( custom_roles_on_page => [ @{$m->notes('custom_roles_on_page')||[]}, $name ] );
+    $field_type = 'custom_role';
+    $field_label ||= $name;
+} elsif ( RT::Extension::FormTools::is_core_field($name) ) {
     $field_type = 'core';
     my $res = $m->notes(
         core_fields_on_page => [ @{$m->notes('core_fields_on_page')||[]}, $name ] );
@@ -262,7 +281,7 @@ $input_name         => undef
 <input class="form-control" type="text" name="<%$name%>" size="<% $cols || 20 %>" value="<%$default%>">
 % }
 
-% } else { # CF
+% } elsif ($field_type eq 'custom') {
 
 % unless ($render_as =~ /^(?:normal|radio|checkbox|date)/i) {
 <input type="hidden" class="hidden" name="<% $input_name %>-Magic" value="1" />
@@ -344,6 +363,13 @@ $input_name         => undef
 % return;
 %}
 
+% } elsif ($field_type eq 'custom_role') {
+<& /Elements/EmailInput,
+    Name                 => 'RT::CustomRole-'.$role->id,
+    Default              => $default,
+    AutocompleteMultiple => 1,
+    (exists $ARGS{cols} ? (Size => $cols) : ()),
+&>
 % }
 
 
