@@ -11,6 +11,11 @@ my %all_fields = $m->request_args;
 % my $id = $1;
 %$cf->Load($id);
 <tr><td><b><%$cf->Name%></b></td><td><% ref ($all_fields{$field}) ? join(', ',@{$all_fields{$field}}) : $all_fields{$field}%></td></tr>
+% } elsif ($field =~ /CustomRole-(\d+)/) {
+% my $id = $1;
+% my $role = RT::CustomRole->new($session{'CurrentUser'});
+% $role->Load($id);
+<tr><td><b><%$role->Name%></b></td><td><% ref ($all_fields{$field}) ? join(', ',@{$all_fields{$field}}) : $all_fields{$field}%></td></tr>
 % } elsif (RT::Extension::FormTools::is_core_field($field)) {
 
 <tr><td><b><%$field%></b></td><td><% $all_fields{$field} %></td></tr>
