@@ -107,7 +107,7 @@ sub _ParseContent {
 
 =head1 NAME
 
-RT-Extension-FormTools - Create multi-page ticket creation wizards for RT
+RT::Extension::FormTools - Create multi-page ticket creation wizards for RT
 
 =head1 DESCRIPTION
 
