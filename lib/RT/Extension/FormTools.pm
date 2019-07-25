@@ -7,7 +7,7 @@ our $VERSION = '0.51';
 
 =head1 NAME
 
-RT-Extension-FormTools - Help write multi-page ticket creation wizards
+RT::Extension::FormTools - Help write multi-page ticket creation wizards
 
 =head1 DESCRIPTION
 
