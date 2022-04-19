@@ -19,7 +19,7 @@ their own forms in Mason.
 
 =head1 RT VERSION
 
-Works with RT 4.0 and 4.2
+Works with RT 4.2.3+
 
 =head1 INSTALLATION
 
@@ -35,15 +35,9 @@ May need root permissions
 
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
 
-If you are using RT 4.2 or greater, add this line:
+Add this line:
 
     Plugin('RT::Extension::FormTools');
-
-For RT 4.0, add this line:
-
-    Set(@Plugins, qw(RT::Extension::FormTools));
-
-or add C<RT::Extension::FormTools> to your existing C<@Plugins> line.
 
 =item Clear your mason cache
 
