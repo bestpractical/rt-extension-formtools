@@ -64,17 +64,10 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
         $default ||= $values[0];
     }
 
-    if (RT::Interface::Web->can("GetCustomFieldInputName")) {
-        $input_name = GetCustomFieldInputName(
-            Object      => $ticket,
-            CustomField => $cf,
-        );
-    } else {
-        $input_name = "Object-RT::Ticket-"
-                       . ($ticket ? $ticket->id : '')
-                       . "-CustomField-" . $cf->id .'-Value';
-        $input_name .= "s" if $render_as =~ /^(radio|check|boolean)/
-    }
+    $input_name = GetCustomFieldInputName(
+        Object      => $ticket,
+        CustomField => $cf,
+    );
 }
 
 my $request_args = $m->request_args();
