@@ -1,0 +1,88 @@
+<&|/FormTools/Form, next => '/Forms/' . $form_name . '/' . $form_config->{$page}{'next'},
+    validation => $form_config->{$page}{'validation'},
+    next_for_validation => '/Forms/' . $form_name . '/' . $page,
+&>
+
+<%perl>
+# Build the current page here dyamically from config
+
+foreach my $element ( @{$form_config->{$page}{'content'}} ) {
+    if ( $element->{type} eq 'raw_html' ) {
+        $m->out( $element->{html} );
+    }
+    elsif ( $element->{type} eq 'hidden' ) {
+        $m->out('<input type="hidden" class="hidden" name="' . $element->{'input-name'}
+            . '" value="' . $element->{'input-value'} . '"  />');
+    }
+    elsif ( $element->{type} eq 'component' ) {
+        $m->comp('/FormTools/' . $element->{comp_name}, %{$element->{arguments}});
+    }
+}
+</%perl>
+
+<& /FormTools/Next &>
+</&>
+<%init>
+
+my $path = $m->dhandler_arg;
+my ($form_name, $page_name);
+
+if ( $path =~ /^([\w|\s]+)\/(\w+)$/ ) {
+    $form_name = $1;
+    $page_name = $2;
+}
+else {
+    $form_name = $path;
+}
+
+# Limit to names to letters, numbers, underscore, spaces
+unless ( $form_name =~ /^[\w|\s]+$/ ) {
+    RT->Logger->error("FormTools called with invalid form name: $form_name");
+    Abort('Invalid form name');
+}
+
+if ( $page_name ) {
+    unless ( $page_name =~ /^\w+$/ ) {
+        RT->Logger->error("FormTools called with invalid page name: $page_name");
+        Abort('Invalid page name');
+    }
+}
+
+# Load FormTools configration and look for a configured
+# form with the provided name.
+my $form_attribute = RT::Attribute->new( RT->SystemUser );
+$form_attribute->LoadByCols( Name => 'FormTools Form', Description => $form_name );
+my $form_config;
+
+if ( $form_attribute->Id ) {
+    $form_config = $form_attribute->Content;
+}
+else {
+    # We didn't find a form, so show a not found page
+    Abort('Form not found');
+}
+
+my $page;
+
+if ( $page_name ) {
+    $page = $page_name;
+}
+else {
+    $page = $form_config->{'formtools-start-page'};
+}
+
+my $queue_obj = RT::Queue->new( RT->SystemUser );
+my ($ok, $msg) = $queue_obj->Load( $form_config->{'queue'} );
+
+unless ( $ok ) {
+    RT->Logger->error('FormTools unable to load queue: ' . $form_config->{'queue'});
+    Abort('Unable to load form, invalid queue');
+}
+
+$m->notes( queue => $queue_obj );
+$m->notes( page_title => $form_config->{$page}{'name'} );
+
+</%init>
+<%args>
+$_form_tools_next => undef
+</%args>
