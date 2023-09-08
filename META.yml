@@ -16,6 +16,7 @@ meta-spec:
 name: RT-Extension-FormTools
 no_index:
   directory:
+    - etc
     - html
     - inc
 requires:
