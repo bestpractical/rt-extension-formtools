@@ -12,6 +12,7 @@ $form_id             => undef
 $form_name           => undef
 $form_classes        => undef
 $self_service        => 0
+$results_ref         => []
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -80,6 +81,10 @@ foreach my $key (keys %request_args) {
    next unless RT::Extension::FormTools::is_core_field($key);
    delete $request_args{$key} if ($core_fields{$key});
 }
+
+# Add in any @results passed in. These should not be errors,
+# so they will be shown on the next page.
+push @results, @{$results_ref};
 
 $next_for_validation ||= $m->caller(1)->path;
 

@@ -1,6 +1,7 @@
 <&|/FormTools/Form, next => '/Forms/' . $form_name . '/' . $form_config->{$page}{'next'},
     validation => $form_config->{$page}{'validation'},
     next_for_validation => '/Forms/' . $form_name . '/' . $page,
+    results_ref => \@results,
 &>
 
 <%perl>
@@ -82,7 +83,23 @@ unless ( $ok ) {
 $m->notes( queue => $queue_obj );
 $m->notes( page_title => $form_config->{$page}{'name'} );
 
+# Try to create a ticket if we're on the last page and
+# "create_ticket" is submitted as an arg from the second-to-last
+# page.
+
+my ($ticket_obj, @results);
+if ( $create_ticket ) {
+    ($ticket_obj, @results) = CreateTicket(
+        Subject => 'Ticket created from FormTools form ' . $form_name,
+        Queue   => $queue_obj->Id,
+        Status => 'new',
+        Requestors => $session{'CurrentUser'}->EmailAddress,
+        %ARGS,
+    );
+}
+
 </%init>
 <%args>
 $_form_tools_next => undef
+$create_ticket => undef
 </%args>
