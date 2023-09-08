@@ -53,18 +53,15 @@ if ($validation && $real_next) {
         }
     }
 
-    # cf validation based on record pattern
-    foreach my $key (keys %request_args) {
-        next if $key =~ /Values-Magic$/;
-        next unless ($key =~ /CustomField-(\d+)/ );
-        my $id = $1;
-        my $cf = RT::CustomField->new($session{'CurrentUser'});
-        $cf->Load($id);
-        next unless exists $request_args{"Object-RT::Ticket--CustomField-@{[ $cf->Id ]}-Values-Magic"};
-        my ($ok, @res) = RT::Extension::FormTools::validate_cf($cf, \%request_args);
-        push @results, @res unless $ok;
-
+    my ($status, @msg) = $m->comp(
+        '/Elements/ValidateCustomFields',
+        CustomFields    => $queue->TicketCustomFields,
+        ARGSRef         => \%request_args,
+    );
+    unless ($status) {
+        push @results, @msg;
     }
+
     unless (@results) {
         $real_next = $m->caller(1)->dir_path . '/' . $real_next
             unless $real_next =~ m'^/';
