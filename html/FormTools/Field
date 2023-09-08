@@ -192,9 +192,13 @@ $default = '' unless defined $default;
             QueueObj => $queue,
             ($default ? (Default => $default) : ())
             &>
-% if ($show_validation && $cf->FriendlyPattern) {
-    <span class="cfhints"><% loc("Input must match [_1]", $cf->FriendlyPattern) %></span>
-%}
+%      if (my $msg = $m->notes('InvalidField-' . $cf->Id)) {
+            <span class="cfinvalidfield my-1 d-inline-block"><% $msg %></span>
+%      } elsif ($show_validation and $cf->FriendlyPattern) {
+            <span class="cfhints my-1 d-inline-block">
+              <% $cf->FriendlyPattern %>
+            </span>
+%      }
 % } elsif ($render_as =~  /^boolean/i)  {
 %       my $value = 'Yes';
 <div class="custom-control custom-checkbox" style="margin-top: 5px">
