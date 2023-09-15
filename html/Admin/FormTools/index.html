@@ -1,0 +1,57 @@
+<& /Admin/Elements/Header, Title => loc("Admin FormTools") &>
+<& /Elements/Tabs &>
+<& /Elements/ListActions, actions => \@results &>
+
+  <table class="table collection collection-as-table" cellspacing="0">
+    <tbody>
+      <tr class="collection-as-table">
+        <th class="collection-as-table"><&|/l&>Name</&></th>
+        <th class="collection-as-table"><&|/l&>Creates Tickets in Queue</&></th>
+      </tr>
+% my $i = 0;
+% for my $form_ref ( @forms ) {
+
+      <tr class="<% $i % 2 ? 'oddline' : 'evenline' %>">
+        <td class="collection-as-table"><a href="<% RT->Config->Get('WebURL') %>Admin/FormTools/Modify.html?id=<% $form_ref->{'id'} %>"><% $form_ref->{'name'} %></a></td>
+        <td class="collection-as-table"><% $form_ref->{'queue_name'} %></td>
+      </tr>
+%    ++$i;
+% }
+    </tbody>
+  </table>
+
+<%init>
+my @results;
+
+my $forms = RT::Attributes->new( $session{'CurrentUser'} );
+$forms->Limit( FIELD => 'Name', VALUE => 'FormTools Form' );
+
+my @unsorted_forms;
+while ( my $form = $forms->Next ) {
+    my $form_ref = $form->Content;
+    $form_ref->{'name'} = $form->Description;
+    $form_ref->{'id'} = $form->Id;
+
+    my $queue = RT::Queue->new( $session{'CurrentUser'} );
+    my ($ok, $msg) = $queue->Load($form_ref->{'queue'});
+    if ( $ok ) {
+        $form_ref->{'queue_name'} = $queue->Name;
+    }
+    else {
+        RT->Logger->error("FormTools unable to load queue " . $form_ref->{'queue'} . " $msg");
+    }
+
+    push @unsorted_forms, $form_ref;
+}
+
+my @forms = sort { $a->{'name'} cmp $b->{'name'} } @unsorted_forms;
+
+$m->callback(
+    CallbackName     => 'Initial',
+    FormsRef         => \@forms,
+    ARGSRef          => \%ARGS
+);
+
+</%init>
+<%args>
+</%args>
