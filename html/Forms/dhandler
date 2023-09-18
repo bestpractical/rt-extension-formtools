@@ -1,5 +1,5 @@
-<&|/FormTools/Form, next => '/Forms/' . $form_name . '/' . $form_config->{$page}{'next'},
-    validation => $form_config->{$page}{'validation'},
+<&|/FormTools/Form, next => '/Forms/' . $form_name . '/' . $form_config->{'formtools-pages'}{$page}{'next'},
+    validation => $form_config->{'formtools-pages'}{$page}{'validation'},
     next_for_validation => '/Forms/' . $form_name . '/' . $page,
     results_ref => \@results,
 &>
@@ -7,7 +7,7 @@
 <%perl>
 # Build the current page here dyamically from config
 
-foreach my $element ( @{$form_config->{$page}{'content'}} ) {
+foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
     if ( $element->{type} eq 'raw_html' ) {
         $m->out( $element->{html} );
     }
@@ -81,7 +81,7 @@ unless ( $ok ) {
 }
 
 $m->notes( queue => $queue_obj );
-$m->notes( page_title => $form_config->{$page}{'name'} );
+$m->notes( page_title => $form_config->{'formtools-pages'}{$page}{'name'} );
 
 # Try to create a ticket if we're on the last page and
 # "create_ticket" is submitted as an arg from the second-to-last

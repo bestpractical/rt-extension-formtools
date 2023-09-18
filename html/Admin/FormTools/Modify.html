@@ -11,7 +11,7 @@
 </div>
 <div class="formtools-form-pages boxcontainer col-md-9" id="formtools-pages-wrapper">
 <&| /Widgets/TitleBox, title => loc('FormTools Pages') &>
-% my @form_pages = keys %$form;
+% my @form_pages = keys %{$form->{'formtools-pages'}};
   <ul class="nav nav-<% $nav_type %>s" id="formtools-pages">
 % my $current_context = {};
 % foreach my $page_name (@form_pages) {
