@@ -4,11 +4,28 @@
 <div id="formtools-edit">
 <& /Admin/Elements/FormToolsHelp &>
 <div class="row">
-<div class="formtools-component-menu boxcontainer col-md-3" id="formtools-component-wrapper">
-<&| /Widgets/TitleBox, title => loc('FormTools Components') &>
-<p>FormTools help goes here.</p>
-</&>
-</div>
+  <div class="formtools-component-menu boxcontainer col-md-3" id="formtools-component-wrapper">
+    <&| /Widgets/TitleBox, title => loc('FormTools Components') &>
+      <div aria-label="FormTools HTML Components">
+        <button type="button" class="btn btn-outline-primary btn-block">H1 Element</button>
+        <button type="button" class="btn btn-outline-primary btn-block">H2 Element</button>
+        <button type="button" class="btn btn-outline-primary btn-block">HR Element</button>
+      </div>
+      <hr />
+      <div aria-label="FormTools RT Core Components">
+        <button type="button" class="btn btn-outline-primary btn-block">Requestors</button>
+        <button type="button" class="btn btn-outline-primary btn-block">Owner</button>
+        <button type="button" class="btn btn-outline-primary btn-block">Subject</button>
+        <button type="button" class="btn btn-outline-primary btn-block">Content</button>
+      </div>
+      <hr />
+      <div aria-label="FormTools RT Custom Fields">
+        <button type="button" class="btn btn-outline-primary btn-block">Custom Field 1</button>
+        <button type="button" class="btn btn-outline-primary btn-block">Custom Field 2</button>
+        <button type="button" class="btn btn-outline-primary btn-block">Custom Field 3</button>
+      </div>
+    </&>
+  </div>
 <div class="formtools-form-pages boxcontainer col-md-9" id="formtools-pages-wrapper">
 <&| /Widgets/TitleBox, title => loc('FormTools Pages') &>
 % my @form_pages = keys %{$form->{'formtools-pages'}};
