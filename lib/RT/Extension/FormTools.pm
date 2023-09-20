@@ -5,6 +5,9 @@ package RT::Extension::FormTools;
 
 our $VERSION = '0.53';
 
+RT->AddStyleSheets('rt-extension-formtools.css');
+RT->AddJavaScript('rt-extension-formtools.js');
+
 =head1 NAME
 
 RT-Extension-FormTools - Help write multi-page ticket creation wizards

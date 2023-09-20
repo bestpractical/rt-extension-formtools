@@ -19,6 +19,7 @@ no_index:
     - etc
     - html
     - inc
+    - static
 requires:
   perl: 5.10.1
 resources:
