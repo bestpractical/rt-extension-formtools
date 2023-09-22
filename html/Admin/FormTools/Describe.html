@@ -4,7 +4,7 @@
 
 <&| /Widgets/TitleBox, title => '' &>
   <p>Forms are shown to users on a page in the RT Self Service interface. Below you can manage how the form details will appear to end users.</p>
-  <form name="EditFormDescription" action="" method="post" enctype="multipart/form-data">
+  <form name="EditFormDescription" action="<%RT->Config->Get('WebPath')%>/Admin/FormTools/Describe.html" method="post" enctype="multipart/form-data">
   <input type="hidden" class="hidden" name="id" value="<% $id %>" />
   <&| /Widgets/TitleBox, title => loc('Icon') &>
     <p>Form to upload an icon</p>
