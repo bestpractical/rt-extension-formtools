@@ -26,6 +26,7 @@ if ( $m->request_path =~ m{^/Admin/FormTools/} ) {
 
         $page->child( modify => title => loc('Modify'), path => "/Admin/FormTools/Modify.html?id=" . $id );
         $page->child( description => title => loc('Description'), path => "/Admin/FormTools/Describe.html?id=" . $id );
+        $page->child( advanced => title => loc('Advanced'), path => "/Admin/FormTools/Advanced.html?id=" . $id );
     }
 }
 
