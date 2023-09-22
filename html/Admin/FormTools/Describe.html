@@ -15,7 +15,7 @@
       <div class="form-row">
         <div class="col-12">
           <input type="hidden" class="hidden" name="FormDescriptionType" value="text/html" />
-          <textarea autocomplete="off" class="form-control messagebox richtext" cols="80" rows="15" name="FormDescription"><%$form->{'form-description'}%></textarea>
+          <textarea autocomplete="off" class="form-control messagebox richtext" cols="80" rows="15" name="FormDescription"><% $ARGS{'FormDescription'} || $form->{'form-description'} %></textarea>
         </div>
       </div>
   </&>
@@ -45,16 +45,23 @@ my $form = $form_attribute->Content;
 my ($title, @results);
 $title = loc("Description for form [_1]", $form_attribute->Description);
 
-if ( $ARGS{'SubmitDescription'} && $ARGS{'SubmitDescription'} eq 'Save' ) {
-    $form->{'form-description'} = $ARGS{'FormDescription'};
+if ( $ARGS{'SubmitDescription'} ) {
 
-
-    $form_attribute->SetContent($form);
+    if ( $form->{'form-description'} ne $ARGS{'FormDescription'} ) {
+        $form->{'form-description'} = $ARGS{'FormDescription'};
+        my ( $ret, $msg ) = $form_attribute->SetContent($form);
+        if ($ret) {
+            push @results, loc('Updated description');
+        }
+        else {
+            push @results, loc( "Could not update description: [_1]", $msg );
+        }
+    }
 }
 
 MaybeRedirectForResults(
     Actions   => \@results,
-    Arguments => { id => $id },
+    Arguments => { id => $id, FormDescription => $ARGS{'FormDescription'} },
 );
 
 </%init>
