@@ -11,8 +11,20 @@ if ( $session{'CurrentUser'}->HasRight( Object => RT->System, Right => 'SuperUse
 }
 
 if ( $m->request_path =~ m{^/Admin/FormTools/} ) {
-    my $page = PageMenu();
-    $page->child( select => title => loc('Select'), path => "/Admin/FormTools/" );
+    if ( ( $HTML::Mason::Commands::DECODED_ARGS->{'id'} || '' ) =~ /^(\d+)$/ ) {
+        my $id  = $1;
+        my $form_attribute = RT::Attribute->new($session{'CurrentUser'});
+        my ($ok, $msg) = $form_attribute->Load($id);
+
+        unless ( $ok ) {
+            RT->Logger->error("Unable to load form with id $id");
+        }
+
+        my $page = PageMenu();
+        $page->child( select => title => loc('Select'), path => "/Admin/FormTools/index.html?id=" . $id );
+        $page->child( modify => title => loc('Modify'), path => "/Admin/FormTools/Modify.html?id=" . $id );
+        $page->child( description => title => loc('Description'), path => "/Admin/FormTools/Describe.html?id=" . $id );
+    }
 }
 
 </%init>

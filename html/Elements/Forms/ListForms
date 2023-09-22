@@ -1,0 +1,19 @@
+<&|/Widgets/TitleBox, title => '', class => 'fullwidth' &>
+% while ( my $form_attribute = $forms->Next ) {
+%    my $form = $form_attribute->Content;
+<div class="row border border-primary">
+  <div class="col-4 text-center">
+    <p><% $form_attribute->Description %></p>
+  </div>
+  <div class="col-8 text-left">
+    <% $form->{'form-description'} %>
+  </div>
+</div>
+% }
+</&>
+<%init>
+my $forms = RT::Attributes->new( RT->SystemUser );
+$forms->Limit( FIELD => 'Name', VALUE => 'FormTools Form' );
+</%init>
+<%args>
+</%args>

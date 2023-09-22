@@ -1,0 +1,62 @@
+<& /Admin/Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+<& /Elements/ListActions, actions => \@results &>
+
+<&| /Widgets/TitleBox, title => '' &>
+  <p>Forms are shown to users on a page in the RT Self Service interface. Below you can manage how the form details will appear to end users.</p>
+  <form name="EditFormDescription" action="" method="post" enctype="multipart/form-data">
+  <input type="hidden" class="hidden" name="id" value="<% $id %>" />
+  <&| /Widgets/TitleBox, title => loc('Icon') &>
+    <p>Form to upload an icon</p>
+  </&>
+  <&| /Widgets/TitleBox, title => loc('Description') &>
+    <p>Describe what the form should be used for and include instructions to help users pick the correct form.</p>
+    <p>An HTML edit box for instructions</p>
+      <div class="form-row">
+        <div class="col-12">
+          <textarea autocomplete="off" class="form-control messagebox richtext" cols="80" rows="15" name="FormDescription"><%$form->{'form-description'}%></textarea>
+        </div>
+      </div>
+  </&>
+</&>
+<div class="form-row">
+  <div class="col-12">
+    <& /Elements/Submit, Label => loc('Save'), Name => 'SubmitDescription' &>
+  </div>
+</div>
+</form>
+<%init>
+
+# Handle id getting submitted twice and becoming an array
+my @id = ( ref $id eq 'ARRAY' ) ? @{$id} : ($id);
+$id = $id[0];
+Abort("No form id found") unless $id;
+
+my $form_attribute = RT::Attribute->new($session{'CurrentUser'});
+my ($ok, $msg) = $form_attribute->Load($id);
+
+unless ( $ok ) {
+    Abort("Unable to load form with id $id");
+}
+
+my $form = $form_attribute->Content;
+
+my ($title, @results);
+$title = loc("Description for form [_1]", $form_attribute->Description);
+
+if ( $ARGS{'SubmitDescription'} && $ARGS{'SubmitDescription'} eq 'Save' ) {
+    $form->{'form-description'} = $ARGS{'FormDescription'};
+
+
+    $form_attribute->SetContent($form);
+}
+
+MaybeRedirectForResults(
+    Actions   => \@results,
+    Arguments => { id => $id },
+);
+
+</%init>
+<%args>
+$id => undef
+</%args>
