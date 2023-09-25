@@ -1,15 +1,21 @@
 <&|/Widgets/TitleBox, title => '', class => 'fullwidth' &>
+<div class="container">
+% my $item_number = 1;
 % while ( my $form_attribute = $forms->Next ) {
 %    my $form = $form_attribute->Content;
 <div class="row border border-primary">
-  <div class="col-4 text-center">
-    <p><% $form_attribute->Description %></p>
+  <div class="col-4">
+    <a href="<% RT->Config->Get('WebPath') %>/SelfService/Forms/<% $form_attribute->Description %>">
+      <% $m->scomp('/Elements/Forms/ShowFormGraphic', FormName => $form_attribute->Description, ItemNumber => $item_number) |n %>
+    </a>
   </div>
-  <div class="col-8 text-left">
-    <% $form->{'form-description'} %>
+  <div class="col">
+    <% $form->{'form-description'} |n %>
   </div>
 </div>
+% $item_number++;
 % }
+</div>
 </&>
 <%init>
 my $forms = RT::Attributes->new( RT->SystemUser );

@@ -1,0 +1,21 @@
+<div class="formtools-form-graphic w-50 mt-2 mb-2">
+  <div class="rounded pt-5 pb-5" style="background-color: <%$color%>;">
+    <p class="text-center" style="font-color: white; font-weight: bold; font-size: 2rem;">
+      <% $FormName %>
+    </p>
+  </div>
+</div>
+<%init>
+
+my $color_list = [
+    "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
+    "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"
+];
+
+my $color = $color_list->[ $ItemNumber % 8 ];
+
+</%init>
+<%args>
+$FormName => "Form"
+$ItemNumber => 1
+</%args>
