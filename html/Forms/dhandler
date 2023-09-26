@@ -92,7 +92,16 @@ $base_path = '/SelfService' . $base_path if $SelfService;
 
 my ($ticket_obj, @results);
 if ( $create_ticket ) {
-    ($ticket_obj, @results) = CreateTicket(
+
+    # We override Abort elsewhere so we'll get $ticket_obj here even if
+    # the current user has no rights to see the newly created ticket.
+
+    # We deliberately don't pass along @results because the work
+    # behind the scenes is "magic" and we don't want the form user to
+    # see any details, like ticket ids or queues, if they are not supposed
+    # to see them.
+
+    ($ticket_obj) = CreateTicket(
         Subject => 'Ticket created from FormTools form ' . $form_name,
         Queue   => $queue_obj->Id,
         Status => 'new',
