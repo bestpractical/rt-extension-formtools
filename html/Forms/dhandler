@@ -1,6 +1,6 @@
-<&|/FormTools/Form, next => '/Forms/' . $form_name . '/' . $form_config->{'formtools-pages'}{$page}{'next'},
+<&|/FormTools/Form, next => $base_path . $form_name . '/' . $form_config->{'formtools-pages'}{$page}{'next'},
     validation => $form_config->{'formtools-pages'}{$page}{'validation'},
-    next_for_validation => '/Forms/' . $form_name . '/' . $page,
+    next_for_validation => $base_path . $form_name . '/' . $page,
     results_ref => \@results,
 &>
 
@@ -83,6 +83,9 @@ unless ( $ok ) {
 $m->notes( queue => $queue_obj );
 $m->notes( page_title => $form_config->{'formtools-pages'}{$page}{'name'} );
 
+my $base_path = '/Forms/';
+$base_path = '/SelfService' . $base_path if $SelfService;
+
 # Try to create a ticket if we're on the last page and
 # "create_ticket" is submitted as an arg from the second-to-last
 # page.
@@ -102,4 +105,5 @@ if ( $create_ticket ) {
 <%args>
 $_form_tools_next => undef
 $create_ticket => undef
+$SelfService => 0
 </%args>
