@@ -2,3 +2,12 @@
 div .formtools-content {
     min-height: 400px;
 }
+
+p.formtools-form-graphic {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+div .formtools-form-list {
+    max-width: 1000px;
+}

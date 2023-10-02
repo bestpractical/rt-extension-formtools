@@ -1,6 +1,6 @@
-<div class="formtools-form-graphic w-50 mt-2 mb-2">
+<div class="formtools-form-graphic w-50 mt-2 mb-2 ml-auto mr-auto">
   <div class="rounded pt-5 pb-5" style="background-color: <%$color%>;">
-    <p class="text-center" style="font-color: white; font-weight: bold; font-size: 2rem;">
+    <p class="text-center formtools-form-graphic">
       <% $FormName %>
     </p>
   </div>
