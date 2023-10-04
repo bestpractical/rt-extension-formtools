@@ -8,51 +8,362 @@
     <&| /Widgets/TitleBox, title => loc('FormTools Components') &>
       <div class="d-block text-center">
 % foreach my $item ( @html_components ) {
-    <p id="formtools-element-<% $item %>" class="m-1 p-2 border border-primary rounded" draggable="true" ondragstart="dragstart_handler(event);" ondragend="dragend_handler(event);"><% uc($item) %> Element</p>
+        <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'raw_html', html => "<$item>test</$item>"}) %>">
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="m-1 p-2 border rounded">
+            <span class="badge badge-primary">raw_html</span>
+            <span class="content"><% loc('[_1] Element', uc($item)) %></span>
+%           if ( $item ne 'hr' ) {
+            <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
+              <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
+            </a>
+%           }
+            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+              <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
+            </a>
+          </p>
+%         if ( $item ne 'hr' ) {
+          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <form class="formtools-element-form">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
+                  <div class="modal-body">
+                    <textarea name="html" class="form-control"><% "<$item>Text</$item>" %></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+%         }
+        </div>
 % }
-      <hr />
+        <hr />
 % foreach my $item ( @core_components ) {
-    <p id="formtools-element-<% $item %>" class="m-1 p-2 border border-primary rounded" draggable="true" ondragstart="dragstart_handler(event);" ondragend="dragend_handler(event);"><% ucfirst($item) %></p>
+        <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'component', comp_name => 'Field', arguments => { name => $item } }) %>">
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="m-1 p-2 border rounded">
+            <span class="badge badge-primary">component</span>
+            <% $item %>
+            <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
+              <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
+            </a>
+            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+              <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
+            </a>
+          </p>
+          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <form class="formtools-element-form">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-row">
+                      <div class="col-3 label"><&|/l&>Label</&>:</div>
+                      <div class="col-9 value">
+                        <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-3 label"><&|/l&>Default Value</&>:</div>
+                      <div class="col-9 value">
+                        <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 % }
-      <hr />
+        <hr />
 % foreach my $item ( @custom_fields ) {
-    <p id="formtools-element-<% $item %>" class="m-1 p-2 border border-primary rounded" draggable="true" ondragstart="dragstart_handler(event);" ondragend="dragend_handler(event);"><% uc($item) %></p>
+        <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'component', comp_name => 'Field', arguments => { name => $item } }) %>">
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="m-1 p-2 border rounded">
+            <span class="badge badge-primary">component</span>
+            <% $item %>
+            <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
+              <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
+            </a>
+            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+              <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
+            </a>
+          </p>
+          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <form class="formtools-element-form">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-row">
+                      <div class="col-3 label"><&|/l&>Label</&>:</div>
+                      <div class="col-9 value">
+                        <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-3 label"><&|/l&>Default Value</&>:</div>
+                      <div class="col-9 value">
+                        <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+% }
+
+        <hr />
+% foreach my $item ( sort keys %other_components ) {
+        <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON($other_components{$item}) %>">
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="m-1 p-2 border rounded">
+            <span class="badge badge-primary"><% $other_components{$item}{type} %></span>
+            <span class="content"><% $item %></span>
+%         if ( $item eq 'Hidden' ) {
+            <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
+              <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
+            </a>
+%         }
+            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+              <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
+            </a>
+          </p>
+
+%         if ( $item eq 'Hidden' ) {
+          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <form class="formtools-element-form">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </a>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-row">
+                      <div class="col-3 label"><&|/l&>Name</&>:</div>
+                      <div class="col-9 value">
+                        <input name="name" type="text" class="form-control" value="" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-3 label"><&|/l&>Value</&>:</div>
+                      <div class="col-9 value">
+                        <input name="value" type="text" class="form-control" value="" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+%         }
+        </div>
 % }
       </div>
     </&>
   </div>
-<div class="formtools-form-pages boxcontainer col-md-9" id="formtools-pages-wrapper">
-<&| /Widgets/TitleBox, title => loc('FormTools Pages') &>
-% my @form_pages = keys %{$form->{'formtools-pages'}};
-  <ul class="nav nav-<% $nav_type %>s" id="formtools-pages">
-% my $current_context = {};
-% foreach my $page_name (@form_pages) {
-%     my $tab_id = CSSClass( $page_name );
-%     $current_context->{tab} = $tab_id;
-% #     my( $active, $aria_selected) = $tab_id eq $active_context->{tab} ? ('active', 'true') : ('', 'false');
-%     my( $active, $aria_selected) = ('active', 'true');
-%     my $nav_id = join '-', 'nav', $current_context->{tab};
-%     my $content_id = join '-', 'content', $current_context->{tab};
-    <li class="nav-item">
-      <a class="nav-link <% $active %>" id="<% $nav_id %>" data-toggle="<% $nav_type %>" href="#<% $content_id %>" role="<% $nav_type %>" aria-controls="<% $content_id %>" aria-selected="<% $aria_selected %>"><% $page_name %></a>
-    </li>
+  <div class="formtools-form-pages boxcontainer col-md-9" id="formtools-pages-wrapper">
+  <&| /Widgets/TitleBox, title => loc('FormTools Pages') &>
+
+    <ul class="nav nav-<% $nav_type %>s" id="formtools-pages">
+%   my $current_context = {};
+%   foreach my $page_name (@form_pages) {
+%     my( $active, $aria_selected) = $form_page_id{$page_name} eq $active_context->{tab} ? ('active', 'true') : ('', 'false');
+%     my $nav_id = join '-', 'formtools', 'nav', $form_page_id{$page_name};
+%     my $content_id = join '-', 'formtools', 'content', $form_page_id{$page_name};
+      <li class="nav-item">
+        <a class="nav-link <% $active %>" id="formtools-tab-<% $nav_id %>" data-toggle="<% $nav_type %>" href="#<% $content_id %>" role="<% $nav_type %>" aria-controls="formtools-<% $content_id %>" aria-selected="<% $aria_selected %>"><% $form->{'formtools-pages'}{$page_name}{name} %></a>
+      </li>
 % }
-  </ul>
-  <p>Drag components from the left toolbar and drop them here</p>
-    <div id="formtools-content-form-1" class="formtools-content w-100 border border-primary rounded" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" ondragend="dragend_handler(event);">
+      <li class="nav-item">
+        <a class="nav-link" id="formtools-tab-add" href="?id=<% $id %>;AddPage=1">
+          <span class="fas fa-plus" alt="<% loc('Add Page') %>" data-toggle="tooltip" data-original-title="<% loc('Add Page') %>"></span>
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content">
+%   foreach my $page_name (@form_pages) {
+      <div id="formtools-content-<% $form_page_id{$page_name} %>" class="tab-pane <% $form_page_id{$page_name} eq $active_context->{tab} ? 'show active' : 'fade' %>" role="tabpanel">
+        <&| /Widgets/TitleBox, title => loc('Basic Info'), titleright_raw => qq{} &>
+        <form>
+          <div class="form-row">
+            <div class="col-3 label"><&|/l&>Name</&>:</div>
+            <div class="col-9 value">
+              <input name="name" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{name} %>" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-3 label"><&|/l&>Sort order</&>:</div>
+            <div class="col-9 value">
+              <input name="sort_order" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{sort_order} %>" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-3 label"></div>
+            <div class="col-9 value">
+              <div class="custom-control custom-checkbox">
+                <input class="custom-control-input" id="<% $form_page_id{$page_name} %>-validation" type="checkbox" name="validation" value="1" <% $form->{'formtools-pages'}{$page_name}{validation} ? 'checked="checked"' : '' |n%> />
+                <label class="custom-control-label" for="<% $form_page_id{$page_name} %>-validation">
+                  <&|/l&>Enable validation</&>
+                </label>
+              </div>
+            </div>
+          </div>
+%         # Do not delete the last one
+%         if ( $form->{'formtools-pages'}{$page_name}{next} ) {
+          <div class="form-row">
+            <div class="col-3 label"></div>
+            <div class="col-9 value">
+              <a class="formtools-delete-page btn btn-primary button" data-page="<% $page_name %>" href="#"><% loc('Delete Page') %></a>
+            </div>
+          </div>
+%         }
+        </form>
+        </&>
+
+        <&| /Widgets/TitleBox, title => loc('Content') &>
+          <div class="formtools-content w-100 border rounded" data-page="<% $page_name %>" data-page-id="<% $form_page_id{$page_name} %>" ondrop="formTools.drop(event);" ondragover="formTools.dragover(event);" ondragend="formTools.dragend(event);">
+%         my $i = 0;
+%         for my $item ( grep { $_->{type} ne 'hidden' || $_->{'input-name'} ne 'create_ticket' } @{$form->{'formtools-pages'}{$page_name}{content} || []} ) {
+            <div id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" ondragenter="formTools.dragenter(event)" ondragleave="formTools.dragleave(event)" data-value="<% JSON($item) %>">
+              <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+              <p class="m-1 p-2 border rounded">
+                <span class="badge badge-primary"><% $item->{type} %></span>
+                <span class="content">
+%               if ( $item->{type} eq 'raw_html' ) {
+                  <% length $item->{html} > 40 ? substr($item->{html}, 0, 40) . '...' : $item->{html} %>
+%               } elsif ( $item->{type} eq 'hidden' ) {
+                  <% $item->{'input-name'} %>: <% $item->{'input-value'} %>
+%               } else {
+                  <% $item->{arguments}{name} || $item->{comp_name} %>
+%               }
+                </span>
+%             if ( $item->{type} eq 'raw_html' || ( $item->{type} eq 'component' && $item->{comp_name} eq 'Field' ) || $item->{type} eq 'hidden' ) {
+                <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-modal">
+                  <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
+                </a>
+%             }
+                <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+                  <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
+                </a>
+              </p>
+              <div class="modal fade formtools-element-modal" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <form class="formtools-element-form">
+                      <div class="modal-header">
+                        <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                        <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </a>
+                      </div>
+                      <div class="modal-body">
+%                     if ( $item->{type} eq 'raw_html' ) {
+                        <textarea name="html" class="form-control"><% $item->{html} %></textarea>
+%                     } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'Field' ) {
+                        <div class="form-row">
+                          <div class="col-3 label"><&|/l&>Label</&>:</div>
+                          <div class="col-9 value">
+                            <input name="label" type="text" class="form-control" placeholder="<% $item->{arguments}{name} %>" value="<% $item->{arguments}{label} // ''  %>" />
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="col-3 label"><&|/l&>Default Value</&>:</div>
+                          <div class="col-9 value">
+                            <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
+                          </div>
+                        </div>
+%                     } elsif ( $item->{type} eq 'hidden' ) {
+                        <div class="form-row">
+                          <div class="col-3 label"><&|/l&>Name</&>:</div>
+                          <div class="col-9 value">
+                            <input name="name" type="text" class="form-control" value="<% $item->{'input-name'} // ''  %>" />
+                          </div>
+                        </div>
+                        <div class="form-row">
+                          <div class="col-3 label"><&|/l&>Value</&>:</div>
+                          <div class="col-9 value">
+                            <input name="value" type="text" class="form-control" value="<% $item->{'input-value'} // '' %>" />
+                          </div>
+                        </div>
+%                     }
+                      </div>
+                      <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+%           $i++;
+%         }
+            <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          </div>
+
+
+        </&>
+      </div>
+%   }
     </div>
-</&>
-</div><!-- row -->
+
+    <form method="POST" action="Modify.html" id="formtools-form-modify">
+      <input type="hidden" name="id" value="<% $id %>">
+      <input type="hidden" name="ActiveTab" value="">
+      <input type="hidden" name="Content">
+      <div class="row">
+        <div class="col-12" style="padding-right: 25px">
+          <& /Elements/Submit, Name => 'Update', Label => loc('Save Changes') &>
+        </div>
+      </div>
+    </form>
+  </&>
+  </div><!-- row -->
 </div><!-- formtools-form-pages -->
 </div><!-- formtools-edit -->
 
-<p><&|/l&>Loaded form <% $form_attribute->Description %></&></p>
-
-<pre>
-% use Data::Printer;
-% $m->out(np($form));
-</pre>
-
+<script type="text/javascript">
+jQuery(function() {
+    jQuery('#formtools-form-modify').on('submit', formTools.submit);
+    jQuery('.formtools-element-form').on('submit', formTools.elementSubmit);
+    jQuery('.formtools-delete-page').on('click', formTools.deletePage);
+});
+</script>
 <%INIT>
 
 Abort("No form id found") unless $id;
@@ -66,16 +377,146 @@ unless ( $ok ) {
 
 my $form = $form_attribute->Content;
 
-my ($title, @results);
-$title = loc("Modify form [_1]", $form_attribute->Description);
+use UUID::Tiny 'create_uuid_as_string';
+
+my @results;
+
+if ( $AddPage ) {
+    Abort( loc('Permission Denied') )
+        unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'SuperUser' );
+
+    my @orders = map { $form->{'formtools-pages'}{$_}{sort_order} } keys %{$form->{'formtools-pages'}};
+
+    my $new_page = create_uuid_as_string();
+    $form->{'formtools-pages'}{$new_page} = {
+        name       => 'Page New',
+        sort_order => ( $orders[-2] || 0 ) + 1,
+    };
+    my ( $ret, $msg ) = $form_attribute->SetContent($form);
+    if ($ret) {
+        push @results, loc('Updated content');
+    }
+    else {
+        push @results, loc( "Couldn't update content: [_1]", $msg );
+    }
+
+    MaybeRedirectForResults(
+        Actions   => \@results,
+        Path      => '/Admin/FormTools/Modify.html',
+        Arguments => { id => $id, ActiveTab => $new_page },
+    );
+}
+elsif ( $Update ) {
+    Abort( loc('Permission Denied') )
+        unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'SuperUser' );
+
+    my $new_content = eval { JSON::from_json( $ARGS{Content} ) };
+    if ( $@ ) {
+        push @results, loc( "Couldn't decode JSON" );
+    }
+    else {
+        require List::Util;
+        my %order_name = map { $new_content->{$_}{sort_order} => $_ } keys %$new_content;
+        my @orders = sort { $a <=> $b } keys %order_name;
+
+        my ( $first_page, $submit_page );
+        for my $page ( sort { $new_content->{$a}{sort_order} <=> $new_content->{$b}{sort_order} } keys %$new_content ) {
+            if ( $new_content->{$page}{sort_order} == $orders[0] ) {
+                $form->{'formtools-start-page'} = $page;
+            }
+
+            if ( $orders[-2] && $new_content->{$page}{sort_order} == $orders[-2] ) {
+                push @{ $new_content->{$page}{content} },
+                    { type => 'hidden', 'input-name' => 'create_ticket', 'input-value' => 'create_ticket' };
+            }
+
+            if ( my $next_order = List::Util::first { $_ > $new_content->{$page}{sort_order} } @orders ) {
+                $new_content->{$page}{next} = $order_name{$next_order};
+            }
+            else {
+                $new_content->{$page}{next} = '';
+            }
+        }
+
+        $form->{'formtools-pages'} = $new_content;
+
+        if ( $form_attribute->_SerializeContent($form) ne $form_attribute->_Value('Content') ) {
+            my ( $ret, $msg ) = $form_attribute->SetContent($form);
+            if ($ret) {
+                push @results, loc('Updated content');
+            }
+            else {
+                push @results, loc( "Couldn't update content: [_1]", $msg );
+            }
+        }
+    }
+
+    MaybeRedirectForResults(
+        Actions   => \@results,
+        Path      => '/Admin/FormTools/Modify.html',
+        Arguments => { id => $id, ActiveTab => $ActiveTab },
+    );
+}
+
+my $title = loc("Modify form [_1]", $form_attribute->Description);
 
 my $nav_type = 'pill'; # 'tab' or 'pill'
 
-my @html_components = qw( h1 h2 h3 hr );
-my @core_components = qw( requestors owner subject content );
-my @custom_fields = qw( cf1 cf2 cf3 );
+my @html_components = qw( h1 h2 h3 h4 h5 h6 hr p );
+my @core_components = qw( Requestors Owner Subject Content );
 
+my $queue = RT::Queue->new($session{'CurrentUser'});
+$queue->Load($form->{queue});
+my $cfs = $queue->TicketCustomFields;
+my @custom_fields;
+my %default_values;
+
+while ( my $cf = $cfs->Next ) {
+    push @custom_fields, $cf->Name;
+    if ( $cf->SupportDefaultValues ) {
+        if ( defined( my $default_values = $cf->DefaultValues(Object => $queue) ) ) {
+            $default_values{$cf->Name} = ref $default_values eq 'ARRAY' ? join(', ', @$default_values) : $default_values;
+        }
+    }
+}
+
+my %other_components = (
+    ShowChoices => { type => 'component', comp_name => 'ShowChoices' },
+    Hidden      => { type => 'hidden' },
+);
+
+
+
+$form->{'formtools-pages'} ||= {
+    create_uuid_as_string => { sort_order => 1, name => 'Page 1' },
+    create_uuid_as_string => {
+        sort_order => 999,
+        name       => 'Result',
+        content    => [
+            {
+                type => 'raw_html',
+                html => '<h2>Request Submitted</h2>',
+            },
+            {
+                type => 'raw_html',
+                html => '<p>Your request has been submitted.</p>',
+            },
+        ],
+    },
+};
+
+
+my @form_pages
+    = sort { ( $form->{'formtools-pages'}{$a}{sort_order} || 0 ) <=> ( $form->{'formtools-pages'}{$b}{sort_order} || 0 ) }
+    keys %{ $form->{'formtools-pages'} };
+
+
+my %form_page_id = map { $_ => CSSClass($_) } @form_pages;
+my $active_context = { tab => $ActiveTab || $form_page_id{$form_pages[0]} };
 </%INIT>
 <%ARGS>
 $id => undef
+$ActiveTab => ''
+$Update => undef
+$AddPage => undef
 </%ARGS>
