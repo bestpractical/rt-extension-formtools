@@ -11,3 +11,7 @@ p.formtools-form-graphic {
 div .formtools-form-list {
     max-width: 1000px;
 }
+
+div .formtools-admin-description {
+    max-width: 1000px;
+}

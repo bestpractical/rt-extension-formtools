@@ -213,6 +213,33 @@ sub has_value {
     return (0, "You must provide a value for this field");
 }
 
+=head2 LoadFormIcon($current_user, $form_id)
+
+Loads the form icon attribute associated with the passed form id.
+
+Returns a tuple of attribute object or false, and a message.
+
+=cut
+
+sub LoadFormIcon {
+    my $current_user = shift;
+    my $form_id = shift;
+
+    my $form_icon = RT::Attribute->new( $current_user );
+    my ( $ok, $msg ) = $form_icon->LoadByCols(
+        Name => 'FormTools Icon',
+        ObjectType => 'RT::Attribute',
+        ObjectId => $form_id );
+
+    if ( $ok ) {
+        return ( $form_icon, $msg );
+    }
+    else {
+        RT->Logger->error("Unable to load icon: $msg");
+        return ( 0, $msg );
+    }
+}
+
 =head1 AUTHOR
 
 Best Practical Solutions, LLC E<lt>modules@bestpractical.comE<gt>
