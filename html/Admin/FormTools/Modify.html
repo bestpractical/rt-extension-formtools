@@ -11,7 +11,7 @@
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'raw_html', html => "<$item>test</$item>"}) %>">
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary">raw_html</span>
+            <span class="badge badge-primary"><% $item eq 'html' ? 'HTML' : uc($item) %></span>
             <span class="content"><% loc('[_1] Element', uc($item)) %></span>
 %           if ( $item ne 'hr' ) {
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
@@ -34,7 +34,15 @@
                     </a>
                   </div>
                   <div class="modal-body">
-                    <textarea name="html" class="form-control"><% "<$item>Text</$item>" %></textarea>
+                    <&| /Elements/LabeledValue, Label => loc("Content") &>
+%                   if ( $item =~ /^h\d/ ) {
+                      <input name="content" class="form-control" data-wrapper="<% $item %>" />
+%                   } elsif ( $item eq 'p' ) {
+                      <textarea name="content" class="form-control" data-wrapper="<% $item %>"></textarea>
+%                   } elsif ( $item eq 'html' ) {
+                      <textarea name="content" class="form-control"></textarea>
+%                   }
+                    </&>
                   </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
@@ -262,10 +270,14 @@
             <div id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" ondragenter="formTools.dragenter(event)" ondragleave="formTools.dragleave(event)" data-value="<% JSON($item) %>">
               <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
               <p class="m-1 p-2 border rounded">
-                <span class="badge badge-primary"><% $item->{type} %></span>
+                <span class="badge badge-primary"><% $item->{type} eq 'raw_html' ? uc($item->{wrapper} || 'HTML') : $item->{type} %></span>
                 <span class="content">
 %               if ( $item->{type} eq 'raw_html' ) {
-                  <% length $item->{html} > 40 ? substr($item->{html}, 0, 40) . '...' : $item->{html} %>
+%                 if ( $item->{wrapper} ) {
+                    <% length $item->{content} > 40 ? substr($item->{content}, 0, 40) . '...' : $item->{content} %>
+%                 } else {
+                    <% length $item->{html} > 40 ? substr($item->{html}, 0, 40) . '...' : $item->{html} %>
+%                 }
 %               } elsif ( $item->{type} eq 'hidden' ) {
                   <% $item->{'input-name'} %>: <% $item->{'input-value'} %>
 %               } else {
@@ -293,7 +305,15 @@
                       </div>
                       <div class="modal-body">
 %                     if ( $item->{type} eq 'raw_html' ) {
-                        <textarea name="html" class="form-control"><% $item->{html} %></textarea>
+                        <&| /Elements/LabeledValue, Label => loc("Content") &>
+%                       if ( ($item->{wrapper} // '') =~ /^h\d/i ) {
+                          <input name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>" value="<% $item->{content} %>"/>
+%                       } elsif ( lc ($item->{wrapper} // '') eq 'p' ) {
+                          <textarea name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>"><% $item->{content} %></textarea>
+%                       } elsif ( $item eq 'html' ) {
+                          <textarea name="content" class="form-control"><% $item->{html} %></textarea>
+%                       }
+                        </&>
 %                     } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'Field' ) {
                         <div class="form-row">
                           <div class="col-3 label"><&|/l&>Label</&>:</div>
@@ -462,7 +482,7 @@ my $title = loc("Modify form [_1]", $form_attribute->Description);
 
 my $nav_type = 'pill'; # 'tab' or 'pill'
 
-my @html_components = qw( h1 h2 h3 h4 h5 h6 hr p );
+my @html_components = qw( h1 h2 h3 hr p html );
 my @core_components = qw( Requestors Owner Subject Content );
 
 my $queue = RT::Queue->new($session{'CurrentUser'});

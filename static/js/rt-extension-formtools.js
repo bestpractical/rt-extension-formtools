@@ -80,8 +80,18 @@ formTools = {
         const value = element.data('value');
 
         if ( value.type === 'raw_html' ) {
-            value.html = form.find(':input[name=html]').val();
-            element.find('span.content').text(value.html.length > 40 ? value.html.substr(0, 40) + '...' : value.html);
+            const input = form.find(':input[name=content]');
+            const content = input.val();
+            const wrapper = input.data('wrapper');
+            if ( wrapper ) {
+                value.content = content;
+                value.wrapper = wrapper;
+                value.html = '<' + wrapper + '>' + content + '</' + wrapper + '>';
+            }
+            else {
+                value.html = content;
+            }
+            element.find('span.content').text(content.length > 40 ? content.substr(0, 40) + '...' : content);
         }
         else if ( value.type === 'component' && value.comp_name === 'Field' ) {
             const label = form.find(':input[name=label]').val();
