@@ -89,6 +89,11 @@ FUNCTIONS
   has_value value
     Returns true if the value is defined and non-empty.
 
+  LoadFormIcon($current_user, $form_id)
+    Loads the form icon attribute associated with the passed form id.
+
+    Returns a tuple of attribute object or false, and a message.
+
 AUTHOR
     Best Practical Solutions, LLC <modules@bestpractical.com>
 
