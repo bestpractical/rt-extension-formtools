@@ -28,7 +28,7 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
 my $path = $m->dhandler_arg;
 my ($form_name, $page_name);
 
-if ( $path =~ /^([\w|\s]+)\/(\w+)$/ ) {
+if ( $path =~ /^([\w|\s]+)\/([-\w]+)$/ ) {
     $form_name = $1;
     $page_name = $2;
 }
@@ -43,7 +43,7 @@ unless ( $form_name =~ /^[\w|\s]+$/ ) {
 }
 
 if ( $page_name ) {
-    unless ( $page_name =~ /^\w+$/ ) {
+    unless ( $page_name =~ /^[-\w]+$/ ) {
         RT->Logger->error("FormTools called with invalid page name: $page_name");
         Abort('Invalid page name');
     }
