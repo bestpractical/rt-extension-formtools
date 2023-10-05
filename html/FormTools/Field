@@ -53,7 +53,8 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
     unless ( $cf->id ) {
         my $msg = "Could not find a custom field called $name";
         $msg .= " for the queue ".$queue->Name if (defined $queue);
-        die $msg;
+        RT->Logger->error('Could not load custom field:' . $msg);
+        return;
     }
 
     $m->notes( cfs_on_page => [ @{$m->notes('cfs_on_page')||[]}, $cf->id ] );
@@ -250,7 +251,8 @@ $default = '' unless defined $default;
 % }
 
 % } else {
-% die "'$render_as' isn't a valid rendering option for field '$name'";
+% RT->Logger->error("'$render_as' isn't a valid rendering option for field '$name'");
+% return;
 %}
 
 % }

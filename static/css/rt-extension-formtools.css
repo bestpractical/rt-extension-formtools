@@ -43,3 +43,16 @@ div .formtools-content {
 .formtools-element.current p {
     opacity: 0.7;
 }
+
+p.formtools-form-graphic {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+div .formtools-form-list {
+    max-width: 1000px;
+}
+
+div .formtools-admin-description {
+    max-width: 1000px;
+}
