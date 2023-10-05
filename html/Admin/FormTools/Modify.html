@@ -488,8 +488,8 @@ my %other_components = (
 
 
 $form->{'formtools-pages'} ||= {
-    create_uuid_as_string => { sort_order => 1, name => 'Page 1' },
-    create_uuid_as_string => {
+    create_uuid_as_string() => { sort_order => 1, name => 'Page 1' },
+    create_uuid_as_string() => {
         sort_order => 999,
         name       => 'Result',
         content    => [
