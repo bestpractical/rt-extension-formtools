@@ -1,3 +1,6 @@
+#formtools-form-body {
+    max-width: 700px;
+}
 
 div .formtools-content {
     min-height: 400px;
