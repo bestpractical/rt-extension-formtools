@@ -138,6 +138,17 @@
                         <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
                       </div>
                     </div>
+                    <div class="form-row">
+                      <div class="col-3 label"></div>
+                      <div class="col-9 value">
+                        <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" id="<% CSSClass($item) %>-validation" type="checkbox" name="show_validation" value="1" checked="checked" />
+                          <label class="custom-control-label" for="<% CSSClass($item) %>-validation">
+                            <&|/l&>Show validation</&>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
@@ -337,6 +348,19 @@
                             <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
                           </div>
                         </div>
+%                       if ( !RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ) {
+                        <div class="form-row">
+                          <div class="col-3 label"></div>
+                          <div class="col-9 value">
+                            <div class="custom-control custom-checkbox">
+                              <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation" type="checkbox" name="show_validation" value="1" <% $item->{arguments}{show_validation} ? q{checked="checked"} : '' |n %> />
+                              <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation">
+                                <&|/l&>Show validation</&>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+%                       }
 %                     } elsif ( $item->{type} eq 'hidden' ) {
                         <div class="form-row">
                           <div class="col-3 label"><&|/l&>Name</&>:</div>

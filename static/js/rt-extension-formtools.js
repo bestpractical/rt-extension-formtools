@@ -110,6 +110,16 @@ formTools = {
             else {
                 delete value.arguments.default;
             }
+
+            const validation = form.find(':input[name=show_validation]');
+            if ( validation.length ) {
+                if ( validation.is(':checked') ) {
+                    value.arguments.show_validation = 1;
+                }
+                else {
+                    delete value.arguments.show_validation;
+                }
+            }
         }
         else if ( value.type === 'hidden' ) {
             value['input-name'] = form.find(':input[name=name]').val();
