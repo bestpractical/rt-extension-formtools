@@ -92,6 +92,13 @@ $base_path = '/SelfService' . $base_path if $SelfService;
 # "create_ticket" is submitted as an arg from the second-to-last
 # page.
 
+my $validation = $form_config->{'formtools-pages'}{$page}{'validation'};
+
+if ( $validation and not $ARGS{'validation_ok'} ) {
+    # If validation is enabled and it didn't pass, don't create
+    $create_ticket = 0;
+}
+
 my ($ticket_obj, @results);
 if ( $create_ticket ) {
 

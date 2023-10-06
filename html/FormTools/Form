@@ -64,6 +64,9 @@ if ($validation && $real_next) {
     }
 
     unless (@results) {
+        # Flag to show validation passed
+        $ARGS{'validation_ok'} = 1;
+
         $real_next = $m->caller(1)->dir_path . '/' . $real_next
             unless $real_next =~ m'^/';
         $m->subexec("$real_next", %ARGS, %request_args);
