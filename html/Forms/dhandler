@@ -2,6 +2,8 @@
     validation => $form_config->{'formtools-pages'}{$page}{'validation'},
     next_for_validation => $base_path . $form_name . '/' . $page,
     results_ref => \@results,
+    self_service => $SelfService,
+    include_tabs => 1,
 &>
 
 <%perl>
@@ -89,6 +91,13 @@ $base_path = '/SelfService' . $base_path if $SelfService;
 # Try to create a ticket if we're on the last page and
 # "create_ticket" is submitted as an arg from the second-to-last
 # page.
+
+my $validation = $form_config->{'formtools-pages'}{$page}{'validation'};
+
+if ( $validation and not $ARGS{'validation_ok'} ) {
+    # If validation is enabled and it didn't pass, don't create
+    $create_ticket = 0;
+}
 
 my ($ticket_obj, @results);
 if ( $create_ticket ) {
