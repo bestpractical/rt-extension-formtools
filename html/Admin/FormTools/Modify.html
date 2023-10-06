@@ -79,18 +79,12 @@
                     </a>
                   </div>
                   <div class="modal-body">
-                    <div class="form-row">
-                      <div class="col-3 label"><&|/l&>Label</&>:</div>
-                      <div class="col-9 value">
-                        <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="col-3 label"><&|/l&>Default Value</&>:</div>
-                      <div class="col-9 value">
-                        <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
-                      </div>
-                    </div>
+                    <&| /Elements/LabeledValue, Label => loc('Label') &>
+                      <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
+                    </&>
+                    <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+                      <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+                    </&>
                   </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
@@ -126,29 +120,20 @@
                     </a>
                   </div>
                   <div class="modal-body">
-                    <div class="form-row">
-                      <div class="col-3 label"><&|/l&>Label</&>:</div>
-                      <div class="col-9 value">
-                        <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
+                    <&| /Elements/LabeledValue, Label => loc('Label') &>
+                      <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
+                    </&>
+                    <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+                      <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+                    </&>
+                    <&| /Elements/LabeledValue, Label => '' &>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" id="<% CSSClass($item) %>-validation" type="checkbox" name="show_validation" value="1" checked="checked" />
+                        <label class="custom-control-label" for="<% CSSClass($item) %>-validation">
+                          <&|/l&>Show validation</&>
+                        </label>
                       </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="col-3 label"><&|/l&>Default Value</&>:</div>
-                      <div class="col-9 value">
-                        <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="col-3 label"></div>
-                      <div class="col-9 value">
-                        <div class="custom-control custom-checkbox">
-                          <input class="custom-control-input" id="<% CSSClass($item) %>-validation" type="checkbox" name="show_validation" value="1" checked="checked" />
-                          <label class="custom-control-label" for="<% CSSClass($item) %>-validation">
-                            <&|/l&>Show validation</&>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+                    </&>
                   </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
@@ -189,18 +174,12 @@
                     </a>
                   </div>
                   <div class="modal-body">
-                    <div class="form-row">
-                      <div class="col-3 label"><&|/l&>Name</&>:</div>
-                      <div class="col-9 value">
-                        <input name="name" type="text" class="form-control" value="" />
-                      </div>
-                    </div>
-                    <div class="form-row">
-                      <div class="col-3 label"><&|/l&>Value</&>:</div>
-                      <div class="col-9 value">
-                        <input name="value" type="text" class="form-control" value="" />
-                      </div>
-                    </div>
+                    <&| /Elements/LabeledValue, Label => loc('Name') &>
+                      <input name="name" type="text" class="form-control" value="" />
+                    </&>
+                    <&| /Elements/LabeledValue, Label => loc('Value') &>
+                      <input name="value" type="text" class="form-control" value="" />
+                    </&>
                   </div>
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
@@ -239,37 +218,26 @@
       <div id="formtools-content-<% $form_page_id{$page_name} %>" class="tab-pane <% $form_page_id{$page_name} eq $active_context->{tab} ? 'show active' : 'fade' %>" role="tabpanel">
         <&| /Widgets/TitleBox, title => loc('Basic Info'), titleright_raw => qq{} &>
         <form>
-          <div class="form-row">
-            <div class="col-3 label"><&|/l&>Name</&>:</div>
-            <div class="col-9 value">
-              <input name="name" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{name} %>" />
+          <&| /Elements/LabeledValue, Label => loc('Name') &>
+            <input name="name" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{name} %>" />
+          </&>
+          <&| /Elements/LabeledValue, Label => loc('Sort Order') &>
+            <input name="sort_order" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{sort_order} %>" />
+          </&>
+          <&| /Elements/LabeledValue, Label => '' &>
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" id="<% $form_page_id{$page_name} %>-validation" type="checkbox" name="validation" value="1" <% $form->{'formtools-pages'}{$page_name}{validation} ? 'checked="checked"' : '' |n%> />
+              <label class="custom-control-label" for="<% $form_page_id{$page_name} %>-validation">
+                <&|/l&>Enable validation</&>
+              </label>
             </div>
-          </div>
-          <div class="form-row">
-            <div class="col-3 label"><&|/l&>Sort order</&>:</div>
-            <div class="col-9 value">
-              <input name="sort_order" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{sort_order} %>" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-3 label"></div>
-            <div class="col-9 value">
-              <div class="custom-control custom-checkbox">
-                <input class="custom-control-input" id="<% $form_page_id{$page_name} %>-validation" type="checkbox" name="validation" value="1" <% $form->{'formtools-pages'}{$page_name}{validation} ? 'checked="checked"' : '' |n%> />
-                <label class="custom-control-label" for="<% $form_page_id{$page_name} %>-validation">
-                  <&|/l&>Enable validation</&>
-                </label>
-              </div>
-            </div>
-          </div>
+          </&>
+
 %         # Do not delete the last one
 %         if ( $form->{'formtools-pages'}{$page_name}{next} ) {
-          <div class="form-row">
-            <div class="col-3 label"></div>
-            <div class="col-9 value">
-              <a class="formtools-delete-page btn btn-primary button" data-page="<% $page_name %>" href="#"><% loc('Delete Page') %></a>
-            </div>
-          </div>
+          <&| /Elements/LabeledValue, Label => '' &>
+            <a class="formtools-delete-page btn btn-primary button" data-page="<% $page_name %>" href="#"><% loc('Delete Page') %></a>
+          </&>
 %         }
         </form>
         </&>
@@ -336,44 +304,29 @@
 %                       }
                         </&>
 %                     } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'Field' ) {
-                        <div class="form-row">
-                          <div class="col-3 label"><&|/l&>Label</&>:</div>
-                          <div class="col-9 value">
-                            <input name="label" type="text" class="form-control" placeholder="<% $item->{arguments}{name} %>" value="<% $item->{arguments}{label} // ''  %>" />
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div class="col-3 label"><&|/l&>Default Value</&>:</div>
-                          <div class="col-9 value">
-                            <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
-                          </div>
-                        </div>
+                        <&| /Elements/LabeledValue, Label => loc('Label') &>
+                          <input name="label" type="text" class="form-control" placeholder="<% $item->{arguments}{name} %>" value="<% $item->{arguments}{label} // ''  %>" />
+                        </&>
+                        <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+                          <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
+                        </&>
 %                       if ( !RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ) {
-                        <div class="form-row">
-                          <div class="col-3 label"></div>
-                          <div class="col-9 value">
-                            <div class="custom-control custom-checkbox">
-                              <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation" type="checkbox" name="show_validation" value="1" <% $item->{arguments}{show_validation} ? q{checked="checked"} : '' |n %> />
-                              <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation">
-                                <&|/l&>Show validation</&>
-                              </label>
-                            </div>
+                        <&| /Elements/LabeledValue, Label => '' &>
+                          <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation" type="checkbox" name="show_validation" value="1" <% $item->{arguments}{show_validation} ? q{checked="checked"} : '' |n %> />
+                            <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation">
+                              <&|/l&>Show validation</&>
+                            </label>
                           </div>
-                        </div>
+                        </&>
 %                       }
 %                     } elsif ( $item->{type} eq 'hidden' ) {
-                        <div class="form-row">
-                          <div class="col-3 label"><&|/l&>Name</&>:</div>
-                          <div class="col-9 value">
-                            <input name="name" type="text" class="form-control" value="<% $item->{'input-name'} // ''  %>" />
-                          </div>
-                        </div>
-                        <div class="form-row">
-                          <div class="col-3 label"><&|/l&>Value</&>:</div>
-                          <div class="col-9 value">
-                            <input name="value" type="text" class="form-control" value="<% $item->{'input-value'} // '' %>" />
-                          </div>
-                        </div>
+                        <&| /Elements/LabeledValue, Label => loc('Name') &>
+                          <input name="name" type="text" class="form-control" value="<% $item->{'input-name'} // ''  %>" />
+                        </&>
+                        <&| /Elements/LabeledValue, Label => loc('Value') &>
+                          <input name="value" type="text" class="form-control" value="<% $item->{'input-value'} // '' %>" />
+                        </&>
 %                     }
                       </div>
                       <div class="modal-footer">
