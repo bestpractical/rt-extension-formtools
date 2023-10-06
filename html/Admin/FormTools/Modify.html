@@ -407,8 +407,6 @@ unless ( $ok ) {
 
 my $form = $form_attribute->Content;
 
-use UUID::Tiny 'create_uuid_as_string';
-
 my @results;
 
 if ( $AddPage ) {
@@ -417,7 +415,7 @@ if ( $AddPage ) {
 
     my @orders = map { $form->{'formtools-pages'}{$_}{sort_order} } keys %{$form->{'formtools-pages'}};
 
-    my $new_page = create_uuid_as_string();
+    my $new_page = RT::Extension::FormTools->GeneratePageId($form);
     $form->{'formtools-pages'}{$new_page} = {
         name       => 'Page New',
         sort_order => ( $orders[-2] || 0 ) + 1,
@@ -518,8 +516,8 @@ my %other_components = (
 
 
 $form->{'formtools-pages'} ||= {
-    create_uuid_as_string() => { sort_order => 1, name => 'Page 1' },
-    create_uuid_as_string() => {
+    RT::Extension::FormTools->GeneratePageId() => { sort_order => 1, name => 'Page 1' },
+    RT::Extension::FormTools->GeneratePageId() => {
         sort_order => 999,
         name       => 'Result',
         content    => [

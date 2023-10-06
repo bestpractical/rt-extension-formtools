@@ -8,6 +8,45 @@ our $VERSION = '0.53';
 RT->AddStyleSheets('rt-extension-formtools.css');
 RT->AddJavaScript('rt-extension-formtools.js');
 
+use Time::HiRes 'time';
+use Digest::SHA 'sha1_hex';
+
+# page ids are based on current time, keep 100 recent ids in case CPU is really fast
+my @recent_page_ids;
+
+sub GeneratePageId {
+    shift if ( $_[0] // '' ) eq __PACKAGE__;
+    my $form = shift;
+    my %current;
+    if ($form) {
+        %current = map { $_ => 1 } keys %{ $form->{'formtools-pages'} };
+    }
+
+    my %skip = (
+        map { $_ => 1 } @recent_page_ids,
+        $form && $form->{'formtools-pages'} ? keys %{ $form->{'formtools-pages'} } : ()
+    );
+
+    my $page_id = _GeneratePageId();
+
+    for ( 1 .. 100 ) {
+        if ( $skip{$page_id} ) {
+            $page_id = _GeneratePageId();
+        }
+        else {
+            push @recent_page_ids, $page_id;
+            shift @recent_page_ids while @recent_page_ids > 100;
+            return $page_id;
+        }
+    }
+    RT->Logger->error("Could not generate a new page id");
+    return;
+}
+
+sub _GeneratePageId {
+    return substr( sha1_hex( time . int rand 10000 ), 0, 8 );
+}
+
 =head1 NAME
 
 RT-Extension-FormTools - Help write multi-page ticket creation wizards
