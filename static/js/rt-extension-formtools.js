@@ -156,12 +156,13 @@ formTools = {
     },
 
     deletePage: function() {
+        jQuery('.formtools-element-modal.show').modal('hide');
         const tab = jQuery(this).closest('.tab-pane');
-
         tab.fadeOut(function() {
             jQuery('#formtools-pages').find('a.nav-link[href="#' + tab.attr('id') + '"]').closest('li').remove();
             jQuery('#formtools-pages').find('li:first a.nav-link').tab('show');
-        }).remove();
+            tab.remove();
+        });
         return false;
     }
 };

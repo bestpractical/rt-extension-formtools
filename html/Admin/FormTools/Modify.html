@@ -216,34 +216,52 @@
     <div class="tab-content">
 %   foreach my $page_name (@form_pages) {
       <div id="formtools-content-<% $form_page_id{$page_name} %>" class="tab-pane <% $form_page_id{$page_name} eq $active_context->{tab} ? 'show active' : 'fade' %>" role="tabpanel">
-        <&| /Widgets/TitleBox, title => loc('Basic Info'), titleright_raw => qq{} &>
-        <form>
-          <&| /Elements/LabeledValue, Label => loc('Name') &>
-            <input name="name" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{name} %>" />
-          </&>
-          <&| /Elements/LabeledValue, Label => loc('Sort Order') &>
-            <input name="sort_order" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{sort_order} %>" />
-          </&>
-          <&| /Elements/LabeledValue, Label => '' &>
-            <div class="custom-control custom-checkbox">
-              <input class="custom-control-input" id="<% $form_page_id{$page_name} %>-validation" type="checkbox" name="validation" value="1" <% $form->{'formtools-pages'}{$page_name}{validation} ? 'checked="checked"' : '' |n%> />
-              <label class="custom-control-label" for="<% $form_page_id{$page_name} %>-validation">
-                <&|/l&>Enable validation</&>
-              </label>
+        <div class="modal fade formtools-element-modal" id="formtools-element-<% $form_page_id{$page_name} %>-basics-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form class="formtools-element-form">
+                <div class="modal-header">
+                  <h5 class="modal-title"><% loc('Modify Basics') %></h5>
+                  <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <&| /Elements/LabeledValue, Label => loc('Name') &>
+                      <input name="name" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{name} %>" />
+                    </&>
+                    <&| /Elements/LabeledValue, Label => loc('Sort Order') &>
+                      <input name="sort_order" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{sort_order} %>" />
+                    </&>
+                    <&| /Elements/LabeledValue, Label => '' &>
+                      <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" id="<% $form_page_id{$page_name} %>-validation" type="checkbox" name="validation" value="1" <% $form->{'formtools-pages'}{$page_name}{validation} ? 'checked="checked"' : '' |n%> />
+                        <label class="custom-control-label" for="<% $form_page_id{$page_name} %>-validation">
+                          <&|/l&>Enable validation</&>
+                        </label>
+                      </div>
+                    </&>
+
+%                   # Do not delete the last one
+%                   if ( $form->{'formtools-pages'}{$page_name}{next} ) {
+                    <&| /Elements/LabeledValue, Label => '' &>
+                      <a class="formtools-delete-page btn btn-primary button" data-page="<% $page_name %>" href="#"><% loc('Delete Page') %></a>
+                    </&>
+%                   }
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary button form-control" data-dismiss="modal"><% loc('Save') %></button>
+                </div>
+              </form>
             </div>
-          </&>
+          </div>
+        </div>
 
-%         # Do not delete the last one
-%         if ( $form->{'formtools-pages'}{$page_name}{next} ) {
-          <&| /Elements/LabeledValue, Label => '' &>
-            <a class="formtools-delete-page btn btn-primary button" data-page="<% $page_name %>" href="#"><% loc('Delete Page') %></a>
-          </&>
-%         }
-        </form>
-        </&>
-
-        <&| /Widgets/TitleBox, title => loc('Content') &>
-          <div class="formtools-content w-100 border rounded" data-page="<% $page_name %>" data-page-id="<% $form_page_id{$page_name} %>" ondrop="formTools.drop(event);" ondragover="formTools.dragover(event);" ondragend="formTools.dragend(event);">
+%       my $loc_basics = loc('Basics');
+        <&| /Widgets/TitleBox, title => loc('Content'), titleright_raw => qq{<a href="#" data-toggle="modal" data-target="#formtools-element-$form_page_id{$page_name}-basics-modal"><span class="fas fa-cog icon-bordered fa-2x" alt="$loc_basics" data-toggle="tooltip" data-placement="top" data-original-title="$loc_basics"></span></a>} &>
+          <div class="formtools-content w-100 border rounded mt-3" data-page="<% $page_name %>" data-page-id="<% $form_page_id{$page_name} %>" ondrop="formTools.drop(event);" ondragover="formTools.dragover(event);" ondragend="formTools.dragend(event);">
 %         my $i = 0;
 %         for my $item ( grep { $_->{type} ne 'hidden' || $_->{'input-name'} ne 'create_ticket' } @{$form->{'formtools-pages'}{$page_name}{content} || []} ) {
             <div id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" ondragenter="formTools.dragenter(event)" ondragleave="formTools.dragleave(event)" data-value="<% JSON($item) %>">
