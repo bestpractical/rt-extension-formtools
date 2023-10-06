@@ -2,6 +2,8 @@
     validation => $form_config->{'formtools-pages'}{$page}{'validation'},
     next_for_validation => $base_path . $form_name . '/' . $page,
     results_ref => \@results,
+    self_service => $SelfService,
+    include_tabs => 1,
 &>
 
 <%perl>
