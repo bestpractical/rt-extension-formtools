@@ -23,7 +23,9 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
 }
 </%perl>
 
-<& /FormTools/Next &>
+% if ( $form_config->{'formtools-pages'}{$page}{'next'} ) {
+ <& /FormTools/Next &>
+% }
 </&>
 <%init>
 
