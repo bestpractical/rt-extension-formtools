@@ -124,10 +124,35 @@ $default = '' unless defined $default;
 % } else {
 
 % if ($render_as ne 'hidden' && $show_label) { # no label if hidden
-<div class="form-row">
-  <div class="label col-3"><%$field_label%><% $after_label |n %></div>
-  <div class="value col-9">
+
+<&| /Elements/LabeledValue, RawLabel => $m->interp->apply_escapes($field_label, 'h') . $after_label &>
+  <& SELF:Value, %ARGS, input_name => $input_name, field_type => $field_type, default => $default, values => \@values, cf => $cf &>
+  <% $after_input |n %>
+</&>
+
+% } else {
+  <& SELF:Value, %ARGS, input_name => $input_name, field_type => $field_type, default => $default, values => \@values, cf => $cf &>
 % }
+
+% }
+
+<%METHOD Value>
+<%ARGS>
+$name
+$render_as          => 'normal'
+$default            => undef
+$cols               => undef
+$rows               => undef
+$empty_allowed      => 1
+$show_validation    => 0
+$disables           => {}
+$after_input        => ''
+$cf                 => undef
+$queue              => undef
+$field_type         => undef
+$input_name         => undef
+@values             => ()
+</%ARGS>
 
 % if ($field_type eq 'core') {
 
@@ -256,7 +281,4 @@ $default = '' unless defined $default;
 %}
 
 % }
-% if ($render_as ne 'hidden' && $show_label) {
-<% $after_input |n %></div></div>
-% }
-% }
+</%METHOD>
