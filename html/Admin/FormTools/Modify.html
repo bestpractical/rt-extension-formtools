@@ -418,7 +418,7 @@ if ( $AddPage ) {
     Abort( loc('Permission Denied') )
         unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'SuperUser' );
 
-    my @orders = map { $form->{'formtools-pages'}{$_}{sort_order} } keys %{$form->{'formtools-pages'}};
+    my @orders = sort { $a <=> $b } map { $form->{'formtools-pages'}{$_}{sort_order} } keys %{$form->{'formtools-pages'}};
 
     my $new_page = RT::Extension::FormTools->GeneratePageId($form);
     $form->{'formtools-pages'}{$new_page} = {
