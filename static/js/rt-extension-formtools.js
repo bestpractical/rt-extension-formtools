@@ -111,6 +111,15 @@ formTools = {
                 delete value.arguments.default;
             }
 
+            const tooltip = form.find(':input[name=tooltip]').val();
+
+            if ( tooltip.length ) {
+                value.arguments.tooltip = tooltip;
+            }
+            else {
+                delete value.arguments.tooltip;
+            }
+
             const validation = form.find(':input[name=show_validation]');
             if ( validation.length ) {
                 if ( validation.is(':checked') ) {

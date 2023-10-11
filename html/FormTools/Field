@@ -1,6 +1,7 @@
 <%args>
 $name
 $label              => undef
+$tooltip            => undef
 $item_labels        => {}
 $render_as          => 'normal'
 $default            => undef
@@ -59,6 +60,7 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
 
     $m->notes( cfs_on_page => [ @{$m->notes('cfs_on_page')||[]}, $cf->id ] );
     $field_label ||= $cf->Name;
+    $tooltip ||= $cf->EntryHint;
 
     if ($ticket) {
         @values = map { $_->Content } @{ $cf->ValuesForObject($ticket)->ItemsArrayRef };
@@ -125,7 +127,7 @@ $default = '' unless defined $default;
 
 % if ($render_as ne 'hidden' && $show_label) { # no label if hidden
 
-<&| /Elements/LabeledValue, RawLabel => $m->interp->apply_escapes($field_label, 'h') . $after_label &>
+<&| /Elements/LabeledValue, RawLabel => $m->interp->apply_escapes($field_label, 'h') . $after_label, LabelTooltip => $tooltip &>
   <& SELF:Value, %ARGS, input_name => $input_name, field_type => $field_type, default => $default, values => \@values, cf => $cf &>
   <% $after_input |n %>
 </&>
