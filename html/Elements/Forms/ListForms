@@ -3,6 +3,7 @@
 % my $item_number = 1;
 % while ( my $form_attribute = $forms->Next ) {
 %    my $form = $form_attribute->Content;
+%    next if $form->{disabled};
 <div class="row mt-3 mb-3">
   <div class="col-4">
     <a href="<% RT->Config->Get('WebPath') %><% $SelfServicePath %>/Forms/<% $form_attribute->Description %>">
