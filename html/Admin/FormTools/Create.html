@@ -29,7 +29,7 @@ if ( $Create ) {
     push @results, loc('Missing Queue') unless $Queue;
 
     if ( $Description && $Queue ) {
-        my $form = RT::Attribute->new( RT->SystemUser );
+        my $form = RT::Attribute->new( $session{CurrentUser} );
         my ($ret) = $form->LoadByCols( Name => 'FormTools Form', Description => $Description );
         if ($ret) {
             push @results, loc( 'Name [_1] already exists', $Description );
