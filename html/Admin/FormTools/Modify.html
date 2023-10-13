@@ -18,41 +18,41 @@
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
             </a>
 %           }
-            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+            <a href="#" class="remove" onclick="return formTools.deleteElement(event);">
               <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
             </a>
           </p>
-%         if ( $item ne 'hr' ) {
-          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <form class="formtools-element-form">
-                  <div class="modal-header">
-                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
-                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </a>
-                  </div>
-                  <div class="modal-body">
-                    <&| /Elements/LabeledValue, Label => loc("Content") &>
+        </div>
+%       if ( $item ne 'hr' ) {
+        <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form class="formtools-element-form">
+                <div class="modal-header">
+                  <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                  <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <&| /Elements/LabeledValue, Label => loc("Content") &>
 %                   if ( $item =~ /^h\d/ ) {
-                      <input name="content" class="form-control" data-wrapper="<% $item %>" />
+                    <input name="content" class="form-control" data-wrapper="<% $item %>" />
 %                   } elsif ( $item eq 'p' ) {
-                      <textarea name="content" class="form-control" data-wrapper="<% $item %>"></textarea>
+                    <textarea name="content" class="form-control" data-wrapper="<% $item %>"></textarea>
 %                   } elsif ( $item eq 'html' ) {
-                      <textarea name="content" class="form-control"></textarea>
+                    <textarea name="content" class="form-control"></textarea>
 %                   }
-                    </&>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
-                  </div>
-                </form>
-              </div>
+                  </&>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                </div>
+              </form>
             </div>
           </div>
-%         }
         </div>
+%       }
 % }
         <hr />
 % foreach my $item ( @core_components ) {
@@ -68,32 +68,32 @@
               <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
             </a>
           </p>
-          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <form class="formtools-element-form">
-                  <div class="modal-header">
-                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
-                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </a>
-                  </div>
-                  <div class="modal-body">
-                    <&| /Elements/LabeledValue, Label => loc('Label') &>
-                      <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
-                    </&>
-                    <&| /Elements/LabeledValue, Label => loc('Default Value') &>
-                      <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
-                    </&>
-                    <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
-                      <input name="tooltip" type="text" class="form-control" value="" />
-                    </&>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
-                  </div>
-                </form>
-              </div>
+        </div>
+        <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form class="formtools-element-form">
+                <div class="modal-header">
+                  <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                  <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <&| /Elements/LabeledValue, Label => loc('Label') &>
+                    <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
+                  </&>
+                  <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+                    <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+                  </&>
+                  <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
+                    <input name="tooltip" type="text" class="form-control" value="" />
+                  </&>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -112,40 +112,40 @@
               <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
             </a>
           </p>
-          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <form class="formtools-element-form">
-                  <div class="modal-header">
-                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
-                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </a>
-                  </div>
-                  <div class="modal-body">
-                    <&| /Elements/LabeledValue, Label => loc('Label') &>
-                      <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
-                    </&>
-                    <&| /Elements/LabeledValue, Label => loc('Default Value') &>
-                      <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
-                    </&>
-                    <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
-                      <input name="tooltip" type="text" class="form-control" placeholder="<% $tooltips{$item} // '' %>" value="" />
-                    </&>
-                    <&| /Elements/LabeledValue, Label => '' &>
-                      <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input" id="<% CSSClass($item) %>-validation" type="checkbox" name="show_validation" value="1" checked="checked" />
-                        <label class="custom-control-label" for="<% CSSClass($item) %>-validation">
-                          <&|/l&>Show validation</&>
-                        </label>
-                      </div>
-                    </&>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
-                  </div>
-                </form>
-              </div>
+        </div>
+        <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form class="formtools-element-form">
+                <div class="modal-header">
+                  <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                  <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <&| /Elements/LabeledValue, Label => loc('Label') &>
+                    <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
+                  </&>
+                  <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+                    <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+                  </&>
+                  <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
+                    <input name="tooltip" type="text" class="form-control" placeholder="<% $tooltips{$item} // '' %>" value="" />
+                  </&>
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-validation" type="checkbox" name="show_validation" value="1" checked="checked" />
+                      <label class="custom-control-label" for="<% CSSClass($item) %>-validation">
+                        <&|/l&>Show validation</&>
+                      </label>
+                    </div>
+                  </&>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -167,35 +167,34 @@
               <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
             </a>
           </p>
-
-%         if ( $item eq 'Hidden' ) {
-          <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <form class="formtools-element-form">
-                  <div class="modal-header">
-                    <h5 class="modal-title"><% loc('Modify Element') %></h5>
-                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </a>
-                  </div>
-                  <div class="modal-body">
-                    <&| /Elements/LabeledValue, Label => loc('Name') &>
-                      <input name="name" type="text" class="form-control" value="" />
-                    </&>
-                    <&| /Elements/LabeledValue, Label => loc('Value') &>
-                      <input name="value" type="text" class="form-control" value="" />
-                    </&>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
-                  </div>
-                </form>
-              </div>
+        </div>
+%       if ( $item eq 'Hidden' ) {
+        <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form class="formtools-element-form">
+                <div class="modal-header">
+                  <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                  <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </a>
+                </div>
+                <div class="modal-body">
+                  <&| /Elements/LabeledValue, Label => loc('Name') &>
+                    <input name="name" type="text" class="form-control" value="" />
+                  </&>
+                  <&| /Elements/LabeledValue, Label => loc('Value') &>
+                    <input name="value" type="text" class="form-control" value="" />
+                  </&>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                </div>
+              </form>
             </div>
           </div>
-%         }
         </div>
+%       }
 % }
       </div>
     </&>
@@ -306,72 +305,75 @@
                   <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
                 </a>
               </p>
-              <div class="modal fade formtools-element-modal" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <form class="formtools-element-form">
-                      <div class="modal-header">
-                        <h5 class="modal-title"><% loc('Modify Element') %></h5>
-                        <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </a>
-                      </div>
-                      <div class="modal-body">
-%                     if ( $item->{type} eq 'raw_html' ) {
-                        <&| /Elements/LabeledValue, Label => loc("Content") &>
-%                       if ( ($item->{wrapper} // '') =~ /^h\d/i ) {
-                          <input name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>" value="<% $item->{content} %>"/>
-%                       } elsif ( lc ($item->{wrapper} // '') eq 'p' ) {
-                          <textarea name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>"><% $item->{content} %></textarea>
-%                       } elsif ( $item eq 'html' ) {
-                          <textarea name="content" class="form-control"><% $item->{html} %></textarea>
-%                       }
-                        </&>
-%                     } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'Field' ) {
-                        <&| /Elements/LabeledValue, Label => loc('Label') &>
-                          <input name="label" type="text" class="form-control" placeholder="<% $item->{arguments}{name} %>" value="<% $item->{arguments}{label} // ''  %>" />
-                        </&>
-                        <&| /Elements/LabeledValue, Label => loc('Default Value') &>
-                          <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
-                        </&>
-
-                        <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
-                          <input name="tooltip" type="text" class="form-control" placeholder="<% $tooltips{$item->{arguments}{name}} // '' %>" value="<% $item->{arguments}{tooltip} // '' %>" />
-                        </&>
-%                       if ( !RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ) {
-                        <&| /Elements/LabeledValue, Label => '' &>
-                          <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation" type="checkbox" name="show_validation" value="1" <% $item->{arguments}{show_validation} ? q{checked="checked"} : '' |n %> />
-                            <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation">
-                              <&|/l&>Show validation</&>
-                            </label>
-                          </div>
-                        </&>
-%                       }
-%                     } elsif ( $item->{type} eq 'hidden' ) {
-                        <&| /Elements/LabeledValue, Label => loc('Name') &>
-                          <input name="name" type="text" class="form-control" value="<% $item->{'input-name'} // ''  %>" />
-                        </&>
-                        <&| /Elements/LabeledValue, Label => loc('Value') &>
-                          <input name="value" type="text" class="form-control" value="<% $item->{'input-value'} // '' %>" />
-                        </&>
-%                     }
-                      </div>
-                      <div class="modal-footer">
-
-                        <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
             </div>
 %           $i++;
 %         }
             <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
           </div>
+          <div class="modal-wrapper">
+%         $i = 0;
+%         for my $item ( grep { $_->{type} ne 'hidden' || $_->{'input-name'} ne 'create_ticket' } @{$form->{'formtools-pages'}{$page_name}{content} || []} ) {
+            <div class="modal fade formtools-element-modal" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <form class="formtools-element-form">
+                    <div class="modal-header">
+                      <h5 class="modal-title"><% loc('Modify Element') %></h5>
+                      <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </a>
+                    </div>
+                    <div class="modal-body">
+%                   if ( $item->{type} eq 'raw_html' ) {
+                      <&| /Elements/LabeledValue, Label => loc("Content") &>
+%                     if ( ($item->{wrapper} // '') =~ /^h\d/i ) {
+                        <input name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>" value="<% $item->{content} %>"/>
+%                     } elsif ( lc ($item->{wrapper} // '') eq 'p' ) {
+                        <textarea name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>"><% $item->{content} %></textarea>
+%                     } elsif ( $item eq 'html' ) {
+                        <textarea name="content" class="form-control"><% $item->{html} %></textarea>
+%                     }
+                      </&>
+%                   } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'Field' ) {
+                      <&| /Elements/LabeledValue, Label => loc('Label') &>
+                        <input name="label" type="text" class="form-control" placeholder="<% $item->{arguments}{name} %>" value="<% $item->{arguments}{label} // ''  %>" />
+                      </&>
+                      <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+                        <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
+                      </&>
 
-
+                      <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
+                        <input name="tooltip" type="text" class="form-control" placeholder="<% $tooltips{$item->{arguments}{name}} // '' %>" value="<% $item->{arguments}{tooltip} // '' %>" />
+                      </&>
+%                     if ( !RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ) {
+                      <&| /Elements/LabeledValue, Label => '' &>
+                        <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation" type="checkbox" name="show_validation" value="1" <% $item->{arguments}{show_validation} ? q{checked="checked"} : '' |n %> />
+                          <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-validation">
+                            <&|/l&>Show validation</&>
+                          </label>
+                        </div>
+                      </&>
+%                     }
+%                   } elsif ( $item->{type} eq 'hidden' ) {
+                      <&| /Elements/LabeledValue, Label => loc('Name') &>
+                        <input name="name" type="text" class="form-control" value="<% $item->{'input-name'} // ''  %>" />
+                      </&>
+                      <&| /Elements/LabeledValue, Label => loc('Value') &>
+                        <input name="value" type="text" class="form-control" value="<% $item->{'input-value'} // '' %>" />
+                      </&>
+%                   }
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary button form-control"><% loc('Save') %></button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+%           $i++;
+%         }
+          </div>
         </&>
       </div>
 %   }

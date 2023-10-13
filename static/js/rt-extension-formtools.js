@@ -53,10 +53,6 @@ formTools = {
 
             const old_id = source_copy.id;
             source_copy.id = 'formtools-element-' + area.dataset.pageId + '-' + Date.now();
-            jQuery(source_copy).find('#' + old_id + '-modal').attr('id', source_copy.id + '-modal' );
-            jQuery(source_copy).find('a.edit').attr('data-target', '#' + source_copy.id + '-modal' );
-            jQuery(source_copy).find('form.formtools-element-form').on('submit', formTools.elementSubmit);
-            jQuery(source_copy).find('.formtools-element-modal').modal('show');
             jQuery(source_copy).attr('ondragenter', 'formTools.dragenter(event);');
             if ( sibling ) {
                 area.insertBefore(source_copy, sibling);
@@ -64,6 +60,14 @@ formTools = {
             else {
                 area.insertBefore(source_copy, area.children[area.children.length-1]);
             }
+
+            const modal_copy = jQuery('#' + old_id + '-modal').clone(true);
+            jQuery('div.modal-wrapper:visible').append(modal_copy);
+            modal_copy.attr('id', source_copy.id + '-modal' );
+            modal_copy.find('a.edit').attr('data-target', '#' + source_copy.id + '-modal' );
+            modal_copy.find('form.formtools-element-form').on('submit', formTools.elementSubmit);
+            modal_copy.modal('show');
+            modal_copy.attr('ondragenter', 'formTools.dragenter(event);');
         }
     },
 
@@ -76,7 +80,8 @@ formTools = {
     elementSubmit: function(e) {
         e.preventDefault();
         const form = jQuery(this);
-        const element = form.closest('.formtools-element');
+        const modal = form.closest('.formtools-element-modal');
+        const element = jQuery('#' + modal.attr('id').replace(/-modal$/, ''));
         const value = element.data('value');
 
         if ( value.type === 'raw_html' ) {
@@ -162,6 +167,17 @@ formTools = {
         });
         form.find('input[name=ActiveTab]').val(jQuery('.formtools-content:visible').data('page-id'));
         form.find('input[name=Content]').val(JSON.stringify(content));
+    },
+
+    deleteElement: function(event) {
+        jQuery(event.target).find('[data-toggle=tooltip]').tooltip('hide');
+        const element = event.target.closest('.formtools-element');
+        const modal = document.getElementById(element.id + '-modal');
+        if ( modal ) {
+            modal.remove();
+        }
+        element.remove();
+        return false;
     },
 
     deletePage: function() {
