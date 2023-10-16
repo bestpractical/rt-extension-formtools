@@ -9,6 +9,7 @@
 <%perl>
 # Build the current page here dyamically from config
 
+my $button_label = loc('Next');
 foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
     if ( $element->{type} eq 'raw_html' ) {
         $m->out( $element->{html} );
@@ -20,11 +21,18 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
     elsif ( $element->{type} eq 'component' ) {
         $m->comp('/FormTools/' . $element->{comp_name}, %{$element->{arguments}});
     }
+
+    if ( $element->{type} eq 'hidden'
+         and $element->{'input-name'} eq 'create_ticket' ) {
+
+        # This is the page that will submit, so change the button label
+        $button_label = loc('Submit');
+    }
 }
 </%perl>
 
 % if ( $form_config->{'formtools-pages'}{$page}{'next'} ) {
- <& /FormTools/Next &>
+ <& /FormTools/Next, Label => $button_label &>
 % }
 </&>
 <%init>
