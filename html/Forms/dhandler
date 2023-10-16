@@ -156,6 +156,9 @@ if ( $ARGS{Back} and $ARGS{Back} eq 'Back' ) {
 my ($ticket_obj, @results);
 if ( $create_ticket ) {
 
+    $m->callback( CallbackName => 'BeforeCreate', ARGSRef => \%ARGS, results => \@results,
+                  FormName => $form_name, PageName => $page );
+
     # We override Abort elsewhere so we'll get $ticket_obj here even if
     # the current user has no rights to see the newly created ticket.
 
