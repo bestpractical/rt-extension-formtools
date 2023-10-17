@@ -1,5 +1,4 @@
-<&|/Widgets/TitleBox, title => '', class => 'fullwidth formtools-form-list ml-auto mr-auto' &>
-<div class="container">
+<&|/Widgets/TitleBox, title => '', class => 'container formtools-form-list ml-auto mr-auto' &>
 % my $item_number = 1;
 % while ( my $form_attribute = $forms->Next ) {
 %    my $form = $form_attribute->Content;
@@ -17,7 +16,6 @@
 <hr />
 % $item_number++;
 % }
-</div>
 </&>
 <%init>
 my $forms = RT::Attributes->new( RT->SystemUser );
