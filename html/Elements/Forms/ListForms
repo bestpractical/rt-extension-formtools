@@ -10,12 +10,11 @@
       <% $m->scomp('/Elements/Forms/ShowFormGraphic', FormObj => $form_attribute, ItemNumber => $item_number) |n %>
     </a>
   </div>
-  <div class="col">
-    <div class="formtools-form-text w-100 mt-2 mb-2 mr-auto ml-auto">
-      <% $form->{'form-description'} |n %>
-    </div>
+  <div class="col my-auto ml-2 mr-2 formtools-form-text">
+    <% $form->{'form-description'} |n %>
   </div>
 </div>
+<hr />
 % $item_number++;
 % }
 </div>

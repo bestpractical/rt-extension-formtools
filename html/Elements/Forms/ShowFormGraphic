@@ -2,8 +2,8 @@
 % if ( $has_icon ) {
 <& /Elements/Forms/ShowFormIcon, FormID => $FormObj->Id &>
 % } else {
-  <div class="rounded pt-5 pb-5" style="background-color: <%$color%>;">
-    <p class="text-center formtools-form-graphic">
+  <div class="formtools-form-graphic-box border border-primary rounded pt-4 pb-4">
+    <p class="text-center formtools-form-graphic-text pl-1 pr-1">
       <% $FormObj->Description %>
     </p>
   </div>
@@ -15,13 +15,6 @@ unless ( $FormObj and $FormObj->Id ) {
     RT->Logger->error("No valid form attribute object passed");
     return;
 }
-
-my $color_list = [
-    "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
-    "#9467bd", "#8c564b", "#e377c2", "#7f7f7f"
-];
-
-my $color = $color_list->[ $ItemNumber % 8 ];
 
 my $has_icon = 0;
 my $form_icon = RT::Attribute->new( RT->SystemUser );
