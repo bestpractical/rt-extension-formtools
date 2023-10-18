@@ -2,18 +2,8 @@
 <& /Elements/Tabs &>
 <& /Elements/ListActions, actions => \@results &>
 
+<&| /Widgets/TitleBox, title => '', class => 'container formtools-admin-select' &>
 <form method="post" action="<% RT->Config->Get('WebPath') %>/Admin/FormTools/index.html">
-  <div class="form-row">
-    <div class="col-auto">
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input checkbox" id="FindDisabledForms" name="FindDisabledForms" value="1" <% $FindDisabledForms ? 'checked="checked"': '' |n%> />
-        <label class="custom-control-label" for="FindDisabledForms"><&|/l&>Include disabled forms in listing.</&></label>
-      </div>
-    </div>
-    <div class="col-auto">
-      <input type="submit" name="Go" class="form-control btn btn-primary" value="<&|/l&>Go!</&>" />
-    </div>
-  </div>
   <table class="table collection collection-as-table" cellspacing="0">
     <tbody>
       <tr class="collection-as-table">
@@ -38,15 +28,23 @@
 % }
     </tbody>
   </table>
-  <div class="form-row">
+  <div class="form-row align-items-center">
     <div class="col-12">
-      <div align="right">
+      <div class="custom-control custom-checkbox text-right">
+        <input type="checkbox" class="custom-control-input checkbox" id="FindDisabledForms" name="FindDisabledForms" value="1" <% $FindDisabledForms ? 'checked="checked"': '' |n%> />
+        <label class="custom-control-label" for="FindDisabledForms"><&|/l&>Include disabled forms in listing.</&></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-row align-items-center">
+    <div class="col-12">
+      <div class="text-right">
         <input type="submit" name="Submit" class="form-control btn btn-primary" value="<&|/l&>Update</&>" />
       </div>
     </div>
   </div>
 </form>
-
+</&>
 <%init>
 my @results;
 
