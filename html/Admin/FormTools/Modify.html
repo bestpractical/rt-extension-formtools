@@ -531,12 +531,16 @@ $form->{'formtools-pages'} ||= {
         name       => 'Result',
         content    => [
             {
-                type => 'raw_html',
-                html => '<h2>Request Submitted</h2>',
+               "content" => "Request Submitted",
+               "html"    => "<h2>Request Submitted</h2>",
+               "type"    => "raw_html",
+               "wrapper" => "h2"
             },
             {
-                type => 'raw_html',
-                html => '<p>Your request has been submitted.</p>',
+               "content" => "Your request has been submitted.",
+               "html"    => "<p>Your request has been submitted.</p>",
+               "type"    => "raw_html",
+               "wrapper" => "p"
             },
         ],
     },
