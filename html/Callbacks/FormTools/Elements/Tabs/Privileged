@@ -30,6 +30,12 @@ if ( $m->request_path =~ m{^/Admin/FormTools/} ) {
     }
 }
 
+# Forms home page for all privileged users
+my $formtools = Menu->child('home')->child(
+    formtools => title => loc('Forms'),
+    path      => '/Forms.html',
+);
+
 </%init>
 <%args>
 $Path

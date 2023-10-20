@@ -9,6 +9,7 @@
 <%perl>
 # Build the current page here dyamically from config
 
+my $button_label = loc('Next');
 foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
     if ( $element->{type} eq 'raw_html' ) {
         $m->out( $element->{html} );
@@ -20,11 +21,18 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
     elsif ( $element->{type} eq 'component' ) {
         $m->comp('/FormTools/' . $element->{comp_name}, %{$element->{arguments}});
     }
+
+    if ( $element->{type} eq 'hidden'
+         and $element->{'input-name'} eq 'create_ticket' ) {
+
+        # This is the page that will submit, so change the button label
+        $button_label = loc('Submit');
+    }
 }
 </%perl>
 
 % if ( $form_config->{'formtools-pages'}{$page}{'next'} ) {
- <& /FormTools/Next &>
+ <& /FormTools/Next, Label => $button_label, Back => $show_back &>
 % }
 </&>
 <%init>
@@ -90,10 +98,6 @@ $m->notes( page_title => $form_config->{'formtools-pages'}{$page}{'name'} );
 my $base_path = '/Forms/';
 $base_path = '/SelfService' . $base_path if $SelfService;
 
-# Try to create a ticket if we're on the last page and
-# "create_ticket" is submitted as an arg from the second-to-last
-# page.
-
 my $validation = $form_config->{'formtools-pages'}{$page}{'validation'};
 
 if ( $validation and not $ARGS{'validation_ok'} ) {
@@ -101,8 +105,59 @@ if ( $validation and not $ARGS{'validation_ok'} ) {
     $create_ticket = 0;
 }
 
+my @form_pages
+    = sort { ( $form_config->{'formtools-pages'}{$a}{sort_order} || 0 ) <=> ( $form_config->{'formtools-pages'}{$b}{sort_order} || 0 ) }
+    keys %{ $form_config->{'formtools-pages'} };
+
+my $show_back = 0;
+my $index = 0;
+my $back_page;
+
+# When validation is enabled for this page, it submits to itself
+# first, so the back button only needs to go back 1. Otherwise,
+# current page was "next" on submit, so we need to go back 2.
+my $go_back_count = $validation ? 1 : 2;
+
+foreach my $page_index ( @form_pages ) {
+    if ( $page_index eq $page ) {
+        $back_page = $form_pages[$index - $go_back_count];
+        last;
+    }
+    $index++;
+}
+
+# Don't show the back button on the first page
+$show_back = 1 if $index > 0;
+
+# Did the user click Back?
+if ( $ARGS{Back} and $ARGS{Back} eq 'Back' ) {
+    # Avoid trying to go back again
+    delete $ARGS{Back};
+
+    # Don't create a ticket when going back
+    delete $ARGS{'create_ticket'} if $ARGS{'create_ticket'};
+    $create_ticket = 0;
+
+    $_form_tools_next = '';
+    delete $ARGS{'_form_tools_next'} if $ARGS{'_form_tools_next'};
+
+    # Redirect to the previous page
+    MaybeRedirectForResults(
+        Path      => $base_path . $form_name . '/' . $back_page,
+        Arguments => \%ARGS,
+        Force     => 1,
+    );
+}
+
+# Try to create a ticket if we're on the last page and
+# "create_ticket" is submitted as an arg from the second-to-last
+# page.
+
 my ($ticket_obj, @results);
 if ( $create_ticket ) {
+
+    $m->callback( CallbackName => 'BeforeCreate', ARGSRef => \%ARGS, results => \@results,
+                  FormName => $form_name, PageName => $page );
 
     # We override Abort elsewhere so we'll get $ticket_obj here even if
     # the current user has no rights to see the newly created ticket.
