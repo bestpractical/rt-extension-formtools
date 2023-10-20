@@ -1,5 +1,4 @@
-<&|/Widgets/TitleBox, title => '', class => 'fullwidth formtools-form-list ml-auto mr-auto' &>
-<div class="container">
+<&|/Widgets/TitleBox, title => '', class => 'container formtools-form-list ml-auto mr-auto' &>
 % my $item_number = 1;
 % while ( my $form_attribute = $forms->Next ) {
 %    my $form = $form_attribute->Content;
@@ -10,15 +9,13 @@
       <% $m->scomp('/Elements/Forms/ShowFormGraphic', FormObj => $form_attribute, ItemNumber => $item_number) |n %>
     </a>
   </div>
-  <div class="col">
-    <div class="formtools-form-text w-100 mt-2 mb-2 mr-auto ml-auto">
-      <% $form->{'form-description'} |n %>
-    </div>
+  <div class="col my-auto ml-2 mr-2 formtools-form-text">
+    <% $form->{'form-description'} |n %>
   </div>
 </div>
+<hr />
 % $item_number++;
 % }
-</div>
 </&>
 <%init>
 my $forms = RT::Attributes->new( RT->SystemUser );

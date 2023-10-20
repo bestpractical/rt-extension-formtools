@@ -47,15 +47,28 @@ div .formtools-content {
     opacity: 0.7;
 }
 
-p.formtools-form-graphic {
+.formtools-form-graphic-box {
+    background-color: #EEEEFF;
+}
+
+p.formtools-form-graphic-text {
     font-weight: bold;
     font-size: 1.5rem;
 }
 
 div .formtools-form-list {
-    max-width: 1000px;
+    max-width: 85%;
 }
 
 div .formtools-admin-description {
     max-width: 1000px;
+}
+
+.formtools-form-text > p {
+    color: black;
+    line-height: 1.5;
+}
+
+#formtools-edit .card-body {
+    padding: 15px 15px 15px 15px;
 }

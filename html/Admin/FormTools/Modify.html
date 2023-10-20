@@ -9,7 +9,7 @@
       <div class="d-block text-center">
 % foreach my $item ( @html_components ) {
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'raw_html', html => "<$item>test</$item>"}) %>">
-          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
             <span class="badge badge-primary"><% $item eq 'html' ? 'HTML' : uc($item) %></span>
             <span class="content"><% loc('[_1] Element', uc($item)) %></span>
@@ -57,9 +57,9 @@
         <hr />
 % foreach my $item ( @core_components ) {
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'component', comp_name => 'Field', arguments => { name => $item } }) %>">
-          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary"><% loc('Field') %></span>
+            <span class="badge badge-primary"><% loc('Custom Field') %></span>
             <% $item %>
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
@@ -101,9 +101,9 @@
         <hr />
 % foreach my $item ( @custom_fields ) {
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'component', comp_name => 'Field', arguments => { name => $item } }) %>">
-          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary"><% loc('Field') %></span>
+            <span class="badge badge-primary"><% loc('Custom Field') %></span>
             <% $item %>
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
@@ -154,7 +154,7 @@
         <hr />
 % foreach my $item ( sort keys %other_components ) {
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON($other_components{$item}) %>">
-          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+          <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
             <span class="badge badge-primary"><% $other_components{$item}{type} eq 'hidden' ? loc('Hidden') : loc('Component') %></span>
             <span class="content"><% $item %></span>
@@ -233,7 +233,7 @@
                 </div>
                 <div class="modal-body">
                   <form>
-                    <&| /Elements/LabeledValue, Label => loc('Name') &>
+                    <&| /Elements/LabeledValue, Label => loc('Page Name') &>
                       <input name="name" class="form-control" value="<% $form->{'formtools-pages'}{$page_name}{name} %>" />
                     </&>
                     <&| /Elements/LabeledValue, Label => loc('Sort Order') &>
@@ -270,7 +270,7 @@
 %         my $i = 0;
 %         for my $item ( grep { $_->{type} ne 'hidden' || $_->{'input-name'} ne 'create_ticket' } @{$form->{'formtools-pages'}{$page_name}{content} || []} ) {
             <div id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" ondragenter="formTools.dragenter(event)" ondragleave="formTools.dragleave(event)" data-value="<% JSON($item) %>">
-              <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+              <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
               <p class="m-1 p-2 border rounded">
                 <span class="badge badge-primary">
 %                 if ( $item->{type} eq 'raw_html' ) {
@@ -280,7 +280,7 @@
 %                 } elsif ( $item->{type} eq 'hidden' ) {
                     <% loc('Hidden') %>
 %                 } else {
-                    <% loc('Field') %>
+                    <% loc('Custom Field') %>
 %                 }
                 </span>
                 <span class="content">
@@ -308,7 +308,7 @@
             </div>
 %           $i++;
 %         }
-            <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Put it here') %></p>
+            <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           </div>
           <div class="modal-wrapper">
 %         $i = 0;
@@ -531,12 +531,16 @@ $form->{'formtools-pages'} ||= {
         name       => 'Result',
         content    => [
             {
-                type => 'raw_html',
-                html => '<h2>Request Submitted</h2>',
+               "content" => "Request Submitted",
+               "html"    => "<h2>Request Submitted</h2>",
+               "type"    => "raw_html",
+               "wrapper" => "h2"
             },
             {
-                type => 'raw_html',
-                html => '<p>Your request has been submitted.</p>',
+               "content" => "Your request has been submitted.",
+               "html"    => "<p>Your request has been submitted.</p>",
+               "type"    => "raw_html",
+               "wrapper" => "p"
             },
         ],
     },
