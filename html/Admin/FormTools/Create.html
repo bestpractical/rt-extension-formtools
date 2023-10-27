@@ -20,7 +20,7 @@
 </&>
 <%INIT>
 Abort( loc('Permission Denied') )
-    unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'SuperUser' );
+    unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'AdminForm' );
 
 my ($title, @results);
 $title = loc('Create form');

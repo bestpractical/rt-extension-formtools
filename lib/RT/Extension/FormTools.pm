@@ -8,6 +8,8 @@ our $VERSION = '0.53';
 RT->AddStyleSheets('rt-extension-formtools.css');
 RT->AddJavaScript('rt-extension-formtools.js');
 
+RT::System->AddRight( Admin => AdminForm => 'Create, modify and disable forms' ); # loc
+
 use Time::HiRes 'time';
 use Digest::SHA 'sha1_hex';
 

@@ -418,7 +418,7 @@ my @results;
 
 if ( $AddPage ) {
     Abort( loc('Permission Denied') )
-        unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'SuperUser' );
+        unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'AdminForm' );
 
     my @orders = sort { $a <=> $b } map { $form->{'formtools-pages'}{$_}{sort_order} } keys %{$form->{'formtools-pages'}};
 
@@ -443,7 +443,7 @@ if ( $AddPage ) {
 }
 elsif ( $Update ) {
     Abort( loc('Permission Denied') )
-        unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'SuperUser' );
+        unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'AdminForm' );
 
     my $new_content = eval { JSON::from_json( $ARGS{Content} ) };
     if ( $@ ) {
