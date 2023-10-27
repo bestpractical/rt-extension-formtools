@@ -63,11 +63,12 @@ if ( $page_name ) {
 
 # Load FormTools configration and look for a configured
 # form with the provided name.
-my $form_attribute = RT::Attribute->new( RT->SystemUser );
+my $form_attribute = RT::Attribute->new( $session{CurrentUser} );
 $form_attribute->LoadByCols( Name => 'FormTools Form', Description => $form_name );
 my $form_config;
 
 if ( $form_attribute->Id ) {
+    Abort( loc("Permission Denied") ) unless $form_attribute->CurrentUserCanSee;
     $form_config = $form_attribute->Content;
 }
 else {

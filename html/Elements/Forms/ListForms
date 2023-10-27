@@ -1,6 +1,7 @@
 <&|/Widgets/TitleBox, title => '', class => 'container formtools-form-list ml-auto mr-auto' &>
 % my $item_number = 1;
 % while ( my $form_attribute = $forms->Next ) {
+%    next unless $form_attribute->CurrentUserCanSee;
 %    my $form = $form_attribute->Content;
 %    next if $form->{disabled};
 <div class="row mt-3 mb-3">
@@ -18,7 +19,7 @@
 % }
 </&>
 <%init>
-my $forms = RT::Attributes->new( RT->SystemUser );
+my $forms = RT::Attributes->new( $session{CurrentUser} );
 $forms->Limit( FIELD => 'Name', VALUE => 'FormTools Form' );
 
 my $SelfServicePath = '/SelfService';

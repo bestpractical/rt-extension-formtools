@@ -49,6 +49,47 @@ sub _GeneratePageId {
     return substr( sha1_hex( time . int rand 10000 ), 0, 8 );
 }
 
+{
+    package RT::Attribute;
+    no warnings 'redefine';
+    use Role::Basic 'with';
+    with "RT::Record::Role::Rights";
+
+    my $orig_available_rights = RT::Attribute->can('AvailableRights');
+    *AvailableRights = sub {
+        my $self = shift;
+
+        if ( $self->__Value('Name') eq 'FormTools Form' ) {
+            return { ShowForm => 'View forms' };
+        }
+        return $orig_available_rights->($self, @_);
+    };
+
+    my $orig_right_categories = RT::Attribute->can('RightCategories');
+    *RightCategories = sub {
+        my $self = shift;
+
+        if ( $self->__Value('Name') eq 'FormTools Form' ) {
+            return { ShowForm => 'General' };
+        }
+        return $orig_right_categories->($self, @_);
+    };
+
+    my $orig_current_user_has_right = RT::Attribute->can('CurrentUserHasRight');
+    *CurrentUserHasRight = sub {
+        my $self  = shift;
+        my $right = shift;
+        if ( $self->__Value('Name') eq 'FormTools Form' ) {
+            return 1 if $self->CurrentUser->HasRight( Object => RT->System, Right => 'AdminForm' );
+            $right = 'ShowForm' if $right eq 'display';
+            return $self->CurrentUser->HasRight( Object => $self, Right => $right );
+        }
+        return $orig_current_user_has_right->( $self, $right, @_ );
+    };
+
+    RT::Attribute->AddRight( General => ShowForm => 'View forms' ); # loc
+}
+
 =head1 NAME
 
 RT-Extension-FormTools - Help write multi-page ticket creation wizards
