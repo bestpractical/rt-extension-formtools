@@ -13,6 +13,7 @@ $form_name           => undef
 $form_classes        => undef
 $self_service        => 0
 $results_ref         => []
+$form_config         => undef
 </%args>
 <%init>
 use RT::Extension::FormTools;
@@ -54,10 +55,15 @@ if ($validation && $real_next) {
         }
     }
 
+    my %labels = map { $_->{arguments}{name} => $_->{arguments}{label} }
+        grep { ( $_->{comp_name} // '' ) eq 'Field' && $_->{arguments}{name} && $_->{arguments}{label} }
+        map { @{ $_->{content} } } values %{ $form_config->{'formtools-pages'} };
+
     my ($status, @msg) = $m->comp(
         '/Elements/ValidateCustomFields',
         CustomFields    => $queue->TicketCustomFields,
         ARGSRef         => \%request_args,
+        Labels          => \%labels,
     );
     unless ($status) {
         push @results, @msg;

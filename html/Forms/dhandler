@@ -4,6 +4,7 @@
     results_ref => \@results,
     self_service => $SelfService,
     include_tabs => 1,
+    form_config => $form_config,
 &>
 
 <%perl>
