@@ -54,6 +54,7 @@ formTools = {
             const old_id = source_copy.id;
             source_copy.id = 'formtools-element-' + area.dataset.pageId + '-' + Date.now();
             jQuery(source_copy).attr('ondragenter', 'formTools.dragenter(event);');
+            jQuery(source_copy).find('a.edit').attr('data-target', '#' + source_copy.id + '-modal' );
             if ( sibling ) {
                 area.insertBefore(source_copy, sibling);
             }
@@ -64,7 +65,6 @@ formTools = {
             const modal_copy = jQuery('#' + old_id + '-modal').clone(true);
             jQuery('div.modal-wrapper:visible').append(modal_copy);
             modal_copy.attr('id', source_copy.id + '-modal' );
-            modal_copy.find('a.edit').attr('data-target', '#' + source_copy.id + '-modal' );
             modal_copy.find('form.formtools-element-form').on('submit', formTools.elementSubmit);
             modal_copy.modal('show');
             modal_copy.attr('ondragenter', 'formTools.dragenter(event);');
