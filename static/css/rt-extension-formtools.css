@@ -72,3 +72,7 @@ div .formtools-admin-description {
 #formtools-edit .card-body {
     padding: 15px 15px 15px 15px;
 }
+
+#formtools-form-body p {
+    text-align: center;
+}
