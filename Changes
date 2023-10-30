@@ -1,5 +1,8 @@
 Revision history for RT-Extension-FormTools
 
+0.54 2023-10-30
+ - Create a graphical editor for forms
+
 0.53 2022-05-03
 
  - Update example to render radio using RT core feature
