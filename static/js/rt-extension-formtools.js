@@ -102,8 +102,10 @@ formTools = {
             const label = form.find(':input[name=label]').val();
             if ( label.length ) {
                 value.arguments.label = label;
+                element.find('span.label').text('(' + label + ')');
             }
             else {
+                element.find('span.label').text('');
                 delete value.arguments.label;
             }
 
