@@ -11,6 +11,12 @@
     <textarea class="form-control" rows="30" name="Content"><% $ARGS{Content} || $encoded_content %></textarea>
   </&>
 
+  <div class="form-row invalid-json hidden">
+    <div class="offset-3 col-9">
+      <div class="alert alert-danger mb-0"><&|/l&>Invalid JSON</&></div>
+    </div>
+  </div>
+
   <div class="form-row">
     <div class="col-12">
       <& /Elements/Submit, Label => loc('Save Changes'), Name => 'Update' &>
@@ -18,6 +24,28 @@
   </div>
 
 </form>
+
+<script type="text/javascript">
+jQuery('form[name=ModifyFormToolsAdvanced] :input[name=Content]').bind('input propertychange', function() {
+    var form = jQuery(this).closest('form');
+    var validate_json = function (str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    };
+    if ( validate_json(jQuery(this).val()) ) {
+        form.find('input[type=submit]').prop('disabled', false);
+        form.find('.invalid-json').addClass('hidden');
+    }
+    else {
+        form.find('input[type=submit]').prop('disabled', true);
+        form.find('.invalid-json').removeClass('hidden');
+    }
+});
+</script>
 
 <%INIT>
 Abort("No form id found") unless $id;
