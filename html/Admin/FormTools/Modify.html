@@ -221,10 +221,10 @@
     <div class="tab-content">
 %   foreach my $page_name (@form_pages) {
       <div id="formtools-content-<% $form_page_id{$page_name} %>" class="tab-pane <% $form_page_id{$page_name} eq $active_context->{tab} ? 'show active' : 'fade' %>" role="tabpanel">
-        <div class="modal fade formtools-element-modal" id="formtools-element-<% $form_page_id{$page_name} %>-basics-modal" tabindex="-1" role="dialog">
+        <div class="modal fade formtools-page-modal" id="formtools-element-<% $form_page_id{$page_name} %>-basics-modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-              <form class="formtools-element-form">
+              <form class="formtools-page-form">
                 <div class="modal-header">
                   <h5 class="modal-title"><% loc('Modify Basics') %></h5>
                   <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
@@ -399,6 +399,7 @@
 jQuery(function() {
     jQuery('#formtools-form-modify').on('submit', formTools.submit);
     jQuery('.formtools-element-form').on('submit', formTools.elementSubmit);
+    jQuery('.formtools-page-form').on('submit', formTools.pageSubmit);
     jQuery('.formtools-delete-page').on('click', formTools.deletePage);
 });
 </script>

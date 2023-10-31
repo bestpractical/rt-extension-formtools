@@ -146,6 +146,13 @@ formTools = {
         form.closest('.formtools-element-modal').modal('hide');
     },
 
+    pageSubmit: function(e) {
+        e.preventDefault();
+        const form = jQuery(this);
+        jQuery('#formtools-pages a.nav-link.active').text(form.find('input[name=name]').val());
+        form.closest('.formtools-page-modal').modal('hide');
+    },
+
     submit: function(e) {
         const form = jQuery(this);
         const content = {};
