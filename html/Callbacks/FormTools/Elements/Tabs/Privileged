@@ -14,8 +14,14 @@ if ( Menu->child('admin')
 
 if ( $m->request_path =~ m{^/Admin/FormTools/} ) {
     my $page = PageMenu();
-    $page->child( select => title => loc('Select'), path => "/Admin/FormTools/index.html" );
-    $page->child( create => title => loc('Create'), path => "/Admin/FormTools/Create.html" );
+    if ( $HTML::Mason::Commands::m->request_args->{'id'} && $HTML::Mason::Commands::m->request_args->{'id'} =~ /^\d+$/ ) {
+        my $forms = $page->child( forms => title => loc('Form Tools'), path => "/Admin/FormTools/" );
+        $forms->child( select => title => loc('Select'), path => "/Admin/FormTools/index.html" );
+        $forms->child( create => title => loc('Create'), path => "/Admin/FormTools/Create.html" );
+    } else {
+        $page->child( select => title => loc('Select'), path => "/Admin/FormTools/index.html" );
+        $page->child( create => title => loc('Create'), path => "/Admin/FormTools/Create.html" );
+    }
 
     if ( ( $HTML::Mason::Commands::DECODED_ARGS->{'id'} || '' ) =~ /^(\d+)$/ ) {
         my $id  = $1;
