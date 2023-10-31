@@ -1,5 +1,18 @@
 Revision history for RT-Extension-FormTools
 
+0.55 2023-10-31
+ - Make core and custom fields consistent with other HTML elements
+ - Sync page name and tab text on name update
+ - Remove duplicate form tag
+ - Put Select and Create under one menu (for consistency)
+ - Make placeholders appear lighter than other text elements
+ - Validate errors in real time
+ - Fix HTML element IDs for custom fields
+ - On form edit page, show label text next to CF names
+ - Rename Save button on modal popups to Update
+ - Fix edit link for newly added items
+ - Center paragraph content on form pages
+
 0.54 2023-10-30
  - Create a graphical editor for forms
 
