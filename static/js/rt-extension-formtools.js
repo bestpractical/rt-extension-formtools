@@ -198,5 +198,26 @@ formTools = {
             tab.remove();
         });
         return false;
+    },
+
+    refreshSource: function () {
+        var searchTerm = jQuery(this).val().toLowerCase();
+        if ( searchTerm.length ) {
+            // Hide the separator on search, considering some sections might not have any matched items.
+            jQuery('.formtools-component-menu').find('hr').hide();
+            jQuery('.formtools-component-menu').find('.formtools-element').each(function () {
+                var item = jQuery(this);
+                if (item.find('span.content').text().toLowerCase().indexOf(searchTerm) > -1) {
+                    item.show();
+                }
+                else {
+                    item.hide();
+                }
+            });
+        }
+        else {
+            jQuery('.formtools-component-menu').find('hr').show();
+            jQuery('.formtools-component-menu').find('.formtools-element').show();
+        }
     }
 };

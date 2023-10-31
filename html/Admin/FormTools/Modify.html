@@ -6,6 +6,13 @@
 <div class="row">
   <div class="formtools-component-menu boxcontainer col-md-3" id="formtools-component-wrapper">
     <&| /Widgets/TitleBox, title => loc('FormTools Components') &>
+      <div class="filters">
+        <div class="form-row">
+          <div class="col-12">
+            <input type="search" class="m-1 field form-control" name="search" placeholder="<&|/l&>Search...</&>" autocomplete="off">
+          </div>
+        </div>
+      </div>
       <div class="d-block text-center">
 % foreach my $item ( @html_components ) {
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'raw_html', html => "<$item>test</$item>"}) %>">
@@ -401,6 +408,7 @@ jQuery(function() {
     jQuery('.formtools-element-form').on('submit', formTools.elementSubmit);
     jQuery('.formtools-page-form').on('submit', formTools.pageSubmit);
     jQuery('.formtools-delete-page').on('click', formTools.deletePage);
+    jQuery('.formtools-component-menu input[name=search]').on('propertychange change keyup paste input', formTools.refreshSource);
 });
 </script>
 <%INIT>
