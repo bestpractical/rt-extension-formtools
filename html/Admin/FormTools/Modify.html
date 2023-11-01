@@ -208,6 +208,9 @@
   </div>
   <div class="formtools-form-pages boxcontainer col-md-9" id="formtools-pages-wrapper">
   <&| /Widgets/TitleBox, title => loc('FormTools Pages') &>
+    <div class="mb-3 mx-3 mt-0 alert alert-warning pending-changes hidden">
+      <&|/l&>New changes pending. Click "Save Changes" to update the form.</&>
+    </div>
 
     <ul class="nav nav-<% $nav_type %>s" id="formtools-pages">
 %   my $current_context = {};
@@ -405,6 +408,8 @@
 <script type="text/javascript">
 jQuery(function() {
     jQuery('#formtools-form-modify').on('submit', formTools.submit);
+    formTools.submit(); // Keep track of current values
+
     jQuery('.formtools-element-form').on('submit', formTools.elementSubmit);
     jQuery('.formtools-page-form').on('submit', formTools.pageSubmit);
     jQuery('.formtools-delete-page').on('click', formTools.deletePage);

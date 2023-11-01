@@ -69,6 +69,7 @@ formTools = {
             modal_copy.modal('show');
             modal_copy.attr('ondragenter', 'formTools.dragenter(event);');
         }
+        formTools.submit();
     },
 
     dragend: function (ev) {
@@ -144,6 +145,7 @@ formTools = {
         }
         element.data('value', value);
         form.closest('.formtools-element-modal').modal('hide');
+        formTools.submit();
     },
 
     pageSubmit: function(e) {
@@ -151,10 +153,11 @@ formTools = {
         const form = jQuery(this);
         jQuery('#formtools-pages a.nav-link.active').text(form.find('input[name=name]').val());
         form.closest('.formtools-page-modal').modal('hide');
+        formTools.submit();
     },
 
     submit: function(e) {
-        const form = jQuery(this);
+        const form = jQuery(e ? e.target : '#formtools-form-modify');
         const content = {};
         jQuery('div.formtools-content').each(function() {
             let page = jQuery(this).data('page');
@@ -175,6 +178,17 @@ formTools = {
             });
         });
         form.find('input[name=ActiveTab]').val(jQuery('.formtools-content:visible').data('page-id'));
+
+        const serialized_content = JSON.stringify(content);
+        if ( !form.data('old-value') ) {
+            form.data('old-value', serialized_content);
+        }
+        else if ( serialized_content === form.data('old-value') ) {
+            jQuery('.formtools-form-pages .pending-changes').addClass('hidden');
+        }
+        else {
+            jQuery('.formtools-form-pages .pending-changes').removeClass('hidden');
+        }
         form.find('input[name=Content]').val(JSON.stringify(content));
     },
 
@@ -186,6 +200,7 @@ formTools = {
             modal.remove();
         }
         element.remove();
+        formTools.submit();
         return false;
     },
 
@@ -197,6 +212,7 @@ formTools = {
             jQuery('#formtools-pages').find('li:first a.nav-link').tab('show');
             tab.remove();
         });
+        formTools.submit();
         return false;
     },
 
