@@ -59,7 +59,7 @@ formTools = {
                 area.insertBefore(source_copy, sibling);
             }
             else {
-                area.insertBefore(source_copy, area.children[area.children.length-1]);
+                area.insertBefore(source_copy, area.children[area.children.length-2]);
             }
 
             const modal_copy = jQuery('#' + old_id + '-modal').clone(true);

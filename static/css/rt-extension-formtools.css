@@ -80,3 +80,7 @@ div .formtools-admin-description {
 .formtools-form-pages input::placeholder {
     opacity: 0.5;
 }
+
+.formtools-element-empty-room {
+    height: 200px;
+}
