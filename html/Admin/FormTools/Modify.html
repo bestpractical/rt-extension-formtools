@@ -71,7 +71,7 @@
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
             </a>
-            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+            <a href="#" class="remove" onclick="return formTools.deleteElement(event);">
               <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
             </a>
           </p>
@@ -115,7 +115,7 @@
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
             </a>
-            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+            <a href="#" class="remove" onclick="return formTools.deleteElement(event);">
               <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
             </a>
           </p>
@@ -170,7 +170,7 @@
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
             </a>
 %         }
-            <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+            <a href="#" class="remove" onclick="return formTools.deleteElement(event);">
               <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
             </a>
           </p>
@@ -309,7 +309,7 @@
                   <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
                 </a>
 %             }
-                <a href="#" class="remove" onclick="jQuery(this).find('[data-toggle=tooltip]').tooltip('hide'); this.closest('.formtools-element').remove(); return false;">
+                <a href="#" class="remove" onclick="return formTools.deleteElement(event);">
                   <span class="far fa-times-circle" alt="<% loc('Remove') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Remove') %>"></span>
                 </a>
               </p>
