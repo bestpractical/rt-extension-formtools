@@ -66,7 +66,7 @@
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'component', comp_name => 'Field', arguments => { name => $item } }) %>">
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary"><% loc('Custom Field') %></span>
+            <span class="badge badge-primary"><% loc('Core Field') %></span>
             <span class="content"><% $item %> <span class="label"></span></span>
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
@@ -287,6 +287,8 @@
                     <% loc('Component') %>
 %                 } elsif ( $item->{type} eq 'hidden' ) {
                     <% loc('Hidden') %>
+%                 } elsif ( RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ) {
+                    <% loc('Core Field') %>
 %                 } else {
                     <% loc('Custom Field') %>
 %                 }
