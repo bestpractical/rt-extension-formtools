@@ -205,14 +205,14 @@ formTools = {
     },
 
     deletePage: function() {
-        jQuery('.formtools-element-modal.show').modal('hide');
+        jQuery('.formtools-page-modal.show').modal('hide');
         const tab = jQuery(this).closest('.tab-pane');
-        tab.fadeOut(function() {
-            jQuery('#formtools-pages').find('a.nav-link[href="#' + tab.attr('id') + '"]').closest('li').remove();
-            jQuery('#formtools-pages').find('li:first a.nav-link').tab('show');
+        jQuery('#formtools-pages').find('li:first a.nav-link').tab('show');
+        jQuery('#formtools-pages').find('a.nav-link[href="#' + tab.attr('id') + '"]').closest('li').remove();
+        setTimeout( function() {
             tab.remove();
-        });
-        formTools.submit();
+            formTools.submit();
+        }, 500 );
         return false;
     },
 
