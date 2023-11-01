@@ -190,6 +190,13 @@ formTools = {
             jQuery('.formtools-form-pages .pending-changes').removeClass('hidden');
         }
         form.find('input[name=Content]').val(JSON.stringify(content));
+
+        if (e) { // It's a real form submitting
+            form.addClass('submitting');
+        }
+        else {
+            form.removeClass('submitting');
+        }
     },
 
     deleteElement: function(event) {

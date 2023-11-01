@@ -415,6 +415,17 @@ jQuery(function() {
     jQuery('.formtools-page-form').on('submit', formTools.pageSubmit);
     jQuery('.formtools-delete-page').on('click', formTools.deletePage);
     jQuery('.formtools-component-menu input[name=search]').on('propertychange change keyup paste input', formTools.refreshSource);
+
+    // Alert before leaving the page if there are pending changes
+    window.addEventListener('beforeunload', (event) => {
+        if ( !document.querySelector('#formtools-form-modify.submitting')
+          && !document.querySelector('.pending-changes.hidden') ) {
+            event.preventDefault();
+
+            // Included for legacy support, e.g. Chrome/Edge < 119
+            event.returnValue = true;
+        }
+    });
 });
 </script>
 <%INIT>
