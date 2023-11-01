@@ -115,6 +115,23 @@ $default = '' unless defined $default;
 
 % if ($field_type eq 'core' && $name eq 'Content') {
 
+<div class="form-row">
+  <div class="col-3 label">
+% if ($tooltip) {
+    <span class="prev-icon-helper">
+% }
+      <% $field_label %>
+% if ($tooltip) {
+    </span>
+% }
+
+% if ($tooltip) {
+    <span class="far fa-question-circle icon-helper" data-toggle="tooltip" data-placement="top" data-original-title="<% $tooltip %>"></span>
+% }
+    <% $after_label |n %>
+  </div>
+</div>
+
 <& /Elements/MessageBox,
     Name => $name,
     ($rows ? (Height => $rows) : ()),
