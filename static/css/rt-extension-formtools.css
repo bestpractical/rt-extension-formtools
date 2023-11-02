@@ -73,10 +73,6 @@ div .formtools-admin-description {
     padding: 15px 15px 15px 15px;
 }
 
-#formtools-form-body p {
-    text-align: center;
-}
-
 .formtools-form-pages input::placeholder {
     opacity: 0.5;
 }

@@ -68,6 +68,7 @@ formTools = {
             modal_copy.find('form.formtools-element-form').on('submit', formTools.elementSubmit);
             modal_copy.modal('show');
             modal_copy.attr('ondragenter', 'formTools.dragenter(event);');
+            modal_copy.find('select').selectpicker(); // initialize selectpicker after cloneNode to make it work
         }
         formTools.submit();
     },
@@ -92,7 +93,10 @@ formTools = {
             if ( wrapper ) {
                 value.content = content;
                 value.wrapper = wrapper;
-                value.html = '<' + wrapper + '>' + content + '</' + wrapper + '>';
+
+                const alignment = form.find(':input[name=alignment]').val();
+                value.alignment = alignment;
+                value.html = '<' + wrapper + ( alignment ? ' class="text-' + alignment.toLowerCase() + '"' : '' ) + '>' + content + '</' + wrapper + '>';
             }
             else {
                 value.html = content;

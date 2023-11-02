@@ -51,6 +51,16 @@
                     <textarea name="content" class="form-control"></textarea>
 %                   }
                   </&>
+
+%               if ( $item eq 'p' ) {
+                  <&| /Elements/LabeledValue, Label => loc("Alignment") &>
+                    <select name="alignment" class="form-control">
+                      <option value="left"><% loc('Left') %></option>
+                      <option value="center"><% loc('Center') %></option>
+                      <option value="right"><% loc('Right') %></option>
+                    </select>
+                  </&>
+%               }
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary button form-control"><% loc('Update') %></button>
@@ -348,6 +358,15 @@
                         <textarea name="content" class="form-control"><% $item->{html} %></textarea>
 %                     }
                       </&>
+%                     if ( ($item->{wrapper} // '') eq 'p' ) {
+                      <&| /Elements/LabeledValue, Label => loc("Alignment") &>
+                        <select name="alignment" class="form-control selectpicker">
+                          <option value="left" <% lc($item->{alignment} // '') eq 'left' ? 'selected' : '' %>><% loc('Left') %></option>
+                          <option value="center" <% lc($item->{alignment} // '') eq 'center' ? 'selected' : '' %>><% loc('Center') %></option>
+                          <option value="right" <% lc($item->{alignment} // '') eq 'right' ? 'selected' : '' %>><% loc('Right') %></option>
+                        </select>
+                      </&>
+%                     }
 %                   } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'Field' ) {
                       <&| /Elements/LabeledValue, Label => loc('Label') &>
                         <input name="label" type="text" class="form-control" placeholder="<% $item->{arguments}{name} %>" value="<% $item->{arguments}{label} // ''  %>" />
