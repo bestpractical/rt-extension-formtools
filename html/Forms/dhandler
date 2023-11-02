@@ -33,7 +33,7 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
 </%perl>
 
 % if ( $form_config->{'formtools-pages'}{$page}{'next'} ) {
- <& /FormTools/Next, Label => $button_label, Back => $show_back &>
+ <& /FormTools/Next, Label => $button_label, Back => $show_back, Name => 'Submit' &>
 % }
 </&>
 <%init>
