@@ -69,6 +69,12 @@ formTools = {
             modal_copy.modal('show');
             modal_copy.attr('ondragenter', 'formTools.dragenter(event);');
             modal_copy.find('select').selectpicker(); // initialize selectpicker after cloneNode to make it work
+            modal_copy.find('.custom-checkbox').each(function() {
+                const input = jQuery(this).find('input');
+                const label = jQuery(this).find('label');
+                label.attr('for', source_copy.id + input.attr('name'));
+                input.attr('id', source_copy.id + input.attr('name'));
+            });
         }
         formTools.submit();
     },
