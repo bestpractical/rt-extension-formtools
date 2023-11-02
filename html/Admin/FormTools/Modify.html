@@ -15,7 +15,7 @@
       </div>
       <div class="d-block text-center">
 % foreach my $item ( @html_components ) {
-        <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'raw_html', $item eq 'hr' ? ( wrapper => 'hr' ) : () }) %>">
+        <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'raw_html', $item eq 'hr' ? ( wrapper => 'hr', html => "<$item>" ) : () }) %>">
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
             <span class="badge badge-primary"><% $item eq 'html' ? 'HTML' : uc($item) %></span>
