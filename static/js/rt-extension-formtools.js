@@ -147,6 +147,16 @@ formTools = {
                     delete value.arguments.show_validation;
                 }
             }
+
+            const hide = form.find(':input[name=hide]');
+            if ( hide.length ) {
+                if ( hide.is(':checked') ) {
+                    value.arguments.render_as = 'hidden';
+                }
+                else if ( value.arguments.render_as === 'hidden' ) {
+                    delete value.arguments.render_as;
+                }
+            }
         }
         else if ( value.type === 'hidden' ) {
             value['input-name'] = form.find(':input[name=name]').val();

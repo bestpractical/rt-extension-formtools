@@ -113,7 +113,7 @@ $default = '' unless defined $default;
     </script>
 % }
 
-% if ($field_type eq 'core' && $name eq 'Content') {
+% if ($field_type eq 'core' && $name eq 'Content' && $render_as ne 'hidden') {
 
 <div class="form-row">
   <div class="col-3 label">

@@ -106,6 +106,14 @@
                   <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
                     <input name="tooltip" type="text" class="form-control" value="" />
                   </&>
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-hide" type="checkbox" name="hide" value="1" />
+                      <label class="custom-control-label" for="<% CSSClass($item) %>-hide">
+                        <&|/l&>Hide</&>
+                      </label>
+                    </div>
+                  </&>
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary button form-control"><% loc('Update') %></button>
@@ -155,6 +163,14 @@
                       <input class="custom-control-input" id="<% CSSClass($item) %>-validation" type="checkbox" name="show_validation" value="1" checked="checked" />
                       <label class="custom-control-label" for="<% CSSClass($item) %>-validation">
                         <&|/l&>Show validation</&>
+                      </label>
+                    </div>
+                  </&>
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-hide" type="checkbox" name="hide" value="1" />
+                      <label class="custom-control-label" for="<% CSSClass($item) %>-hide">
+                        <&|/l&>Hide</&>
                       </label>
                     </div>
                   </&>
@@ -388,6 +404,15 @@
                         </div>
                       </&>
 %                     }
+
+                      <&| /Elements/LabeledValue, Label => '' &>
+                        <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-hide" type="checkbox" name="hide" value="1" <% ( $item->{arguments}{render_as} // '' ) eq 'hidden' ? q{checked="checked"} : '' |n %> />
+                          <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-hide">
+                            <&|/l&>Hide</&>
+                          </label>
+                        </div>
+                      </&>
 %                   } elsif ( $item->{type} eq 'hidden' ) {
                       <&| /Elements/LabeledValue, Label => loc('Name') &>
                         <input name="name" type="text" class="form-control" value="<% $item->{'input-name'} // ''  %>" />
