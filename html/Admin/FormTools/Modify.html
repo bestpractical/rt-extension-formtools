@@ -18,7 +18,7 @@
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'raw_html', $item eq 'hr' ? ( wrapper => 'hr', html => "<$item>" ) : () }) %>">
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary"><% $item eq 'html' ? 'HTML' : uc($item) %></span>
+            <span class="badge badge-primary align-text-bottom"><% $item eq 'html' ? 'HTML' : uc($item) %></span>
             <span class="content"><% loc('[_1] Element', uc($item)) %></span>
 %           if ( $item ne 'hr' ) {
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
@@ -76,7 +76,7 @@
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'component', comp_name => 'Field', arguments => { name => $item } }) %>">
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary"><% loc('Core Field') %></span>
+            <span class="badge badge-primary align-text-bottom"><% loc('Core Field') %></span>
             <span class="content"><% $item %> <span class="label"></span></span>
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
@@ -128,7 +128,7 @@
         <div id="formtools-element-<% CSSClass($item) %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON({ type => 'component', comp_name => 'Field', arguments => { name => $item } }) %>">
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary"><% loc('Custom Field') %></span>
+            <span class="badge badge-primary align-text-bottom"><% loc('Custom Field') %></span>
             <span class="content"><% $item %> <span class="label"></span></span>
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
@@ -189,7 +189,7 @@
         <div id="formtools-element-<% $item %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" data-value="<% JSON($other_components{$item}) %>">
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
-            <span class="badge badge-primary"><% $other_components{$item}{type} eq 'hidden' ? loc('Hidden') : loc('Component') %></span>
+            <span class="badge badge-primary align-text-bottom"><% $other_components{$item}{type} eq 'hidden' ? loc('Hidden') : loc('Component') %></span>
             <span class="content"><% $item %></span>
 %         if ( $item eq 'Hidden' ) {
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
@@ -306,7 +306,7 @@
             <div id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>" class="formtools-element" draggable="true" ondragstart="formTools.dragstart(event);" ondragend="formTools.dragend(event);" ondragenter="formTools.dragenter(event)" ondragleave="formTools.dragleave(event)" data-value="<% JSON($item) %>">
               <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
               <p class="m-1 p-2 border rounded">
-                <span class="badge badge-primary">
+                <span class="badge badge-primary align-text-bottom">
 %                 if ( $item->{type} eq 'raw_html' ) {
                     <% uc($item->{wrapper} || 'HTML') %>
 %                 } elsif ( ( $item->{comp_name} // '' ) eq 'ShowChoices' ) {
