@@ -80,3 +80,8 @@ div .formtools-admin-description {
 .formtools-element-empty-room {
     height: 200px;
 }
+
+#formtools-edit .custom-control-label.has-text-input::before,
+#formtools-edit .custom-control-label.has-text-input::after {
+  top: 0.5rem;
+}

@@ -145,8 +145,24 @@ $default = '' unless defined $default;
 % if ($render_as ne 'hidden' && $show_label) { # no label if hidden
 
 <&| /Elements/LabeledValue, RawLabel => $m->interp->apply_escapes($field_label, 'h') . $after_label, LabelSpanClass => $tooltip ? 'prev-icon-helper' : '', LabelTooltip => $tooltip &>
-  <& SELF:Value, %ARGS, input_name => $input_name, field_type => $field_type, default => $default, values => \@values, cf => $cf &>
-  <% $after_input |n %>
+  <div data-name="<% $cf ? $cf->Name : '' %>"
+% if ( $ARGS{dependent_validation} && $ARGS{dependent_validation}{enabled} && $ARGS{dependent_validation}{name} ) {
+%   my $dependent_cf = RT::CustomField->new($session{CurrentUser});
+%   $dependent_cf = RT::CustomField->new( $session{'CurrentUser'} );
+%   $dependent_cf->SetContextObject($ticket) if $cf->can('SetContextObject');
+
+%   # try loading CFs for this Queue, followed by Global, followed by any CF of given $name
+%   $dependent_cf->LoadByName( Name => $ARGS{dependent_validation}{name}, Queue => $queue->id ) if (defined $queue);
+%   $dependent_cf->LoadByName( Name => $ARGS{dependent_validation}{name}, Queue => 0 ) unless ( $cf->id );
+%   if ( $dependent_cf ) {
+    data-dependent-name="<% GetCustomFieldInputName( Object => $ticket, CustomField => $dependent_cf ) %>"
+    data-dependent-values="<% JSON($ARGS{dependent_validation}{values} || []) %>"
+%   }
+% }
+  >
+    <& SELF:Value, %ARGS, input_name => $input_name, field_type => $field_type, default => $default, values => \@values, cf => $cf &>
+    <% $after_input |n %>
+  </div>
 </&>
 
 % } else {

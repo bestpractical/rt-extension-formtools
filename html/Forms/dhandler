@@ -35,6 +35,61 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
 % if ( $form_config->{'formtools-pages'}{$page}{'next'} ) {
  <& /FormTools/Next, Label => $button_label, Back => $show_back, Name => 'Submit' &>
 % }
+
+
+<script type="text/javascript">
+jQuery(function () {
+    jQuery('[data-dependent-name]').each(function () {
+        const dependent_name = jQuery(this).attr('data-dependent-name');
+        const values = JSON.parse(jQuery(this).attr('data-dependent-values'));
+        const target = jQuery(this);
+        const syncValidation = function(source) {
+            if ( source.target ) {
+                source = jQuery(source.target);
+            }
+
+            let source_values = [];
+            const name = source.attr('name');
+            if ( source.is(':checkbox') || source.is(':radio') ) {
+                jQuery(':input[name="' + name +'"]:checked').each( function () {
+                    source_values.push(source.val());
+                });
+            }
+            else {
+                jQuery(':input[name="' + name +'"]').each(function () {
+                    const val = jQuery(this).val();
+                    if ( Array.isArray(val) ) {
+                        source_values.push(...val);
+                    }
+                    else {
+                        source_values.push(val);
+                    }
+                });
+            }
+            let matched;
+            for ( let source_value of source_values ) {
+                if ( values.includes(source_value) ) {
+                    matched = true;
+                }
+            }
+
+            if ( matched ) {
+                target.find(':input:visible').attr('required', true);
+            }
+            else {
+                target.find(':input:visible').attr('required', false);
+            }
+        };
+        jQuery(':input[type!=hidden][name="' + dependent_name +'"]').change(syncValidation).change();
+
+        // Handle the case where dependent input is on previous pages
+        if ( jQuery(':input[type=hidden][name="' + dependent_name +'"]').length ) {
+            syncValidation(jQuery(':input[type=hidden][name="' + dependent_name +'"]'));
+        }
+    });
+});
+</script>
+
 </&>
 <%init>
 

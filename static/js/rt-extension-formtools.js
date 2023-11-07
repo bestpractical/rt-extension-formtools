@@ -148,6 +148,30 @@ formTools = {
                 }
             }
 
+
+            const dependent_validation = form.find(':input[name=dependent_validation]');
+            if ( dependent_validation.length ) {
+                value.arguments.dependent_validation ||= {};
+                if ( dependent_validation.is(':checked') ) {
+                    value.arguments.dependent_validation.enabled = 1;
+                }
+                else {
+                    value.arguments.dependent_validation.enabled = 0;
+                }
+            }
+
+            const dependent_name = form.find(':input[name=dependent_name]');
+            if ( dependent_name.length ) {
+                value.arguments.dependent_validation ||= {};
+                value.arguments.dependent_validation.name = dependent_name.val();
+            }
+
+            const dependent_value = form.find(':input[name=dependent_value]');
+            if ( dependent_value.length ) {
+                value.arguments.dependent_validation ||= {};
+                value.arguments.dependent_validation.values = dependent_value.val();
+            }
+
             const hide = form.find(':input[name=hide]');
             if ( hide.length ) {
                 if ( hide.is(':checked') ) {

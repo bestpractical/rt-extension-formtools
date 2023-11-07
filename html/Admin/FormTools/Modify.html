@@ -138,8 +138,8 @@
             </a>
           </p>
         </div>
-        <div class="modal fade formtools-element-modal" id="formtools-element-<% CSSClass($item) %>-modal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
+        <div class="modal fade formtools-element-modal" id="formtools-element-<% CSSClass($item) %>-modal" data-type="component" data-name="<% $item %>" tabindex="-1" role="dialog">
+          <div class="modal-dialog <% %dependent_custom_fields ? 'modal-lg' : '' %>" role="document">
             <div class="modal-content">
               <form class="formtools-element-form">
                 <div class="modal-header">
@@ -166,6 +166,37 @@
                       </label>
                     </div>
                   </&>
+%                 if ( %dependent_custom_fields ) {
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-depedent-validation" type="checkbox" name="dependent_validation" value="1" />
+                      <label class="custom-control-label has-text-input" for="<% CSSClass($item) %>-depedent-validation">
+                        <&|/l&>Show validation if</&>
+                        <div class="d-inline-block">
+                          <select name="dependent_name" class="form-control">
+                            <option value=""><&|/l&>(no value)</&></option>
+%                         for my $name ( sort keys %dependent_custom_fields ) {
+                            <option value="<% $name %>"><% $name %></option>
+%                         }
+                          </select>
+                        </div>
+                        is
+                        <div class="d-inline-block">
+                          <select name="dependent_value" data-dependent-name="dependent_name" multiple class="form-control">
+                            <option value=""><&|/l&>(no value)</&></option>
+%                         for my $name ( sort keys %dependent_custom_fields ) {
+                            <optgroup label="<% $name %>">
+%                           for my $value ( @{$dependent_custom_fields{$name}} ) {
+                              <option value="<% $value %>"><% $value %></option>
+%                           }
+                            </optgroup>
+%                         }
+                          </select>
+                        </div>
+                      </label>
+                    </div>
+                  </&>
+%                 }
                   <&| /Elements/LabeledValue, Label => '' &>
                     <div class="custom-control custom-checkbox">
                       <input class="custom-control-input" id="<% CSSClass($item) %>-hide" type="checkbox" name="hide" value="1" />
@@ -353,8 +384,8 @@
           <div class="modal-wrapper">
 %         $i = 0;
 %         for my $item ( grep { $_->{type} ne 'hidden' || $_->{'input-name'} ne 'create_ticket' } @{$form->{'formtools-pages'}{$page_name}{content} || []} ) {
-            <div class="modal fade formtools-element-modal" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-modal" tabindex="-1" role="dialog">
-              <div class="modal-dialog" role="document">
+            <div class="modal fade formtools-element-modal" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-modal" tabindex="-1" role="dialog" data-type="<% $item->{type} %>" data-name="<% $item->{arguments} && $item->{arguments}{name} ? $item->{arguments}{name} : '' %>">
+              <div class="modal-dialog <% $item->{type} eq 'component' && %dependent_custom_fields && !RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ? 'modal-lg' : '' %>" role="document">
                 <div class="modal-content">
                   <form class="formtools-element-form">
                     <div class="modal-header">
@@ -403,6 +434,37 @@
                           </label>
                         </div>
                       </&>
+%                     if ( %dependent_custom_fields ) {
+                      <&| /Elements/LabeledValue, Label => '' &>
+                        <div class="custom-control custom-checkbox">
+                          <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-depedent-validation" type="checkbox" name="dependent_validation" value="1" <% $item->{arguments}{dependent_validation}{enabled} ? 'checked="checked"' : '' |n %> />
+                          <label class="custom-control-label has-text-input" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-depedent-validation">
+                            <&|/l&>Show validation if</&>
+                            <div class="d-inline-block">
+                              <select name="dependent_name" class="form-control selectpicker">
+                                <option value=""><&|/l&>(no value)</&></option>
+%                               for my $name ( sort keys %dependent_custom_fields ) {
+                                  <option value="<% $name %>" <% ($item->{arguments}{dependent_validation}{name} // '') eq $name ? 'selected="selected"' : '' |n %>><% $name %></option>
+%                               }
+                                </select>
+                              </div>
+                              is
+                              <div class="d-inline-block">
+                                <select name="dependent_value" data-dependent-name="dependent_name" multiple class="form-control selectpicker">
+                                  <option value=""><&|/l&>(no value)</&></option>
+%                               for my $name ( sort keys %dependent_custom_fields ) {
+                                  <optgroup label="<% $name %>">
+%                                 for my $value ( @{$dependent_custom_fields{$name}} ) {
+                                    <option value="<% $value %>" <% ($item->{arguments}{dependent_validation}{name} // '') eq $name && grep( { $value eq $_ } @{$item->{arguments}{dependent_validation}{values} || []} ) ? 'selected="selected"' : '' |n %>><% $value %></option>
+%                                 }
+                                  </optgroup>
+%                               }
+                                </select>
+                              </div>
+                            </label>
+                          </div>
+                        </&>
+%                     }
 %                     }
 
                       <&| /Elements/LabeledValue, Label => '' &>
@@ -471,6 +533,34 @@ jQuery(function() {
             // Included for legacy support, e.g. Chrome/Edge < 119
             event.returnValue = true;
         }
+    });
+
+    jQuery('[name=dependent_name]').change(function () {
+        const modal = jQuery(this).closest('.modal');
+        const target = modal.find('[data-dependent-name="' + jQuery(this).attr('name') + '"');
+        const name = jQuery(this).val();
+        target.find('optgroup').addClass('hidden');
+        target.find('optgroup[label="' + name + '"]').removeClass('hidden');
+        target.selectpicker('refresh');
+        // Hide duplicate dividers
+        target.closest('div').find('li.dropdown-divider').slice(1).hide();
+    });
+
+    jQuery('.formtools-element-modal').on('shown.bs.modal', function (e) {
+        const name = jQuery(this).attr('data-name');
+
+        const select = jQuery(this).find('select[name=dependent_name]');
+
+        select.find('option').addClass('hidden');
+        jQuery('.formtools-form-pages [data-type=component][data-name]').each(function () {
+            const available_name = jQuery(this).attr('data-name');
+            if ( available_name !== name ) {
+                select.find('option[value="' + available_name + '"]').removeClass('hidden');
+            }
+        });
+
+        select.change();
+        select.selectpicker('refresh');
     });
 });
 </script>
@@ -579,6 +669,7 @@ my $cfs = $queue->TicketCustomFields;
 my @custom_fields;
 my %default_values;
 my %tooltips;
+my %dependent_custom_fields;
 
 while ( my $cf = $cfs->Next ) {
     push @custom_fields, $cf->Name;
@@ -588,6 +679,10 @@ while ( my $cf = $cfs->Next ) {
         }
     }
     $tooltips{$cf->Name} = $cf->EntryHint // '';
+
+    if ( $cf->Type eq 'Select' ) {
+        $dependent_custom_fields{$cf->Name} = [ map { $_->Name } @{$cf->Values->ItemsArrayRef || {}} ];
+    }
 }
 
 my %other_components = (
