@@ -72,10 +72,36 @@ jQuery(function () {
                 }
             }
 
+            // Toggle "(No value)" on show to catch all cases including page re-rendering after clicking "Back"
+            if ( target.find('select.selectpicker').length ) {
+                target.find('select.selectpicker').on('show.bs.select', function() {
+                    if ( jQuery(this).hasClass('required') ) {
+                        jQuery(this).parent().find('.dropdown-menu li.disabled').addClass('hidden');
+                    }
+                    else {
+                        jQuery(this).parent().find('.dropdown-menu li').removeClass('hidden');
+                    }
+                });
+            }
+
             if ( matched ) {
+                if ( target.find('select.selectpicker').length ) {
+                    target.find('select.selectpicker option[value=""]').attr('selected', false).attr('disabled', true);
+                    target.find('select.selectpicker').addClass('required').selectpicker('refresh');
+                }
+                else if ( target.find('input[type=radio]').length ) {
+                    target.find('input[type=radio][value=""]').prop('checked', false).attr('disabled', true);
+                }
                 target.find(':input:visible').attr('required', true);
             }
             else {
+                if ( target.find('select.selectpicker').length ) {
+                    target.find('select.selectpicker option[value=""]').attr('disabled', false);
+                    target.find('select.selectpicker').removeClass('required').selectpicker('refresh');
+                }
+                else if ( target.find('input[type=radio]').length ) {
+                    target.find('input[type=radio][value=""]').attr('disabled', false);
+                }
                 target.find(':input:visible').attr('required', false);
             }
         };
