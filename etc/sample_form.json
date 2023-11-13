@@ -19,7 +19,6 @@
           "next" : ""
        },
        "page2" : {
-          "validation" : 1,
           "name" : "Page Two",
           "content" : [
              {
@@ -77,11 +76,9 @@
              }
           ],
           "name" : "Review Selections",
-          "validation" : 1,
           "next" : "submit"
        },
        "page1" : {
-          "validation" : 1,
           "name" : "Page One",
           "content" : [
              {
@@ -97,7 +94,6 @@
                 "type" : "component",
                 "arguments" : {
                    "default" : "preferred username",
-                   "show_validation" : 1,
                    "name" : "Username"
                 }
              }

@@ -138,17 +138,6 @@ formTools = {
                 delete value.arguments.tooltip;
             }
 
-            const validation = form.find(':input[name=show_validation]');
-            if ( validation.length ) {
-                if ( validation.is(':checked') ) {
-                    value.arguments.show_validation = 1;
-                }
-                else {
-                    delete value.arguments.show_validation;
-                }
-            }
-
-
             const dependent_validation = form.find(':input[name=dependent_validation]');
             if ( dependent_validation.length ) {
                 value.arguments.dependent_validation ||= {};
@@ -207,13 +196,8 @@ formTools = {
             let page = jQuery(this).data('page');
             content[page] ||= {};
 
-            for ( let attr of ['name', 'sort_order', 'validation'] ) {
-                if ( attr === 'validation' ) {
-                    content[page][attr] = jQuery(this).closest('div.tab-pane').find(':input[name="' + attr + '"]').is(':checked') ? 1 : 0;
-                }
-                else {
-                    content[page][attr] = jQuery(this).closest('div.tab-pane').find(':input[name="' + attr + '"]').val();
-                }
+            for ( let attr of ['name', 'sort_order'] ) {
+                content[page][attr] = jQuery(this).closest('div.tab-pane').find(':input[name="' + attr + '"]').val();
             }
 
             content[page]['content'] ||= [];

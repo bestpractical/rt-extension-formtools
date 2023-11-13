@@ -1,5 +1,4 @@
 <&|/FormTools/Form, next => $base_path . $form_name . '/' . $form_config->{'formtools-pages'}{$page}{'next'},
-    validation => $form_config->{'formtools-pages'}{$page}{'validation'},
     next_for_validation => $base_path . $form_name . '/' . $page,
     results_ref => \@results,
     self_service => $SelfService,
@@ -164,9 +163,7 @@ $m->notes( page_title => $form_config->{'formtools-pages'}{$page}{'name'} );
 my $base_path = '/Forms/';
 $base_path = '/SelfService' . $base_path if $SelfService;
 
-my $validation = $form_config->{'formtools-pages'}{$page}{'validation'};
-
-if ( $validation and not $ARGS{'validation_ok'} ) {
+if ( not $ARGS{'validation_ok'} ) {
     # If validation is enabled and it didn't pass, don't create
     $create_ticket = 0;
 }
@@ -179,14 +176,9 @@ my $show_back = 0;
 my $index = 0;
 my $back_page;
 
-# When validation is enabled for this page, it submits to itself
-# first, so the back button only needs to go back 1. Otherwise,
-# current page was "next" on submit, so we need to go back 2.
-my $go_back_count = $validation ? 1 : 2;
-
 foreach my $page_index ( @form_pages ) {
     if ( $page_index eq $page ) {
-        $back_page = $form_pages[$index - $go_back_count];
+        $back_page = $form_pages[$index - 1];
         last;
     }
     $index++;

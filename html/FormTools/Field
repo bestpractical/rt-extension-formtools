@@ -8,7 +8,6 @@ $default            => undef
 $cols               => undef
 $rows               => undef
 $empty_allowed      => 1
-$show_validation    => 0
 $show_label         => 1
 $disables           => {}
 $enabled_by         => []
@@ -179,7 +178,6 @@ $default            => undef
 $cols               => undef
 $rows               => undef
 $empty_allowed      => 1
-$show_validation    => 0
 $disables           => {}
 $after_input        => ''
 $cf                 => undef
@@ -255,7 +253,7 @@ $input_name         => undef
             &>
 %      if (my $msg = $m->notes('InvalidField-' . $cf->Id)) {
             <span class="cfinvalidfield my-1 d-inline-block"><% $msg %></span>
-%      } elsif ($show_validation and $cf->FriendlyPattern) {
+%      } elsif ($cf->FriendlyPattern) {
             <span class="cfhints my-1 d-inline-block">
               <% $cf->FriendlyPattern %>
             </span>
