@@ -132,6 +132,15 @@ else {
     Abort('Form not found');
 }
 
+no warnings 'redefine';
+my $orig_current_user_has_right = RT::CustomField->can('CurrentUserHasRight');
+local *RT::CustomField::CurrentUserHasRight = sub {
+    my $self  = shift;
+    my $right = shift;
+    return 1 if $right =~ /SeeCustomField|SetInitialCustomField/;
+    return $orig_current_user_has_right->( $self, $right );
+};
+
 my $page;
 
 if ( $page_name ) {
