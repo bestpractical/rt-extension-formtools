@@ -138,6 +138,16 @@ formTools = {
                 delete value.arguments.tooltip;
             }
 
+            const validation = form.find(':input[name=validation]');
+            if ( validation.length ) {
+                if ( validation.is(':checked') ) {
+                    value.arguments.validation = 1;
+                }
+                else {
+                    delete value.arguments.validation;
+                }
+            }
+
             const dependent_validation = form.find(':input[name=dependent_validation]');
             if ( dependent_validation.length ) {
                 value.arguments.dependent_validation ||= {};

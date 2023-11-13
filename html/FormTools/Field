@@ -145,6 +145,9 @@ $default = '' unless defined $default;
 
 <&| /Elements/LabeledValue, RawLabel => $m->interp->apply_escapes($field_label, 'h') . $after_label, LabelSpanClass => $tooltip ? 'prev-icon-helper' : '', LabelTooltip => $tooltip &>
   <div data-name="<% $cf ? $cf->Name : '' %>"
+% if ( $ARGS{validation} ) {
+    data-validation="<% $ARGS{validation} %>"
+% }
 % if ( $ARGS{dependent_validation} && $ARGS{dependent_validation}{enabled} && $ARGS{dependent_validation}{name} ) {
 %   my $dependent_cf = RT::CustomField->new($session{CurrentUser});
 %   $dependent_cf = RT::CustomField->new( $session{'CurrentUser'} );

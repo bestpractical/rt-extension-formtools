@@ -38,7 +38,38 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
 
 <script type="text/javascript">
 jQuery(function () {
-    jQuery('[data-dependent-name]').each(function () {
+    jQuery('[data-validation]').each(function () {
+        const elem = jQuery(this);
+        if ( elem.find('.selectize-input').length ) {
+            elem.find(':input:first').change(function () {
+                if ( jQuery(this).val() ) {
+                    elem.find('.selectize-input').removeClass('required invalid');
+                    elem.find(':input:visible').attr('required', false);
+                }
+                else {
+                    elem.find('.selectize-input').addClass('required invalid');
+                    elem.find(':input:visible').attr('required', true);
+                }
+            }).change();
+        }
+        else {
+            elem.find(':input:visible').attr('required', true);
+
+            if ( elem.find('select.selectpicker').length ) {
+                elem.find('select.selectpicker option[value=""]').remove();
+                if ( !elem.find('select.selectpicker').val() ) {
+                    elem.find('select.selectpicker').val(null); // Do not automatically select the first valid option
+                }
+                elem.find('select.selectpicker').attr('required', true);
+            }
+            else if ( elem.find('input[type=radio]').length ) {
+                elem.find('input[type=radio][value=""]').closest('div.custom-control').remove();
+            }
+        }
+
+    });
+
+    jQuery('[data-dependent-name]:not([data-validation])').each(function () {
         const dependent_name = jQuery(this).attr('data-dependent-name');
         const values = JSON.parse(jQuery(this).attr('data-dependent-values'));
         const target = jQuery(this);
