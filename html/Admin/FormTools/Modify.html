@@ -163,7 +163,7 @@
                     <div class="custom-control custom-checkbox">
                       <input class="custom-control-input" id="<% CSSClass($item) %>-depedent-validation" type="checkbox" name="dependent_validation" value="1" />
                       <label class="custom-control-label has-text-input" for="<% CSSClass($item) %>-depedent-validation">
-                        <&|/l&>Show validation if</&>
+                        <&|/l&>Require if</&>
                         <div class="d-inline-block">
                           <select name="dependent_name" class="form-control">
                             <option value=""><&|/l&>(no value)</&></option>
@@ -415,7 +415,7 @@
                         <div class="custom-control custom-checkbox">
                           <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-depedent-validation" type="checkbox" name="dependent_validation" value="1" <% $item->{arguments}{dependent_validation}{enabled} ? 'checked="checked"' : '' |n %> />
                           <label class="custom-control-label has-text-input" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-depedent-validation">
-                            <&|/l&>Show validation if</&>
+                            <&|/l&>Require if</&>
                             <div class="d-inline-block">
                               <select name="dependent_name" class="form-control selectpicker">
                                 <option value=""><&|/l&>(no value)</&></option>
