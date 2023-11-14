@@ -1,7 +1,7 @@
 ---
 abstract: 'RT-Extension-FormTools Extension'
 author:
-  - 'Best Practical Solutions, LLC <modules@bestpractical.com>'
+  - 'Best Practical Solutions, LLC'
 build_requires:
   ExtUtils::MakeMaker: 6.59
 configure_requires:

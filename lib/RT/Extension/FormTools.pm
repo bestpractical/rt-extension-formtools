@@ -92,15 +92,16 @@ sub _GeneratePageId {
 
 =head1 NAME
 
-RT-Extension-FormTools - Help write multi-page ticket creation wizards
+RT-Extension-FormTools - Create multi-page ticket creation wizards for RT
 
 =head1 DESCRIPTION
 
-This extension provides scaffolding to make it simpler to create guided
-multi-page ticket creation wizards.  It merely provides useful Mason
-components to accomplish this task; it does not provide any UI.
-Administrators may use this extension as a base upon which to write
-their own forms in Mason.
+Starting in version 1.00, this extension provides a full UI for
+RT administrators to create multi-page form wizards to collect
+information and create a ticket.
+
+<p><img src="http://static.bestpractical.com/images/formtools/formtools-modify-page-example-shadow.png"
+alt="FormTools Modify Page" /></p>
 
 =head1 RT VERSION
 
@@ -132,12 +133,89 @@ Add this line:
 
 =back
 
-=head1 COMPONENTS
+=head1 USAGE
+
+=head2 Creating Forms
+
+=head3 Modify
+
+Once installed and activated, users with the SuperUser or
+AdminForms right can go to Admin > FormTools > Create to build
+new forms. Use Select to view a list of existing forms.
+
+When you initially create a form, you select the queue that the ticket
+will be created in after a user fills out the form. The selected
+queue will also determine which custom fields are available in the
+form builder.
+
+The Modify page allows you to configure all of the pages for the
+selected form. The Components bar on the left lists HTML elements,
+Core RT fields, and all custom fields available to the queue selected
+for the current form. To build pages in your form, drag elements from
+the left into the Content area in the FormTools Pages section on the
+right.
+
+You can drag elements up and down to arrange content for each page.
+To configure elements or add text content, click the pencil icon.
+
+Click the plus (+) to create new pages. To change the order of the pages,
+click the gearbox and update the sort order.
+
+=head3 Description
+
+Your forms will be made available to users on a dedicated Forms page in
+the RT web UI. Forms can be access by privileged users in the main RT
+interface and by unprivilged users in the self service interface.
+
+The Description tab allows you to upload an icon and provide text to show
+on this forms page. Include an icon that represents what the form is
+intended for and include a description to help users pick the right form
+for the right task.
+
+=head3 Advanced
+
+The advanced page shows the raw JSON representation of the configured pages
+in your form. We recommend no editing the JSON directly. However, you can
+copy the content and paste it into another page if you want to migrate
+a form from development to production. You can also save the JSON to a file
+and use the C<rt-insert-formtools-config> utility to load it into another RT.
+
+=head3 Rights
+
+You can control access to forms by granting the ShowForm right for groups
+or users. By default, only SuperUsers can see forms, so you need to grant
+ShowForm to users or groups for them to be visible.
+
+=head2 Using Forms
+
+Privileged and unprivileged users can find a list of available forms
+at Home > Forms. Users need to have the ShowForm right to see forms
+listed.
+
+Once the form is filled out, it will create a ticket, so form users
+also need CreateTicket in the queue where the form will be created.
+FormTools checks this at the beginning of a form and shows the user a
+message if they don't have sufficient rights.
+
+=head1 Internals
+
+In earlier versions, this extension provided code-level Mason templates
+as helpers to manually code forms. We believe pages created with these
+earlier versions will continue to work, but it's possible they may stop
+working at some point as we continue to work on FormTools. If you have
+older FormTools code, it's safest to run with version 0.55. Going forward,
+we recommend converting your forms to the new interface using the
+new UI.
+
+The documentation below is retained as the components are all still
+available.
+
+=head2 Mason Components
 
 See F<ex/RT-Example-FormTools/> for an example extension written using
 this module.
 
-=head1 C</FormTools/Form>
+=head3 C</FormTools/Form>
 
 The top-level component that most elements will call, as a wrapper:
 
@@ -147,12 +225,12 @@ The top-level component that most elements will call, as a wrapper:
 
 It requires that the next page in the wizard be passed as the C<next>
 parameter; this may be empty at the end of the wizard.  It renders page
-decoration (using C</Elements/Header>).  It assumes that the queue will
+decoration (using C</Elements/Header>). It assumes that the queue will
 be stored in C<$m->notes('queue')>.
 
-=head1 C</FormTools/Field>
+=head3 C</FormTools/Field>
 
-Renders a field in the form.  It takes the name of a core field, or CF
+Renders a field in the form. It takes the name of a core field, or CF
 name:
 
     <& /FormTools/Field, name => 'Requestors' &>
@@ -180,20 +258,20 @@ Valid core fields include:
 Any other argument to C<name> is assumed to be the name of a custom
 field.
 
-=head2 C</FormTools/Next>
+=head3 C</FormTools/Next>
 
 Renders the "Next page" button.
 
-=head2 C</FormTools/ShowChoices>
+=head3 C</FormTools/ShowChoices>
 
 Shows the values that have already been submitted.
 
-=head1 FUNCTIONS
+=head2 Internal Functions
 
 In addition to the Mason components, this module provides a number of
 functions which may be useful to call from Mason templates.
 
-=head2 is_core_field C<field_name>
+=head3 is_core_field C<field_name>
 
 Checks if the given C<field_name> is is a field that we consider 'core'
 to RT (subject, AdminCc, etc) rather than something which should be
@@ -217,7 +295,7 @@ sub is_core_field {
     return $is_core_field{ $_[0] };
 }
 
-=head2 validate_cf C<CF>, C<ARGSRef>
+=head3 validate_cf C<CF>, C<ARGSRef>
 
 Takes a given L<RT::CustomField> object and a hashref of query
 parameters, and returns a list of a boolean of if the custom field
@@ -269,7 +347,7 @@ sub validate_cf {
     return ($valid, @res);
 }
 
-=head2 email_is_privileged C<email_address>
+=head3 email_is_privileged C<email_address>
 
 Returns true if the given email address belongs to a privileged user.
 
@@ -283,7 +361,7 @@ sub email_is_privileged {
     return (0, "Invalid account: $email");
 }
 
-=head2 has_value C<value>
+=head3 has_value C<value>
 
 Returns true if the value is defined and non-empty.
 
@@ -295,7 +373,7 @@ sub has_value {
     return (0, "You must provide a value for this field");
 }
 
-=head2 LoadFormIcon($current_user, $form_id)
+=head3 LoadFormIcon($current_user, $form_id)
 
 Loads the form icon attribute associated with the passed form id.
 
@@ -324,7 +402,7 @@ sub LoadFormIcon {
 
 =head1 AUTHOR
 
-Best Practical Solutions, LLC E<lt>modules@bestpractical.comE<gt>
+Best Practical Solutions, LLC
 
 =head1 BUGS
 
@@ -338,7 +416,7 @@ or via the web at
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2014-2022 by Best Practical Solutions
+This software is Copyright (c) 2014-2023 by Best Practical Solutions
 
 This is free software, licensed under:
 
