@@ -261,10 +261,25 @@ if ( $ARGS{Back} and $ARGS{Back} eq 'Back' ) {
     $_form_tools_next = '';
     delete $ARGS{'_form_tools_next'} if $ARGS{'_form_tools_next'};
 
-    for my $field ( grep { /Object-RT::Ticket--CustomField-/ } keys %ARGS ) {
-        next if length $ARGS{$field};
-        delete $ARGS{$field};
-        delete $ARGS{"$field-Magic"};
+    my ($status, @msg) = $m->comp(
+        '/Elements/ValidateCustomFields',
+        CustomFields    => $queue_obj->TicketCustomFields,
+        ARGSRef         => \%ARGS,
+    );
+
+    if ( !$status ) {
+        my %invalid_fields;
+        for my $note ( keys %{ $m->notes } ) {
+            if ( $note =~ /^InvalidField-(\d+)/ ) {
+                $invalid_fields{$1} = 1;
+            }
+        }
+
+        for my $field ( keys %ARGS ) {
+            if ( $field =~ /^Object-RT::Ticket--CustomField-(\d+)-/ ) {
+                delete $ARGS{$field} if $invalid_fields{$1};
+            }
+        }
     }
 
     # Redirect to the previous page
