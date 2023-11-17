@@ -143,6 +143,11 @@ jQuery(function () {
             syncValidation(jQuery(':input[type=hidden][name="' + dependent_name +'"]'));
         }
     });
+
+    jQuery(':input[name=Back]').click(function() {
+        const form = jQuery(this).closest('form');
+        form.find(':input[required]').attr('required', false);
+    });
 });
 </script>
 
