@@ -211,13 +211,15 @@ else {
     $page = $form_config->{'formtools-start-page'};
 }
 
-my $queue_obj = RT::Queue->new( RT->SystemUser );
+my $queue_obj = RT::Queue->new( $session{CurrentUser} );
 my ($ok, $msg) = $queue_obj->Load( $form_config->{'queue'} );
 
 unless ( $ok ) {
     RT->Logger->error('FormTools unable to load queue: ' . $form_config->{'queue'});
     Abort('Unable to load form, invalid queue');
 }
+
+Abort('Permission Denied') unless $queue_obj->CurrentUserHasRight('CreateTicket');
 
 $m->notes( queue => $queue_obj );
 $m->notes( page_title => $form_config->{'formtools-pages'}{$page}{'name'} );
