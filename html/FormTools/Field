@@ -301,4 +301,13 @@ $input_name         => undef
 %}
 
 % }
+
+
+% if (  ( !$cf || !$cf->FriendlyPattern ) && ( $ARGS{validation}
+%    || ( $ARGS{dependent_validation} && $ARGS{dependent_validation}{enabled} && $ARGS{dependent_validation}{name} ) )
+% ) {
+    <span class="cfhints my-1 d-inline-block required">
+      <% loc('Required') %>
+    </span>
+% }
 </%METHOD>

@@ -124,6 +124,7 @@ jQuery(function () {
                     target.find('input[type=radio][value=""]').prop('checked', false).attr('disabled', true);
                 }
                 target.find(':input:visible').attr('required', true);
+                target.find('.cfhints.required').removeClass('hidden');
             }
             else {
                 if ( target.find('select.selectpicker').length ) {
@@ -134,6 +135,7 @@ jQuery(function () {
                     target.find('input[type=radio][value=""]').attr('disabled', false);
                 }
                 target.find(':input:visible').attr('required', false);
+                target.find('.cfhints.required').addClass('hidden');
             }
         };
         jQuery(':input[type!=hidden][name="' + dependent_name +'"]').change(syncValidation).change();
