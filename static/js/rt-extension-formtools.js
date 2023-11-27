@@ -111,7 +111,7 @@ formTools = {
         }
         else if ( value.type === 'component' && value.comp_name === 'Field' ) {
             const label = form.find(':input[name=label]').val();
-            if ( label.length ) {
+            if ( label && label.length ) {
                 value.arguments.label = label;
                 element.find('span.label').text('(' + label + ')');
             }
@@ -131,7 +131,7 @@ formTools = {
 
             const tooltip = form.find(':input[name=tooltip]').val();
 
-            if ( tooltip.length ) {
+            if ( tooltip && tooltip.length ) {
                 value.arguments.tooltip = tooltip;
             }
             else {
