@@ -52,6 +52,22 @@ jQuery(function () {
                 }
             }).change();
         }
+        else if ( elem.find('textarea.richtext').length ) {
+            const textarea = elem.find('textarea.richtext');
+            const form = elem.closest('form');
+            form.on('submit', function(e) {
+                const editor = CKEDITOR.instances[textarea.attr('id')];
+                if ( editor.getData() ) {
+                    return;
+                }
+                else {
+                    editor.focus();
+                    elem.get(0).scrollIntoView();
+                    e.preventDefault();
+                    form.removeClass('rt-form-submitted');
+                }
+            });
+        }
         else {
             elem.find(':input:visible').attr('required', true);
 

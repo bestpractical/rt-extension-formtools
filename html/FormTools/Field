@@ -114,6 +114,11 @@ $default = '' unless defined $default;
 
 % if ($field_type eq 'core' && $name eq 'Content' && $render_as ne 'hidden') {
 
+<div
+% if ( $ARGS{validation} ) {
+    data-validation="<% $ARGS{validation} %>"
+% }
+>
 <& /Elements/MessageBox,
     Name => $name,
     ($rows ? (Height => $rows) : ()),
@@ -122,6 +127,12 @@ $default = '' unless defined $default;
     Default => $default,
     FullWidth => 1,
 &>
+% if ( $ARGS{validation} ) {
+  <span class="cfhints my-1 d-inline-block required">
+    <% loc('Required') %>
+  </span>
+% }
+</div>
 
 % } else {
 
