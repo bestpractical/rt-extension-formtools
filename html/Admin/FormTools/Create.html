@@ -35,12 +35,20 @@ if ( $Create ) {
         if ($ret) {
             push @results, loc( 'Name [_1] already exists', $Description );
         }
-        else {
+
+        my $queue_obj = RT::Queue->new( $session{CurrentUser} );
+        $queue_obj->Load($Queue);
+        if ( !$queue_obj->Id ) {
+            push @results, loc( 'Invalid queue [_1]', $Queue );
+        }
+
+        # It indicates something wrong if @results is not empty
+        if ( !@results ) {
             my ( $ret, $msg ) = $form->Create(
                 Name        => 'FormTools Form',
                 Description => $ARGS{Description},
                 Object      => RT->System,
-                Content     => { queue => $ARGS{Queue} },
+                Content     => { queue => $queue_obj->Name },
             );
 
             if ($ret) {
