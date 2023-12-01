@@ -1,5 +1,8 @@
 Revision history for RT-Extension-FormTools
 
+1.01 2023-12-01
+ - Update screenshot image source to use https and limit its width too
+
 1.0 2023-12-01
  - Save queue name instead of id for better portability
  - Show a message to indicate there are pending changes to save
