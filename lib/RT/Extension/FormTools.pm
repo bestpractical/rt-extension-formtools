@@ -100,7 +100,7 @@ Starting in version 1.00, this extension provides a full UI for
 RT administrators to create multi-page form wizards to collect
 information and create a ticket.
 
-=for html <p><img src="http://static.bestpractical.com/images/formtools/formtools-modify-page-example-shadow.png" alt="FormTools Modify Page" /></p>
+=for html <p><img width="600" src="https://static.bestpractical.com/images/formtools/formtools-modify-page-example-shadow.png" alt="FormTools Modify Page" /></p>
 
 =head1 RT VERSION
 
