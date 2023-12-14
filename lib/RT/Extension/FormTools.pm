@@ -174,7 +174,7 @@ for the right task.
 =head3 Advanced
 
 The advanced page shows the raw JSON representation of the configured pages
-in your form. We recommend no editing the JSON directly. However, you can
+in your form. We recommend not editing the JSON directly. However, you can
 copy the content and paste it into another page if you want to migrate
 a form from development to production. You can also save the JSON to a file
 and use the C<rt-insert-formtools-config> utility to load it into another RT.
