@@ -49,6 +49,21 @@ sub _GeneratePageId {
     return substr( sha1_hex( time . int rand 10000 ), 0, 8 );
 }
 
+sub _ParseContent {
+    shift if ( $_[0] // '' ) eq __PACKAGE__;
+    my %args = (
+        Content   => undef,
+        TicketObj => undef,
+        @_,
+    );
+    return $args{Content} unless $args{TicketObj} && $args{Content} && $args{Content} =~ /\{\s*\$\w+\s*\}/;
+    require RT::Template;
+    return RT::Template->_ParseContentSimple(
+        TemplateArgs => { Ticket => $args{TicketObj} },
+        Content      => $args{Content},
+    );
+}
+
 {
     package RT::Attribute;
     no warnings 'redefine';
