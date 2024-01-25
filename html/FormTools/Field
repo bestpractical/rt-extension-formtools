@@ -70,6 +70,24 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
         $default = [ split /\r?\n/, $default ];
     }
 
+    if ( !( defined $default && length $default ) && $cf->SupportDefaultValues ) {
+        if ( defined( my $default_values = $cf->DefaultValues( Object => $queue ) ) ) {
+            $default = $default_values;
+        }
+    }
+
+    # for readonly, @values is used to render multiple value inputs.
+    if ( $render_as =~ /readonly/ ) {
+        if ( ref $default eq 'ARRAY' ) {
+            if ( @$default > 1 ) {
+                @values = @$default;
+            }
+            else {
+                $default = $default->[0];
+            }
+        }
+    }
+
     $input_name = GetCustomFieldInputName(
         Object      => $ticket,
         CustomField => $cf,
