@@ -215,6 +215,16 @@ formTools = {
                     delete value.arguments.render_as;
                 }
             }
+
+            const readonly = form.find(':input[name=readonly]');
+            if ( readonly.length ) {
+                if ( readonly.is(':checked') ) {
+                    value.arguments.render_as = 'readonly_plus_values';
+                }
+                else if ( value.arguments.render_as === 'readonly_plus_values' ) {
+                    delete value.arguments.render_as;
+                }
+            }
         }
         else if ( value.type === 'hidden' ) {
             value['input-name'] = form.find(':input[name=name]').val();

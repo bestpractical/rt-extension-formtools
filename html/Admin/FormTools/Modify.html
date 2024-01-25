@@ -130,6 +130,16 @@
                       </label>
                     </div>
                   </&>
+%               if ( $item ne 'Content' ) {
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-readonly" type="checkbox" name="readonly" value="1" />
+                      <label class="custom-control-label" for="<% CSSClass($item) %>-readonly">
+                        <&|/l&>Readonly</&>
+                      </label>
+                    </div>
+                  </&>
+%               }
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary button form-control"><% loc('Update') %></button>
@@ -227,6 +237,14 @@
                       <input class="custom-control-input" id="<% CSSClass($item) %>-hide" type="checkbox" name="hide" value="1" />
                       <label class="custom-control-label" for="<% CSSClass($item) %>-hide">
                         <&|/l&>Hide</&>
+                      </label>
+                    </div>
+                  </&>
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-readonly" type="checkbox" name="readonly" value="1" />
+                      <label class="custom-control-label" for="<% CSSClass($item) %>-readonly">
+                        <&|/l&>Readonly</&>
                       </label>
                     </div>
                   </&>
@@ -511,6 +529,16 @@
                           </label>
                         </div>
                       </&>
+%                     if ( $item->{arguments}{name} ne 'Content' ) {
+                        <&| /Elements/LabeledValue, Label => '' &>
+                          <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-readonly" type="checkbox" name="readonly" value="1" <% ( $item->{arguments}{render_as} // '' ) =~ /readonly/ ? q{checked="checked"} : '' |n %> />
+                            <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-readonly">
+                              <&|/l&>Readonly</&>
+                            </label>
+                          </div>
+                        </&>
+%                     }
 %                   } elsif ( $item->{type} eq 'hidden' ) {
                       <&| /Elements/LabeledValue, Label => loc('Name') &>
                         <input name="name" type="text" class="form-control" value="<% $item->{'input-name'} // ''  %>" />
