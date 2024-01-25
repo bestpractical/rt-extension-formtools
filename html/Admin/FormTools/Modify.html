@@ -103,7 +103,11 @@
                   </&>
 %               }
                   <&| /Elements/LabeledValue, Label => loc('Default Value') &>
-                    <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+%                   if ( $item eq 'Content' ) {
+                      <textarea name="default" type="text" rows="5" class="form-control" placeholder="<% $default_values{$item} %>"></textarea>
+%                   } else {
+                      <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+%                   }
                   </&>
 %               if ( $item ne 'Content' ) {
                   <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
@@ -164,9 +168,18 @@
                   <&| /Elements/LabeledValue, Label => loc('Label') &>
                     <input name="label" type="text" class="form-control" placeholder="<% $item %>" value="" />
                   </&>
+
+%               if ( $cf_obj{$item}->SupportDefaultValues ) {
                   <&| /Elements/LabeledValue, Label => loc('Default Value') &>
-                    <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item} %>" value="" />
+%                 if ( $cf_obj{$item}->Type eq 'HTML' ) {
+                    <textarea name="default" type="text" rows="5" class="form-control" placeholder="<% $default_values{$item} %>"></textarea>
+%                 } else {
+                    <& /Elements/EditCustomField, NamePrefix => 'template-' . GetCustomFieldInputName(Object => $queue, CustomField => $cf_obj{$item}), Object => $queue, CustomField => $cf_obj{$item}, Default => $default_values{$item} &>
+
+%                 }
                   </&>
+%               }
+
                   <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
                     <input name="tooltip" type="text" class="form-control" placeholder="<% $tooltips{$item} // '' %>" value="" />
                   </&>
@@ -424,9 +437,25 @@
                         <input name="label" type="text" class="form-control" placeholder="<% $item->{arguments}{name} %>" value="<% $item->{arguments}{label} // ''  %>" />
                       </&>
 %                     }
-                      <&| /Elements/LabeledValue, Label => loc('Default Value') &>
-                        <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
-                      </&>
+
+%                     if ( RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ) {
+                        <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+%                         if ( $item->{arguments}{name} eq 'Content' ) {
+                            <textarea name="default" type="text" class="form-control" rows="5" placeholder="<% $default_values{$item->{arguments}{name}} %>"><% $item->{arguments}{default} // '' %></textarea>
+%                         } else {
+                            <input name="default" type="text" class="form-control" placeholder="<% $default_values{$item->{arguments}{name}} %>" value="<% $item->{arguments}{default} // '' %>" />
+%                         }
+                        </&>
+%                     } elsif ( $cf_obj{$item->{arguments}{name}} && $cf_obj{$item->{arguments}{name}}->SupportDefaultValues ) {
+                        <&| /Elements/LabeledValue, Label => loc('Default Value') &>
+%                       if ( $cf_obj{$item->{arguments}{name}}->Type eq 'HTML' ) {
+                          <textarea name="default" type="text" class="form-control" rows="5" placeholder="<% $default_values{$item->{arguments}{name}} %>"><% $item->{arguments}{default} // '' %></textarea>
+%                       } else {
+                          <& /Elements/EditCustomField, Object => $queue, CustomField => $cf_obj{$item->{arguments}{name}}, Default => $item->{arguments}{default} // $default_values{$item->{arguments}{name}} &>
+%                       }
+                        </&>
+%                     }
+
 %                     if ( $item->{arguments}{name} ne 'Content' ) {
                       <&| /Elements/LabeledValue, Label => loc('Tooltip') &>
                         <input name="tooltip" type="text" class="form-control" placeholder="<% $tooltips{$item->{arguments}{name}} // '' %>" value="<% $item->{arguments}{tooltip} // '' %>" />
@@ -569,6 +598,17 @@ jQuery(function() {
         select.change();
         select.selectpicker('refresh');
     });
+
+    // Cloned selectpicker stuff doesn't work, here we destroy selectpicker
+    // from component list and re-initialize them when adding to form.
+    jQuery('.formtools-component-menu select.selectpicker').each(function () {
+        jQuery(this).selectpicker('destroy');
+    });
+
+    // Datepicker's position is weird in modal, here we disable it to not confuse people.
+    jQuery(':input.hasDatepicker').each(function () {
+        jQuery(this).off('focus');
+    });
 });
 </script>
 <%INIT>
@@ -677,12 +717,14 @@ my @custom_fields;
 my %default_values;
 my %tooltips;
 my %dependent_custom_fields;
+my %cf_obj;
 
 while ( my $cf = $cfs->Next ) {
     push @custom_fields, $cf->Name;
+    $cf_obj{$cf->Name} = $cf;
     if ( $cf->SupportDefaultValues ) {
         if ( defined( my $default_values = $cf->DefaultValues(Object => $queue) ) ) {
-            $default_values{$cf->Name} = ref $default_values eq 'ARRAY' ? join(', ', @$default_values) : $default_values;
+            $default_values{$cf->Name} = $default_values;
         }
     }
     $tooltips{$cf->Name} = $cf->EntryHint // '';

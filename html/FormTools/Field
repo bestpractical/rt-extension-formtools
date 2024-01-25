@@ -63,7 +63,11 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
 
     if ($ticket) {
         @values = map { $_->Content } @{ $cf->ValuesForObject($ticket)->ItemsArrayRef };
-        $default ||= $values[0];
+        $default ||= @values > 1 ? \@values : $values[0];
+    }
+
+    if ( $default && !ref $default && $cf->MaxValues != 1 ) {
+        $default = [ split /\r?\n/, $default ];
     }
 
     $input_name = GetCustomFieldInputName(
@@ -119,6 +123,15 @@ $default = '' unless defined $default;
     data-validation="<% $ARGS{validation} %>"
 % }
 >
+
+% if ( $default && RT->Config->Get('MessageBoxRichText',  $session{'CurrentUser'}) && $default !~ /<.{1,5}>/ ) {
+%   $default =~ s/&/&amp;/g;
+%   $default =~ s/</&lt;/g;
+%   $default =~ s/>/&gt;/g;
+%   $default =~ s/"/&quot;/g;
+%   $default =~ s/'/&#39;/g;
+%   $default =~ s{\n}{<br />}g;
+% }
 <& /Elements/MessageBox,
     Name => $name,
     ($rows ? (Height => $rows) : ()),
