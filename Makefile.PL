@@ -1,3 +1,4 @@
+use lib '.';
 use inc::Module::Install;
 RTx('RT-Extension-FormTools');
 requires_rt('5.0.0');
