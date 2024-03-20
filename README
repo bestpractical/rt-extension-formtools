@@ -8,7 +8,7 @@ DESCRIPTION
     and create a ticket.
 
 RT VERSION
-    Works with RT 5.
+    Works with RT 5.0.5 and newer.
 
 INSTALLATION
     perl Makefile.PL

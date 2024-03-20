@@ -119,7 +119,7 @@ information and create a ticket.
 
 =head1 RT VERSION
 
-Works with RT 5.
+Works with RT 5.0.5 and newer.
 
 =head1 INSTALLATION
 
