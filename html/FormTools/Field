@@ -249,7 +249,7 @@ $input_name         => undef
 %   }
 % }
 
-% } elsif ($name =~ /^(Requestors|Cc|AdminCc)$/ ) {
+% } elsif ($name =~ /^(Requestors|Cc|AdminCc|Owner)$/ ) {
 <& /Elements/EmailInput,
     Name                 => $name,
     Default              => $default,
