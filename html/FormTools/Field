@@ -249,6 +249,8 @@ $input_name         => undef
 %   }
 % }
 
+% } elsif ($name eq "Owner" ) {
+<& /Elements/SelectOwner, Name => $name, QueueObj => $queue, Default => $default, DefaultValue => 0 &>
 % } elsif ($name =~ /^(Requestors|Cc|AdminCc)$/ ) {
 <& /Elements/EmailInput,
     Name                 => $name,
