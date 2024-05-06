@@ -272,6 +272,8 @@ Valid core fields include:
 
 =over
 
+=item Owner
+
 =item Requestors
 
 =item Cc
@@ -315,6 +317,7 @@ Naming a Custom Field Subject would cause serious pain with FormTools.
 =cut
 
 my %is_core_field = map { $_ => 1 } qw(
+    Owner
     Requestors
     Cc
     AdminCc

@@ -41,7 +41,7 @@ if ( $custom_role ) {
     $role->Load( $name );
 
     unless ( $role->id && $role->IsAdded( $queue->id ) ) {
-        my $msg = "Could not find a custom field called $name for the queue ".$queue->Name;
+        my $msg = "Could not find a custom role called $name for the queue ".$queue->Name;
         die $msg;
     }
 
@@ -362,14 +362,6 @@ $input_name         => undef
 % RT->Logger->error("'$render_as' isn't a valid rendering option for field '$name'");
 % return;
 %}
-
-% } elsif ($field_type eq 'custom_role') {
-<& /Elements/EmailInput,
-    Name                 => 'RT::CustomRole-'.$role->id,
-    Default              => $default,
-    AutocompleteMultiple => 1,
-    (exists $ARGS{cols} ? (Size => $cols) : ()),
-&>
 % }
 
 
