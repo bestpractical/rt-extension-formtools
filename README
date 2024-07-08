@@ -1,5 +1,5 @@
 NAME
-    RT-Extension-FormTools - Create multi-page ticket creation wizards for
+    RT::Extension::FormTools - Create multi-page ticket creation wizards for
     RT
 
 DESCRIPTION
