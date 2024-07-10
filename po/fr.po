@@ -29,7 +29,7 @@ msgstr "Avancé"
 
 #: html/Admin/FormTools/Modify.html:444 html/Admin/FormTools/Modify.html:56
 msgid "Alignment"
-msgstr "Aligement"
+msgstr "Alignement"
 
 #: html/Admin/FormTools/Modify.html:367
 msgid "Basics"
@@ -41,7 +41,7 @@ msgstr ""
 
 #: html/Admin/FormTools/Modify.html:447 html/Admin/FormTools/Modify.html:59
 msgid "Center"
-msgstr "iCentrer"
+msgstr "Centrer"
 
 #: html/FormTools/Field:226
 msgid "Choose file"
@@ -86,7 +86,7 @@ msgstr "Impossible d'activer %1: %2"
 #. ($msg)
 #: html/Admin/FormTools/Advanced.html:105 html/Admin/FormTools/Modify.html:673 html/Admin/FormTools/Modify.html:722
 msgid "Couldn't update content: %1"
-msgstr "Impossibl de mettre à jour le contenu: %1"
+msgstr "Impossible de mettre à jour le contenu: %1"
 
 #. ($msg)
 #: html/Admin/FormTools/Advanced.html:84
@@ -232,7 +232,7 @@ msgstr "Modifier"
 
 #: html/Admin/FormTools/Modify.html:339
 msgid "Modify Basics"
-msgstr "Modifier les éléments de bases"
+msgstr "Modifier les éléments de base"
 
 #: html/Admin/FormTools/Modify.html:172 html/Admin/FormTools/Modify.html:284 html/Admin/FormTools/Modify.html:39 html/Admin/FormTools/Modify.html:427 html/Admin/FormTools/Modify.html:94
 msgid "Modify Element"
