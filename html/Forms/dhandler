@@ -326,6 +326,52 @@ if ( $ARGS{Back} and $ARGS{Back} eq 'Back' ) {
 my ($ticket_obj, @results);
 if ( $create_ticket ) {
 
+    # add include_in_content fields to Content arg
+    my @include_in_content;
+    foreach my $page ( keys %{ $form_config->{'formtools-pages'} || {} } ) {
+        my @include_in_content_fields
+            = grep { $_->{arguments}{include_in_content} }
+                @{ $form_config->{'formtools-pages'}{$page}{content} || [] };
+        foreach my $field ( @include_in_content_fields ) {
+            my $string = ( $field->{arguments}{label} || $field->{arguments}{name} ) . ': ';
+            if ( RT::Extension::FormTools::is_core_field( $field->{arguments}{name} ) ) {
+                $string .= $ARGS{ $field->{arguments}{name} };
+            }
+            else {
+                my $cf_name = $field->{arguments}{name};
+                my $cf = RT::CustomField->new( $session{'CurrentUser'} );
+
+                # try loading CFs for this Queue, followed by Global, followed by any CF of given $cf_name
+                $cf->LoadByName( Name => $cf_name, Queue => $queue_obj->id ) if (defined $queue_obj);
+                $cf->LoadByName( Name => $cf_name, Queue => 0 ) unless ( $cf->id );
+                unless ( $cf->Id ) {
+                    $cf->LoadByName( Name => $cf_name );
+                }
+                unless ( $cf->id ) {
+                    my $msg = "Could not find a custom field called $cf_name";
+                    $msg .= " for the queue ".$queue_obj->Name if (defined $queue_obj);
+                    RT->Logger->error('Could not load custom field to include in content:' . $msg);
+                    next;
+                }
+
+                my $cf_id = $cf->id;
+                my $value = $ARGS{"Object-RT::Ticket--CustomField-$cf_id-Value"}
+                    ||
+                    $ARGS{"Object-RT::Ticket--CustomField-$cf_id-Values"}
+                    || '';
+                $string .= ref($value) eq 'ARRAY' ? join( ', ', @$value )
+                                                  : $value;
+            }
+            push @include_in_content, $string;
+        }
+    }
+    if ( @include_in_content ) {
+        my $separator = RT->Config->Get( 'MessageBoxRichText',  $session{'CurrentUser'} ) ? "<br/>"
+                                                                                          : "\n";
+        $ARGS{Content} ||= '';
+        $ARGS{Content} = join( $separator, @include_in_content ) . $separator . $separator . $ARGS{Content};
+    }
+
     $m->callback( CallbackName => 'BeforeCreate', ARGSRef => \%ARGS, results => \@results,
                   FormName => $form_name, PageName => $page );
 

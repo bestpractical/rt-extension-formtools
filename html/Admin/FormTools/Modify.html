@@ -140,6 +140,16 @@
                     </div>
                   </&>
 %               }
+%               if ( $item ne 'Content' ) {
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-include_in_content" type="checkbox" name="include_in_content" value="1" />
+                      <label class="custom-control-label" for="<% CSSClass($item) %>-include_in_content">
+                        <&|/l&>Include in Content</&>
+                      </label>
+                    </div>
+                  </&>
+%               }
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary button form-control"><% loc('Update') %></button>
@@ -245,6 +255,14 @@
                       <input class="custom-control-input" id="<% CSSClass($item) %>-readonly" type="checkbox" name="readonly" value="1" />
                       <label class="custom-control-label" for="<% CSSClass($item) %>-readonly">
                         <&|/l&>Readonly</&>
+                      </label>
+                    </div>
+                  </&>
+                  <&| /Elements/LabeledValue, Label => '' &>
+                    <div class="custom-control custom-checkbox">
+                      <input class="custom-control-input" id="<% CSSClass($item) %>-include_in_content" type="checkbox" name="include_in_content" value="1" />
+                      <label class="custom-control-label" for="<% CSSClass($item) %>-include_in_content">
+                        <&|/l&>Include in Content</&>
                       </label>
                     </div>
                   </&>
@@ -535,6 +553,16 @@
                             <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-readonly" type="checkbox" name="readonly" value="1" <% ( $item->{arguments}{render_as} // '' ) =~ /readonly/ ? q{checked="checked"} : '' |n %> />
                             <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-readonly">
                               <&|/l&>Readonly</&>
+                            </label>
+                          </div>
+                        </&>
+%                     }
+%                     if ( $item->{arguments}{name} ne 'Content' ) {
+                        <&| /Elements/LabeledValue, Label => '' &>
+                          <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-include_in_content" type="checkbox" name="include_in_content" value="1" <% ( $item->{arguments}{include_in_content} // '' ) eq '1' ? q{checked="checked"} : '' |n %> />
+                            <label class="custom-control-label" for="formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-include_in_content">
+                              <&|/l&>Include in Content</&>
                             </label>
                           </div>
                         </&>
