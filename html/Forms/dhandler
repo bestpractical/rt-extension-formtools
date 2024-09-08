@@ -372,6 +372,56 @@ if ( $create_ticket ) {
         $ARGS{Content} = join( $separator, @include_in_content ) . $separator . $separator . $ARGS{Content};
     }
 
+    # check for queue routing
+    my %compare_for_op = (
+        "LIKE"     => sub { my ( $val, $test ) = @_; return ref $val ? grep { $_ =~ /$test/ } @$val : $val =~ /$test/ },
+        "NOT LIKE" => sub { my ( $val, $test ) = @_; return ref $val ? grep { $_ !~ /$test/ } @$val : $val !~ /$test/ },
+        "="        => sub { my ( $val, $test ) = @_; return ref $val ? grep { $_ eq $test } @$val : $val eq $test },
+        "!="       => sub { my ( $val, $test ) = @_; return ref $val ? grep { $_ ne $test } @$val : $val ne $test },
+        "<"        => sub { my ( $val, $test ) = @_; return ref $val ? ! grep { $_ > $test } @$val : $val < $test },
+        ">"        => sub { my ( $val, $test ) = @_; return ref $val ? ! grep { $_ < $test } @$val : $val > $test },
+    );
+    if ( $form_config->{routing} ) {
+        foreach my $route ( @{ $form_config->{routing} || [] } ) {
+            my $match = 1;
+            foreach my $criteria ( @{ $route->{criteria} || [] } ) {
+                my ( $cf_name, $op, $test ) = @$criteria;
+                my $cf = RT::CustomField->new( $session{'CurrentUser'} );
+
+                # try loading CFs for this Queue, followed by Global, followed by any CF of given $cf_name
+                $cf->LoadByName( Name => $cf_name, Queue => $queue_obj->id ) if (defined $queue_obj);
+                $cf->LoadByName( Name => $cf_name, Queue => 0 ) unless ( $cf->id );
+                unless ( $cf->Id ) {
+                    $cf->LoadByName( Name => $cf_name );
+                }
+                unless ( $cf->id ) {
+                    my $msg = "Could not find a custom field called $cf_name";
+                    $msg .= " for the queue ".$queue_obj->Name if (defined $queue_obj);
+                    RT->Logger->error('Could not load custom field to include in content:' . $msg);
+                    next;
+                }
+
+                my $cf_id = $cf->id;
+                my $value = $ARGS{"Object-RT::Ticket--CustomField-$cf_id-Value"}
+                    ||
+                    $ARGS{"Object-RT::Ticket--CustomField-$cf_id-Values"}
+                    || '';
+                $match = $compare_for_op{$op}->( $value, $test );
+                # as soon as one criteria fails we can skip any remaining
+                last unless $match;
+            }
+            if ( $match ) {
+                ( $ok, $msg ) = $queue_obj->Load( $route->{queue} );
+                unless ( $ok ) {
+                    RT->Logger->error('FormTools unable to load queue for alternate queue routing: ' . $route->{queue});
+                    Abort('Unable to load form, invalid alternate queue routing');
+                }
+                # found an alternate queue so skip any remaining routes
+                last;
+            }
+        }
+    }
+
     $m->callback( CallbackName => 'BeforeCreate', ARGSRef => \%ARGS, results => \@results,
                   FormName => $form_name, PageName => $page );
 
