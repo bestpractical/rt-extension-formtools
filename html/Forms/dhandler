@@ -211,6 +211,8 @@ else {
     Abort('Form not found');
 }
 
+$m->callback( CallbackName => 'AfterFormConfigLoaded', ARGSRef => \%ARGS, FormConfig => $form_config );
+
 no warnings 'redefine';
 my $orig_current_user_has_right = RT::CustomField->can('CurrentUserHasRight');
 local *RT::CustomField::CurrentUserHasRight = sub {
