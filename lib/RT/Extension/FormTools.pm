@@ -94,9 +94,29 @@ sub _ParseContent {
     *CurrentUserHasRight = sub {
         my $self  = shift;
         my $right = shift;
-        if ( $self->__Value('Name') eq 'FormTools Form' ) {
+        if ( ( $self->__Value('Name') eq 'FormTools Form' ) || ( $self->__Value('Name') eq 'FormTools Group' ) ) {
             return 1 if $self->CurrentUser->HasRight( Object => RT->System, Right => 'AdminForm' );
             $right = 'ShowForm' if $right eq 'display';
+
+            # if this is a form check if the user has right to the group
+            if ( RT->Config->Get('FormToolsEnableGroups') && ( $self->__Value('Name') eq 'FormTools Form' ) ) {
+                my $content;
+                my $form_attribute = RT::Attribute->new( RT->SystemUser );
+                my ( $ret ) = $form_attribute->Load( $self->id );
+                $content = $form_attribute->Content
+                    if $ret;
+                if ( $content && $content->{group} ) {
+                    my $group_attribute = RT::Attribute->new( $self->CurrentUser );
+                    ( $ret ) = $group_attribute->LoadByCols( Name => 'FormTools Group', Description => $content->{group} );
+                    if ( $ret ) {
+                        return
+                            $group_attribute->CurrentUser->HasRight( Object => $group_attribute, Right => $right )
+                            ||
+                            $self->CurrentUser->HasRight( Object => $self, Right => $right );
+                    }
+                }
+            }
+
             return $self->CurrentUser->HasRight( Object => $self, Right => $right );
         }
         return $orig_current_user_has_right->( $self, $right, @_ );
