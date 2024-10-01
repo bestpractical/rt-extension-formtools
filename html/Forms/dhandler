@@ -241,6 +241,7 @@ Abort('Permission Denied') unless $queue_obj->CurrentUserHasRight('CreateTicket'
 
 $m->notes( queue => $queue_obj );
 $m->notes( page_title => $form_config->{'formtools-pages'}{$page}{'name'} );
+$m->notes( form_group => $form_config->{group} );
 
 my $base_path = '/Forms/';
 $base_path = '/SelfService' . $base_path if $SelfService;
