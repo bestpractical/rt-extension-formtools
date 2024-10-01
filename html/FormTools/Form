@@ -125,7 +125,7 @@ $next_for_validation ||= $m->caller(1)->path;
 %         }
 %     }
 % }
-
+% $m->callback( CallbackName => 'BeforeListActions', ARGSRef => \%ARGS );
 <& /Elements/ListActions, actions => \@results &>
 <div id="formtools-form-body" class="container p-4 formtools-base-style">
 <form

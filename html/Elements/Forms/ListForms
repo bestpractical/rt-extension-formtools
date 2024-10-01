@@ -1,3 +1,4 @@
+% $m->callback( CallbackName => 'BeforeFormsTitleBox', ARGSRef => \%ARGS );
 <&|/Widgets/TitleBox, title => '', class => 'container formtools-form-list ml-auto mr-auto' &>
 % if ( defined $Group ) {
 %   if ( $banner_message ) {
