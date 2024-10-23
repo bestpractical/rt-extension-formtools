@@ -68,7 +68,7 @@ if ($real_next) {
         push @results, @msg;
     }
 
-    unless (@results) {
+    unless ( @results || ( $request_args{AddMoreAttach} && $request_args{AddMoreAttach} eq 'Add More Files' ) ) {
         # Flag to show validation passed
         $ARGS{'validation_ok'} = 1;
 
@@ -147,6 +147,8 @@ $next_for_validation ||= $m->caller(1)->path;
 % next if $forbid_persisting->{$key};
 % next if ($key eq 'user' or $key eq 'pass');
 % next if $key eq 'Submit'; # No need to pass through "Next" button value
+% next if $key eq 'Attach';
+% next if $key eq 'AddMoreAttach';
 % next if $key =~ /^(?:validation|validation_ok|next_for_validation|sc)$/;
 <input type="hidden" name="<%$key%>" value="<%$val%>" />
 % }

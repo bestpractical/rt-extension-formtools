@@ -19,7 +19,7 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
             . '" value="' . $element->{'input-value'} . '"  />');
     }
     elsif ( $element->{type} eq 'component' ) {
-        $m->comp('/FormTools/' . $element->{comp_name}, %{$element->{arguments}});
+        $m->comp('/FormTools/' . $element->{comp_name}, %{$element->{arguments}}, Token => $ARGS{Token} );
     }
 
     if ( $element->{type} eq 'hidden'
@@ -209,6 +209,22 @@ if ( $form_attribute->Id ) {
 else {
     # We didn't find a form, so show a not found page
     Abort('Form not found');
+}
+
+if ( ref $ARGS{Token} && ref $ARGS{Token} eq 'ARRAY' ) {
+    $ARGS{Token} = $ARGS{Token}->[0];
+}
+if ( $ARGS{Attach} ) {
+    my $cgi_object        = $m->cgi_object;
+    my $attach_filehandle = $cgi_object->upload('Attach');
+    if ( $attach_filehandle ) {
+        ProcessAttachments( ARGSRef => \%ARGS )
+            unless tell($attach_filehandle);
+    }
+}
+elsif ( ! $ARGS{Token} ) {
+    # call ProcessAttachments to generate a unique token for this form load
+    ProcessAttachments( ARGSRef => \%ARGS );
 }
 
 $m->callback( CallbackName => 'AfterFormConfigLoaded', ARGSRef => \%ARGS, FormConfig => $form_config );
