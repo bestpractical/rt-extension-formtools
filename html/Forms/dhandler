@@ -345,7 +345,6 @@ if ( $ARGS{Back} and $ARGS{Back} eq 'Back' ) {
 
 my ($ticket_obj, @results);
 if ( $create_ticket ) {
-
     # add include_in_content fields to Content arg
     my @include_in_content;
     foreach my $page ( keys %{ $form_config->{'formtools-pages'} || {} } ) {
@@ -390,6 +389,15 @@ if ( $create_ticket ) {
                                                                                           : "\n";
         $ARGS{Content} ||= '';
         $ARGS{Content} = join( $separator, @include_in_content ) . $separator . $separator . $ARGS{Content};
+    }
+
+    # if the Content field is not on the last page of the form the ContentType arg will not be set
+    # check if the ContentType arg needs to be set before creating the ticket to ensure Content is formatted correctly
+    if ( $ARGS{Content}
+        && ( ! $ARGS{ContentType} )
+        && ( RT->Config->Get( 'MessageBoxRichText',  $session{'CurrentUser'} ) )
+    ) {
+        $ARGS{ContentType} = 'text/html';
     }
 
     # check for queue routing
