@@ -19,7 +19,7 @@ foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
             . '" value="' . $element->{'input-value'} . '"  />');
     }
     elsif ( $element->{type} eq 'component' ) {
-        $m->comp('/FormTools/' . $element->{comp_name}, %{$element->{arguments}}, Token => $ARGS{Token} );
+        $m->comp('/FormTools/' . $element->{comp_name}, %{$element->{arguments}}, Token => $ARGS{Token}, AttachedFilenames => $ARGS{AttachedFilenames} );
     }
 
     if ( $element->{type} eq 'hidden'
@@ -226,6 +226,7 @@ elsif ( ! $ARGS{Token} ) {
     # call ProcessAttachments to generate a unique token for this form load
     ProcessAttachments( ARGSRef => \%ARGS );
 }
+$ARGS{AttachedFilenames} = join ', ', keys %{ $session{'Attachments'}{ $ARGS{Token} } || {} };
 
 $m->callback( CallbackName => 'AfterFormConfigLoaded', ARGSRef => \%ARGS, FormConfig => $form_config );
 

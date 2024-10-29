@@ -30,7 +30,12 @@
         }
 
         if ($input_name) {
-            push @fields, { name => $name, value => $DECODED_ARGS->{$input_name} };
+            if ( $input_name eq 'Attach' ) {
+                push @fields, { name => $name, value => $ARGS{AttachedFilenames} };
+            }
+            else {
+                push @fields, { name => $name, value => $DECODED_ARGS->{$input_name} };
+            }
         }
     }
 </%perl>
