@@ -1,6 +1,6 @@
 % my $queue = $m->notes('queue');
 % my $pages = $DECODED_ARGS->{'form_config'}{'formtools-pages'};
-% for my $page ( sort { $pages->{$a}{'sort_order'} <=> $pages->{$b}{'sort_order'} } keys %$pages ) {
+% for my $page ( sort { $pages->{$a}{'sort_order'} <=> $pages->{$b}{'sort_order'} } grep { exists $pages->{$_}{'sort_order'} } keys %$pages ) {
 <%perl>
     my @fields;
     my @elements = @{ $pages->{$page}{'content'} };
