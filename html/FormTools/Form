@@ -139,21 +139,23 @@ $next_for_validation ||= $m->caller(1)->path;
 <input type="hidden" name="_form_tools_next" value="<%$next%>" />
 <%$content|n%>
 
-% if ($enable_persisting) {
-% require List::MoreUtils;
-% foreach my $key (keys %request_args) {
-% next if (ref $request_args{$key} && ref $request_args{$key} ne 'ARRAY');
-% foreach my $val ( ref ($request_args{$key}) ? List::MoreUtils::uniq(@{$request_args{$key}}) : ($request_args{$key})) {
-% next if $forbid_persisting->{$key};
-% next if ($key eq 'user' or $key eq 'pass');
-% next if $key eq 'Submit'; # No need to pass through "Next" button value
-% next if $key eq 'Attach';
-% next if $key eq 'AddMoreAttach';
-% next if $key =~ /^(?:validation|validation_ok|next_for_validation|sc)$/;
-<input type="hidden" name="<%$key%>" value="<%$val%>" />
-% }
-% }
-% }
+<%perl>
+if ($enable_persisting) {
+    require List::MoreUtils;
+    foreach my $key (keys %request_args) {
+        next if (ref $request_args{$key} && ref $request_args{$key} ne 'ARRAY');
+        foreach my $val ( ref ($request_args{$key}) ? List::MoreUtils::uniq(@{$request_args{$key}}) : ($request_args{$key})) {
+            next if $forbid_persisting->{$key};
+            next if ($key eq 'user' or $key eq 'pass');
+            next if $key eq 'Submit'; # No need to pass through "Next" button value
+            next if $key eq 'Attach';
+            next if $key eq 'AddMoreAttach';
+            next if $key =~ /^(?:validation|validation_ok|next_for_validation|sc)$/;
+            $m->out('<input type="hidden" name="' . $key . '" value="' . $m->interp->apply_escapes( $val, 'h' ) . '" />');
+        }
+    }
+}
+</%perl>
 
 </form>
 </div>
