@@ -517,27 +517,27 @@
                             <div class="d-inline-block">
                               <select name="dependent_name" class="form-control selectpicker">
                                 <option value=""><&|/l&>(no value)</&></option>
-%                               for my $name ( sort keys %dependent_custom_fields ) {
-                                  <option value="<% $name %>" <% ($item->{arguments}{dependent_validation}{name} // '') eq $name ? 'selected="selected"' : '' |n %>><% $name %></option>
-%                               }
-                                </select>
-                              </div>
-                              is
-                              <div class="d-inline-block">
-                                <select name="dependent_value" data-dependent-name="dependent_name" multiple class="form-control selectpicker">
-                                  <option value=""><&|/l&>(no value)</&></option>
-%                               for my $name ( sort keys %dependent_custom_fields ) {
-                                  <optgroup label="<% $name %>">
-%                                 for my $value ( @{$dependent_custom_fields{$name}} ) {
-                                    <option value="<% $value %>" <% ($item->{arguments}{dependent_validation}{name} // '') eq $name && grep( { $value eq $_ } @{$item->{arguments}{dependent_validation}{values} || []} ) ? 'selected="selected"' : '' |n %>><% $value %></option>
-%                                 }
-                                  </optgroup>
-%                               }
-                                </select>
-                              </div>
-                            </label>
-                          </div>
-                        </&>
+%                             for my $name ( sort keys %dependent_custom_fields ) {
+                                <option value="<% $name %>" <% ($item->{arguments}{dependent_validation}{name} // '') eq $name ? 'selected="selected"' : '' |n %>><% $name %></option>
+%                             }
+                              </select>
+                            </div>
+                            is
+                            <div class="d-inline-block">
+                              <select name="dependent_value" data-dependent-name="dependent_name" multiple class="form-control selectpicker">
+                                <option value=""><&|/l&>(no value)</&></option>
+%                              for my $name ( sort keys %dependent_custom_fields ) {
+                                <optgroup label="<% $name %>">
+%                                for my $value ( @{$dependent_custom_fields{$name}} ) {
+                                  <option value="<% $value %>" <% ($item->{arguments}{dependent_validation}{name} // '') eq $name && grep( { $value eq $_ } @{$item->{arguments}{dependent_validation}{values} || []} ) ? 'selected="selected"' : '' |n %>><% $value %></option>
+%                                }
+                                </optgroup>
+%                              }
+                              </select>
+                            </div>
+                          </label>
+                        </div>
+                      </&>
 %                     }
 %                     }
 
