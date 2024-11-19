@@ -16,7 +16,14 @@ $form_config         => undef
 </%args>
 <%init>
 use RT::Extension::FormTools;
-my $content = $m->content;
+
+my $content;
+eval {
+    $content = $m->content;
+};
+if ($@) {
+    RT->Logger->error("Error while accessing content: $@");
+}
 
 $form_id   = $m->interp->apply_escapes( $form_id,   'h')
     if defined $form_id;
