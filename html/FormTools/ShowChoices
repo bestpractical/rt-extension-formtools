@@ -20,6 +20,7 @@
                 my $cf = RT::CustomField->new( $session{'CurrentUser'} );
                 $cf->LoadByName( Name => $name, Queue => $queue->Id );
                 $cf->LoadByName( Name => $name, Queue => 0 ) unless $cf->Id;
+                $cf->LoadByName( Name => $name, LookupType => RT::Ticket->CustomFieldLookupType ) unless $cf->Id;
                 if ( $cf->Id ) {
                     $input_name = GetCustomFieldInputName(
                         Object      => RT::Ticket->new( $session{CurrentUser} ),

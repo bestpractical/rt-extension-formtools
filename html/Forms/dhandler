@@ -363,9 +363,7 @@ if ( $create_ticket ) {
                 # try loading CFs for this Queue, followed by Global, followed by any CF of given $cf_name
                 $cf->LoadByName( Name => $cf_name, Queue => $queue_obj->id ) if (defined $queue_obj);
                 $cf->LoadByName( Name => $cf_name, Queue => 0 ) unless ( $cf->id );
-                unless ( $cf->Id ) {
-                    $cf->LoadByName( Name => $cf_name );
-                }
+                $cf->LoadByName( Name => $cf_name, LookupType => RT::Ticket->CustomFieldLookupType ) unless $cf->id;
                 unless ( $cf->id ) {
                     my $msg = "Could not find a custom field called $cf_name";
                     $msg .= " for the queue ".$queue_obj->Name if (defined $queue_obj);
