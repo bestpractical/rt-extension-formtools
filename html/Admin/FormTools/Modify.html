@@ -415,7 +415,7 @@
                 <span class="content">
 %               if ( $item->{type} eq 'raw_html' ) {
 %                 if ( $item->{wrapper} ) {
-                    <% length $item->{content} > 40 ? substr($item->{content}, 0, 40) . '...' : $item->{content} %>
+                    <% length( $item->{content} // '' ) > 40 ? substr($item->{content}, 0, 40) . '...' : ( $item->{content} // '' ) %>
 %                 } else {
                     <% length $item->{html} > 40 ? substr($item->{html}, 0, 40) . '...' : $item->{html} %>
 %                 }
