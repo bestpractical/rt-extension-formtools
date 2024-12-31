@@ -234,7 +234,7 @@ $Token              => ''
 % if (@values > 1) {
     <ul class="list-group list-group-borderless list-group-compact">
 % for (@values) {
-    <li class="readonly list-group-item"><% $_ %></span>
+    <li class="readonly list-group-item"><% $_ %></li>
 %   if ($render_as eq 'readonly_plus_values') {
     <input type="hidden" name="<% $input_name %>" value="<% $_ %>"/>
 %   }
