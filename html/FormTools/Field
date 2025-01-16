@@ -168,7 +168,11 @@ $default = '' unless defined $default;
 
 % if ($render_as ne 'hidden' && $show_label) { # no label if hidden
 
-<&| /Elements/LabeledValue, RawLabel => $m->interp->apply_escapes($field_label, 'h') . $after_label, LabelSpanClass => $tooltip ? 'prev-icon-helper' : '', LabelTooltip => $tooltip &>
+<&| /Elements/LabeledValue,
+    RawLabel       => $m->interp->apply_escapes($field_label, 'h') . $after_label,
+    LabelSpanClass => $tooltip ? 'prev-icon-helper' : '',
+    LabelTooltip   => $tooltip
+&>
   <div data-name="<% $cf ? $cf->Name : '' %>"
 % if ( $ARGS{validation} ) {
     data-validation="<% $ARGS{validation} %>"
