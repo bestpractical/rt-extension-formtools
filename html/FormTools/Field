@@ -171,7 +171,7 @@ $default = '' unless defined $default;
 <&| /Elements/LabeledValue,
     RawLabel       => $m->interp->apply_escapes($field_label, 'h') . $after_label,
     LabelSpanClass => $tooltip ? 'prev-icon-helper' : '',
-    LabelTooltip   => $tooltip
+    LabelTooltip   => $tooltip,
 &>
   <div data-name="<% $cf ? $cf->Name : '' %>"
 % if ( $ARGS{validation} ) {
