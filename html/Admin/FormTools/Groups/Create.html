@@ -2,13 +2,13 @@
 <& /Elements/Tabs &>
 <& /Elements/ListActions, actions => \@results &>
 
-<&| /Widgets/TitleBox, title => '', class => 'formtools-admin-description ml-auto mr-auto' &>
+<&| /Widgets/TitleBox, title => '', class => 'formtools-admin-description ms-auto me-auto' &>
   <form name="EditFormGroupBannerMessage" action="<%RT->Config->Get('WebPath')%>/Admin/FormTools/Groups/Create.html" method="post" enctype="multipart/form-data">
     <&| /Elements/LabeledValue, Label => loc('Name') &>
       <input name="Name" class="form-control" value="<% $ARGS{Name} // '' %>"/>
     </&>
     <&| /Elements/LabeledValue, Label => loc('Description') &>
-      <div class="form-row">
+      <div class="row mt-2">
         <div class="col-12">
           <input type="hidden" class="hidden" name="DescriptionType" value="text/html" />
           <textarea autocomplete="off" class="form-control messagebox richtext" cols="80" rows="10" name="Description"><% $ARGS{Description} // '' %></textarea>
@@ -16,7 +16,7 @@
       </div>
     </&>
 </&>
-<div class="form-row">
+<div class="row mt-2">
   <div class="col-12">
     <& /Elements/Submit, Label => loc('Create'), Name => 'Create' &>
   </div>
