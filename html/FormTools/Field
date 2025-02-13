@@ -55,7 +55,7 @@ if ( RT::Extension::FormTools::is_core_field($name) ) {
     }
 
     $m->notes( cfs_on_page => [ @{$m->notes('cfs_on_page')||[]}, $cf->id ] );
-    $field_label ||= $cf->Name;
+    $field_label ||= loc($cf->Name);
     $tooltip ||= $cf->EntryHint;
 
     if ($ticket) {
@@ -169,7 +169,7 @@ $default = '' unless defined $default;
 % if ($render_as ne 'hidden' && $show_label) { # no label if hidden
 
 <&| /Elements/LabeledValue, RawLabel => $m->interp->apply_escapes($field_label, 'h') . $after_label, LabelSpanClass => $tooltip ? 'prev-icon-helper' : '', LabelTooltip => $tooltip &>
-  <div data-name="<% $cf ? $cf->Name : '' %>"
+  <div data-name="<% $cf ? loc($cf->Name) : '' %>"
 % if ( $ARGS{validation} ) {
     data-validation="<% $ARGS{validation} %>"
 % }

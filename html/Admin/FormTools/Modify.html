@@ -78,7 +78,7 @@
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
             <span class="badge badge-primary align-text-bottom"><% loc('Core Field') %></span>
-            <span class="content"><% $item %> <span class="label"></span></span>
+            <span class="content"><% loc($item) %> <span class="label"></span></span>
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
             </a>
@@ -167,7 +167,7 @@
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
             <span class="badge badge-primary align-text-bottom"><% loc('Custom Field') %></span>
-            <span class="content"><% $item %> <span class="label"></span></span>
+            <span class="content"><% loc($item) %> <span class="label"></span></span>
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
             </a>
@@ -285,7 +285,7 @@
           <p class="formtools-element-placeholder m-1 p-2 border rounded"><% loc('Place here') %></p>
           <p class="m-1 p-2 border rounded">
             <span class="badge badge-primary align-text-bottom"><% $other_components{$item}{type} eq 'hidden' ? loc('Hidden') : loc('Component') %></span>
-            <span class="content"><% $item %></span>
+            <span class="content"><% loc($item) %></span>
 %         if ( $item eq 'Hidden' || ( $item =~ /ShowChoices|ShowBanner/ && %dependent_custom_fields ) ) {
             <a href="#" class="edit" data-toggle="modal" data-target="#formtools-element-modal">
               <span class="fas fa-pencil-alt" alt="<% loc('Edit') %>" data-toggle="tooltip" data-placement="top" data-original-title="<% loc('Edit') %>"></span>
