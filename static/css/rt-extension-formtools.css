@@ -94,3 +94,7 @@ div .formtools-admin-description {
 #formtools-edit .custom-checkbox {
     z-index: auto;
 }
+
+.formtools-item .value .custom-control.custom-checkbox {
+    margin-top: 5px;
+}
