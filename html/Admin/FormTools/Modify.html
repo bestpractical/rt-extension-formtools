@@ -55,6 +55,9 @@
                   </a>
                 </div>
                 <div class="modal-body">
+%               if ( $item eq 'hr' ) {
+                  <input type ="hidden" name="content" value="<hr/>"/>
+%               } else {
                   <&| /Elements/LabeledValue, Label => loc("Content") &>
 %                   if ( $item =~ /^h\d/ ) {
                     <input name="content" class="form-control" data-wrapper="<% $item %>" />
@@ -64,6 +67,7 @@
                     <textarea name="content" class="form-control"></textarea>
 %                   }
                   </&>
+%               }
 
 %               if ( $item eq 'p' ) {
                   <&| /Elements/LabeledValue, Label => loc("Alignment") &>
@@ -463,15 +467,19 @@
                     </div>
                     <div class="modal-body">
 %                   if ( $item->{type} eq 'raw_html' ) {
+%                       if ( lc ($item->{wrapper} // '') eq 'hr' ) {
+                        <input type ="hidden" name="content" value="<hr/>"/>
+%                       } else {
                       <&| /Elements/LabeledValue, Label => loc("Content") &>
-%                     if ( ($item->{wrapper} // '') =~ /^h\d/i ) {
+%                           if ( ($item->{wrapper} // '') =~ /^h\d/i ) {
                         <input name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>" value="<% $item->{content} %>"/>
-%                     } elsif ( lc ($item->{wrapper} // '') eq 'p' ) {
+%                           } elsif ( lc ($item->{wrapper} // '') eq 'p' ) {
                         <textarea name="content" class="form-control" data-wrapper="<% $item->{wrapper} %>"><% $item->{content} %></textarea>
-%                     } else {
+%                           } else {
                         <textarea name="content" class="form-control"><% $item->{html} %></textarea>
-%                     }
+%                           }
                       </&>
+%                       }
 %                     if ( ($item->{wrapper} // '') eq 'p' ) {
                       <&| /Elements/LabeledValue, Label => loc("Alignment") &>
                         <select name="alignment" class="form-control selectpicker">
