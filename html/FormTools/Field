@@ -256,7 +256,7 @@ $Token              => ''
     AutocompleteMultiple => 1,
     (exists $ARGS{cols} ? (Size => $cols) : ()),
 &>
-% } elsif ( $name eq "Due" ) {
+% } elsif ( $name eq "Due" || $name eq "Starts" ) {
 <& /Elements/SelectDate, Name => $name, Default => $default, current => 0, (defined $cols ? (Size => $cols) : ()) &>
 % } elsif ( $name eq "TimeEstimated" ) {
 <& /Elements/EditTimeValue, Name => $name, Default => $default &>

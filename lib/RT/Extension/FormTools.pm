@@ -350,6 +350,8 @@ Valid core fields include:
 
 =item Due
 
+=item Starts
+
 =item TimeEstimated
 
 =back
@@ -389,6 +391,7 @@ my %is_core_field = map { $_ => 1 } qw(
     Content
     Attach
     Due
+    Starts
     TimeEstimated
 );
 
