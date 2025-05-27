@@ -504,6 +504,24 @@ sub LoadFormIcon {
     }
 }
 
+if ( RT->Config->can('RegisterPluginConfig') ) {
+    RT->Config->RegisterPluginConfig(
+        Plugin  => 'FormTools',
+        Content => [
+            {
+                Name => 'FormToolsEnableGroups',
+                Help => 'https://metacpan.org/pod/RT::Extension::FormTools#Form-Groups',
+            },
+        ],
+        Meta    => {
+            FormToolsEnableGroups => {
+                Type   => 'SCALAR',
+                Widget => '/Widgets/Form/Boolean',
+            },
+        }
+    );
+}
+
 =head1 AUTHOR
 
 Best Practical Solutions, LLC
