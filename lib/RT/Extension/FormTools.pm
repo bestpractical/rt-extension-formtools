@@ -271,6 +271,9 @@ F</opt/rt5/etc/RT_SiteConfig.pm>:
 Setting this config option to a true value will enable form group admin pages
 where you can create and maintain form groups.
 
+If you change this config option in the RT System Configuration UI you must
+refresh the page to update the Admin FormTools menu.
+
 All forms will be required to placed in a form group.
 
 The list of forms will first show a list of available form groups. Clicking a
