@@ -364,7 +364,7 @@
 % }
       <li class="nav-item">
         <a class="nav-link" id="formtools-tab-add" href="?id=<% $id %>;AddPage=1">
-          <span class="fas fa-plus" alt="<% loc('Add Page') %>" data-bs-toggle="tooltip" data-bs-title="<% loc('Add Page') %>"></span>
+          <% GetSVGImage( Name => 'plus', Title => loc('Add Page') ) |n %>
         </a>
       </li>
     </ul>
@@ -405,7 +405,7 @@
         </div>
 
 %       my $loc_basics = loc('Basics');
-        <&| /Widgets/TitleBox, title => loc('Content'), titleright_raw => qq{<a href="#" data-bs-toggle="modal" data-bs-target="#formtools-element-$form_page_id{$page_name}-basics-modal"><span class="fas fa-cog icon-bordered fa-2x" alt="$loc_basics" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="$loc_basics"></span></a>} &>
+        <&| /Widgets/TitleBox, title => loc('Content'), titleright_raw => qq{<a href="#" data-bs-toggle="modal" data-bs-target="#formtools-element-$form_page_id{$page_name}-basics-modal">} . GetSVGImage( Name => 'gear', Title => $loc_basics ) . qq{</a>} &>
           <div class="formtools-content w-100 border rounded mt-3" data-page="<% $page_name %>" data-page-id="<% $form_page_id{$page_name} %>" ondrop="formTools.drop(event);" ondragover="formTools.dragover(event);" ondragend="formTools.dragend(event);">
 %         my $i = 0;
 %         for my $item ( grep { $_->{type} ne 'hidden' || $_->{'input-name'} ne 'create_ticket' } @{$form->{'formtools-pages'}{$page_name}{content} || []} ) {
