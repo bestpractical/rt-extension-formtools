@@ -15,13 +15,13 @@
         </div>
       </div>
     </&>
+    <div class="row mt-2">
+      <div class="col-12">
+        <& /Elements/Submit, Label => loc('Create'), Name => 'Create' &>
+      </div>
+    </div>
+  </form>
 </&>
-<div class="row mt-2">
-  <div class="col-12">
-    <& /Elements/Submit, Label => loc('Create'), Name => 'Create' &>
-  </div>
-</div>
-</form>
 <%INIT>
 Abort( loc('Permission Denied') )
     unless $session{'CurrentUser'}->HasRight( Object => $RT::System, Right => 'AdminForm' );
