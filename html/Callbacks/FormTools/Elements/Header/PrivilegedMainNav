@@ -3,8 +3,13 @@ if ( Menu->child('admin')
     && $session{'CurrentUser'}->HasRight( Object => RT->System, Right => 'AdminForm' ) )
 {
     my $formtools = Menu->child('admin')->child(
-        formtools => title => loc('FormTools'),
-        path      => '/Admin/FormTools/',
+        formtools  => title => loc('FormTools'),
+        path       => '/Admin/FormTools/',
+        attributes => {
+            'hx-trigger' => 'mouseover queue:none',
+            'hx-target'  => 'next ul',
+            'hx-get'     => RT->Config->Get('WebPath') . '/Views/FormToolsMenu',
+        }
     );
 
     $formtools->child( select => title => loc('Select'), path => '/Admin/FormTools/' );
