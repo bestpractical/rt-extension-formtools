@@ -1,5 +1,8 @@
 Revision history for RT-Extension-FormTools
 
+2.00 2025-06-06
+ - Update for RT 6
+
 1.18 2025-06-06
  - Fix issue where clicking Add Page on a newly created form could overwrite the default pages
 
