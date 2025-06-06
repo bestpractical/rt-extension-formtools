@@ -835,28 +835,34 @@ my %other_components = (
 );
 
 
-
-$form->{'formtools-pages'} ||= {
-    RT::Extension::FormTools->GeneratePageId() => { sort_order => 1, name => 'Page 1' },
-    RT::Extension::FormTools->GeneratePageId() => {
-        sort_order => 999,
-        name       => 'Result',
-        content    => [
-            {
-               "content" => "Request Submitted",
-               "html"    => "<h2>Request Submitted</h2>",
-               "type"    => "raw_html",
-               "wrapper" => "h2"
-            },
-            {
-               "content" => "Your request has been submitted.",
-               "html"    => "<p>Your request has been submitted.</p>",
-               "type"    => "raw_html",
-               "wrapper" => "p"
-            },
-        ],
-    },
-};
+# if this is a new form without any pages create default pages and save
+unless ( $form->{'formtools-pages'} ) {
+    $form->{'formtools-pages'} = {
+        RT::Extension::FormTools->GeneratePageId() => { sort_order => 1, name => 'Page 1' },
+        RT::Extension::FormTools->GeneratePageId() => {
+            sort_order => 999,
+            name       => 'Result',
+            content    => [
+                {
+                   "content" => "Request Submitted",
+                   "html"    => "<h2>Request Submitted</h2>",
+                   "type"    => "raw_html",
+                   "wrapper" => "h2"
+                },
+                {
+                   "content" => "Your request has been submitted.",
+                   "html"    => "<p>Your request has been submitted.</p>",
+                   "type"    => "raw_html",
+                   "wrapper" => "p"
+                },
+            ],
+        },
+    };
+    my ( $ret, $msg ) = $form_attribute->SetContent($form);
+    unless ( $ret ) {
+        push @results, loc( "Couldn't set default content: [_1]", $msg );
+    }
+}
 
 
 my @form_pages
