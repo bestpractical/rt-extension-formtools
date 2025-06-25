@@ -50,6 +50,24 @@
 
 <script type="text/javascript">
 jQuery(function () {
+    let ckeOnChangeAdded = {};
+    jQuery('form').on('submit', function(e) {
+        // change the cfhints span class to invalid-feedback to show form validation
+        // do not change class for ckeditor cfhints as it needs special logic
+        jQuery('form').find('.cfhints.required').each( function() {
+            if ( ! jQuery(this).parent().find('textarea.richtext').length ) {
+                jQuery(this).removeClass().addClass('invalid-feedback');
+            }
+        });
+        jQuery('form').addClass('was-validated');
+        if ( this.checkValidity() ) {
+            return;
+        }
+        else {
+            e.preventDefault();
+            jQuery('form').removeClass('rt-form-submitted');
+        }
+    });
     jQuery('[data-validation]').each(function () {
         const elem = jQuery(this);
         if ( elem.find('.selectize-input').length ) {
@@ -69,7 +87,23 @@ jQuery(function () {
             const form = elem.closest('form');
             form.on('submit', function(e) {
                 const editor = RT.CKEditor.instances[textarea.attr('id')];
+                // add change handler to show/hide invalid feedback
+                if ( ! ckeOnChangeAdded.hasOwnProperty( textarea.attr('id') ) ) {
+                    editor.ui.focusTracker.on('change:isFocused', function ( evt, name, isFocused ) {
+                        if ( !isFocused ) {
+                            if ( editor.getData() ) {
+                                elem.find('.cfhints.required').addClass('hidden');
+                            }
+                            else {
+                                elem.find('.cfhints.required').removeClass('hidden');
+                            }
+                        }
+                    });
+                    ckeOnChangeAdded[ textarea.attr('id') ] = 1;
+                }
+                elem.find('.cfhints.required').addClass('invalid-feedback');
                 if ( editor.getData() ) {
+                    elem.find('.cfhints.required').addClass('hidden');
                     return;
                 }
                 else {
@@ -77,6 +111,7 @@ jQuery(function () {
                     elem.get(0).scrollIntoView();
                     e.preventDefault();
                     form.removeClass('rt-form-submitted');
+                    elem.find('.cfhints.required').removeClass('hidden');
                 }
             });
         }
@@ -84,10 +119,6 @@ jQuery(function () {
             elem.find(':input:visible').attr('required', true);
 
             if ( elem.find('select.selectpicker').length ) {
-                elem.find('select.selectpicker option[value=""]').remove();
-                if ( !elem.find('select.selectpicker option[selected]').length ) {
-                    elem.find('select.selectpicker').val(null); // Do not automatically select the first valid option
-                }
                 elem.find('select.selectpicker').attr('required', true);
             }
             else if ( elem.find('input[type=radio]').length ) {
@@ -133,7 +164,6 @@ jQuery(function () {
 
             if ( matched ) {
                 if ( target.find('select.selectpicker').length ) {
-                    target.find('select.selectpicker option[value=""]').attr('selected', false).attr('disabled', true);
                     target.find('select.selectpicker').addClass('required');
                 }
                 else if ( target.find('input[type=radio]').length ) {
@@ -141,17 +171,19 @@ jQuery(function () {
                 }
                 target.find(':input:visible').attr('required', true);
                 target.find('.cfhints.required').removeClass('hidden');
+                if ( target.closest('form').hasClass('was-validated') ) {
+                    target.find('.cfhints.required').removeClass('').addClass('required invalid-feedback')
+                }
             }
             else {
                 if ( target.find('select.selectpicker').length ) {
-                    target.find('select.selectpicker option[value=""]').attr('disabled', false);
                     target.find('select.selectpicker').removeClass('required');
                 }
                 else if ( target.find('input[type=radio]').length ) {
                     target.find('input[type=radio][value=""]').attr('disabled', false);
                 }
                 target.find(':input:visible').attr('required', false);
-                target.find('.cfhints.required').addClass('hidden');
+                target.find('.cfhints.required').removeClass().addClass('cfhints my-1 d-inline-block required hidden');
             }
         };
         jQuery(':input[type!=hidden][name="' + dependent_name +'"]').change(syncValidation).change();
