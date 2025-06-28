@@ -50,24 +50,6 @@
 
 <script type="text/javascript">
 jQuery(function () {
-    let ckeOnChangeAdded = {};
-    jQuery('form').on('submit', function(e) {
-        // change the cfhints span class to invalid-feedback to show form validation
-        // do not change class for ckeditor cfhints as it needs special logic
-        jQuery('form').find('.cfhints.required').each( function() {
-            if ( ! jQuery(this).parent().find('textarea.richtext').length ) {
-                jQuery(this).removeClass().addClass('invalid-feedback');
-            }
-        });
-        jQuery('form').addClass('was-validated');
-        if ( this.checkValidity() ) {
-            return;
-        }
-        else {
-            e.preventDefault();
-            jQuery('form').removeClass('rt-form-submitted');
-        }
-    });
     jQuery('[data-validation]').each(function () {
         const elem = jQuery(this);
         if ( elem.find('.selectize-input').length ) {
@@ -82,40 +64,7 @@ jQuery(function () {
                 }
             }).change();
         }
-        else if ( elem.find('textarea.richtext').length ) {
-            const textarea = elem.find('textarea.richtext');
-            const form = elem.closest('form');
-            form.on('submit', function(e) {
-                const editor = RT.CKEditor.instances[textarea.attr('id')];
-                // add change handler to show/hide invalid feedback
-                if ( ! ckeOnChangeAdded.hasOwnProperty( textarea.attr('id') ) ) {
-                    editor.ui.focusTracker.on('change:isFocused', function ( evt, name, isFocused ) {
-                        if ( !isFocused ) {
-                            if ( editor.getData() ) {
-                                elem.find('.cfhints.required').addClass('hidden');
-                            }
-                            else {
-                                elem.find('.cfhints.required').removeClass('hidden');
-                            }
-                        }
-                    });
-                    ckeOnChangeAdded[ textarea.attr('id') ] = 1;
-                }
-                elem.find('.cfhints.required').addClass('invalid-feedback');
-                if ( editor.getData() ) {
-                    elem.find('.cfhints.required').addClass('hidden');
-                    return;
-                }
-                else {
-                    editor.focus();
-                    elem.get(0).scrollIntoView();
-                    e.preventDefault();
-                    form.removeClass('rt-form-submitted');
-                    elem.find('.cfhints.required').removeClass('hidden');
-                }
-            });
-        }
-        else {
+        else if ( ! elem.find('textarea.richtext').length ) {
             elem.find(':input:visible').attr('required', true);
 
             if ( elem.find('select.selectpicker').length ) {
