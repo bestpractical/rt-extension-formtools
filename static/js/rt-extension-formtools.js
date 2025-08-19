@@ -54,7 +54,7 @@ formTools = {
             const old_id = source_copy.id;
             source_copy.id = 'formtools-element-' + area.dataset.pageId + '-' + Date.now();
             jQuery(source_copy).attr('ondragenter', 'formTools.dragenter(event);');
-            jQuery(source_copy).find('a.edit').attr('data-target', '#' + source_copy.id + '-modal' );
+            jQuery(source_copy).find('a.edit').attr('data-bs-target', '#' + source_copy.id + '-modal' );
             if ( sibling ) {
                 area.insertBefore(source_copy, sibling);
             }
