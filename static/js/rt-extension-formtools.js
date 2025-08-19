@@ -87,8 +87,6 @@ formTools = {
                 input.attr('id', source_copy.id + input.attr('id').replace(/^template-/, ''));
             });
 
-            // combobox dropdown icon doesn't work after drag&drop, hide it for now
-            modal_copy.find('.combobox-container .input-group-append').hide();
             modal_copy.find('select').addClass('selectpicker');
             initializeSelectElements(modal_copy.get(0));
         }
