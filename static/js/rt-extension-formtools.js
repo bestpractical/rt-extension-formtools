@@ -116,7 +116,15 @@ formTools = {
 
                 const alignment = form.find(':input[name=alignment]').val();
                 value.alignment = alignment;
-                value.html = '<' + wrapper + ( alignment ? ' class="text-' + alignment.toLowerCase() + '"' : '' ) + '>' + content + '</' + wrapper + '>';
+                let wrapper_class = alignment ? ' class="text-' + alignment.toLowerCase() : '';
+                if ( wrapper == 'p' ) {
+                    // add margin class so p is spaced like other elements
+                    wrapper_class += alignment ? ' mt-3 mb-2' : ' class="mt-3 mb-2';
+                }
+                if ( wrapper_class.length > 0 ) {
+                    wrapper_class += '"';
+                }
+                value.html = '<' + wrapper + wrapper_class + '>' + content + '</' + wrapper + '>';
             }
             else {
                 value.html = content;
