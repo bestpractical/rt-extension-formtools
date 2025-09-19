@@ -1,5 +1,9 @@
 Revision history for RT-Extension-FormTools
 
+1.19 2025-09-19
+ - Fix issue where conditionally shown fields would not be required when shown
+    but configured as required
+
 1.18 2025-06-06
  - Fix issue where clicking Add Page on a newly created form could overwrite the default pages
 
