@@ -1,0 +1,26 @@
+<&| /Elements/LabeledValue, Label => $label || $name &>
+    <select name="<% $name %>" class="form-control selectpicker">
+        <option value="" <% $value eq '' ? 'selected' : '' %>>
+          (<% loc('no value') %>)
+        </option>
+% foreach my $choice ( split( "\n", $choices ) ) {
+        <option value="<% $choice %>" <% $value eq $choice ? 'selected' : '' %>>
+          <% $choice %>
+        </option>
+% }
+    </select>
+</&>
+<%INIT>
+$m->notes( questions_on_page => [ @{ $m->notes('questions_on_page') || [] }, $name ] );
+
+my $request_args = $DECODED_ARGS;
+if ( exists $request_args->{$name} ) {
+    $value = $request_args->{$name};
+}
+</%INIT>
+<%ARGS>
+$label
+$choices
+$name
+$value => ''
+</%ARGS>

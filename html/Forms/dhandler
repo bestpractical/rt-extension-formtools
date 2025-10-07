@@ -17,6 +17,10 @@
     data-show-condition-name="<% GetCustomFieldInputName( Object => RT::Ticket->new($session{CurrentUser}), CustomField => $show_cf ) %>"
     data-show-condition-values="<% JSON($args->{show_condition}{values} || []) %>"
 %   }
+%   elsif ( my $show_question = $has_question{ $args->{show_condition}{name} } ) {
+    data-show-condition-name="<% $show_question %>"
+    data-show-condition-values="<% JSON($args->{show_condition}{values} || []) %>"
+%   }
 % }
 >
 
@@ -456,6 +460,18 @@ my $load_cf = sub {
     }
     return $cf_map{$name}->Id ? $cf_map{$name} : undef;
 };
+
+my %has_question;
+my @question_components;
+for my $page ( @form_pages ) {
+    push @question_components,
+        map { $_->{arguments}{name} }
+            grep { $_->{comp_name} && ( $_->{comp_name} eq 'ShowQuestion' ) }
+                @{ $form_config->{'formtools-pages'}{$page}{content} || [] };
+}
+for my $question ( @question_components ) {
+    $has_question{$question} = $question;
+}
 
 if ( $create_ticket ) {
     # Drop conditionally hidden fields

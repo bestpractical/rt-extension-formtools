@@ -27,6 +27,7 @@ my $header_component = $self_service ? '/SelfService/Elements/Header' : '/Elemen
 
 my %cfs = map { $_ => 1} @{ $m->notes('cfs_on_page') || [] };
 my %core_fields = map { $_ => 1} @{ $m->notes('core_fields_on_page') || [] };
+my %question_fields = map { $_ => 1} @{ $m->notes('questions_on_page') || [] };
 
 my %request_args = %$DECODED_ARGS;
 
@@ -103,6 +104,10 @@ foreach my $key (keys %request_args) {
 foreach my $key (keys %request_args) {
    next unless RT::Extension::FormTools::is_core_field($key);
    delete $request_args{$key} if ($core_fields{$key});
+}
+
+foreach my $key (keys %request_args) {
+   delete $request_args{$key} if ($question_fields{$key});
 }
 
 # Add in any @results passed in. These should not be errors,
