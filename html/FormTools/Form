@@ -27,6 +27,7 @@ my $header_component = $self_service ? '/SelfService/Elements/Header' : '/Elemen
 
 my %cfs = map { $_ => 1} @{ $m->notes('cfs_on_page') || [] };
 my %core_fields = map { $_ => 1} @{ $m->notes('core_fields_on_page') || [] };
+my %question_fields = map { $_ => 1} @{ $m->notes('questions_on_page') || [] };
 
 my %request_args = %$DECODED_ARGS;
 
@@ -68,6 +69,52 @@ if ($real_next) {
         push @results, @msg;
     }
 
+    # check for any components with disable_submit enabled
+    my %cf_map;
+    my $load_cf = sub {
+        my $name = shift;
+        if ( !$cf_map{ $name } ) {
+            my $cf = RT::CustomField->new( $session{'CurrentUser'} );
+            # try loading CFs for this Queue, followed by Global, followed by any CF of given $cf_name
+            $cf->LoadByName( Name => $name, Queue => $queue->id ) if defined $queue;
+            $cf->LoadByName( Name => $name, Queue => 0 ) unless $cf->id;
+            $cf->LoadByName(
+                Name       => $name,
+                LookupType => RT::Ticket->CustomFieldLookupType,
+            ) unless $cf->id;
+            $cf_map{ $name } = $cf;
+        }
+        return $cf_map{$name}->Id ? $cf_map{$name} : undef;
+    };
+    foreach my $page ( keys %{ $form_config->{'formtools-pages'} || {} } ) {
+        my @disable_submit_fields
+            = grep { $_->{arguments}{disable_submit}{enabled} }
+                @{ $form_config->{'formtools-pages'}{$page}{content} || [] };
+        foreach my $field ( @disable_submit_fields ) {
+            my $field_value;
+            if ( $field->{comp_name} eq 'ShowQuestion' ) {
+                $field_value = $request_args{ $field->{arguments}{name} } || '';
+            }
+            else {
+                my $cf       = $load_cf->( $field->{arguments}{name} );
+                my $cf_id    = $cf->id;
+                $field_value = $request_args{"Object-RT::Ticket--CustomField-$cf_id-Value"}
+                    || $request_args{"Object-RT::Ticket--CustomField-$cf_id-Values"}
+                    || '';
+            }
+            my @disable_values = @{ $field->{arguments}{disable_submit}{values} || [] };
+            my $disable_regex  = join '|', map { '^' . $_ . '$' } @disable_values;
+            if ( $disable_regex && ( $field_value =~ /$disable_regex/ ) ) {
+                if ( scalar @disable_values == 1 ) {
+                    push @results, loc( '[_1] cannot be [_2]', $field->{arguments}{label}, $disable_values[0] );
+                }
+                else {
+                    push @results, loc( '[_1] cannot be any of: [_2]', $field->{arguments}{label}, join( ', ', @disable_values ) );
+                }
+            }
+        }
+    }
+
     unless ( @results || ( $request_args{AddMoreAttach} && $request_args{AddMoreAttach} eq 'Add More Files' ) ) {
         # Flag to show validation passed
         $ARGS{'validation_ok'} = 1;
@@ -101,6 +148,10 @@ foreach my $key (keys %request_args) {
 foreach my $key (keys %request_args) {
    next unless RT::Extension::FormTools::is_core_field($key);
    delete $request_args{$key} if ($core_fields{$key});
+}
+
+foreach my $key (keys %request_args) {
+   delete $request_args{$key} if ($question_fields{$key});
 }
 
 # Add in any @results passed in. These should not be errors,
