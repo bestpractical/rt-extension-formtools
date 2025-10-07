@@ -243,11 +243,78 @@ formTools = {
                     delete value.arguments.include_in_content;
                 }
             }
+
+            const disable_submit = form.find(':input[name=disable_submit]');
+            if ( disable_submit.length ) {
+                value.arguments.disable_submit ||= {};
+                if ( disable_submit.is(':checked') ) {
+                    value.arguments.disable_submit.enabled = '1';
+                }
+                else if ( value.arguments.disable_submit.enabled === '1' ) {
+                    delete value.arguments.disable_submit.enabled;
+                }
+            }
+            const disable_submit_value = form.find(':input[name=disable_submit_value]');
+            if ( disable_submit_value.length ) {
+                value.arguments.disable_submit ||= {};
+                value.arguments.disable_submit.values = disable_submit_value.val();
+            }
         }
         else if ( value.type === 'hidden' ) {
             value['input-name'] = form.find(':input[name=name]').val();
             value['input-value'] = form.find(':input[name=value]').val();
             element.find('span.content').text(value['input-name'] + ': ' + value['input-value']);
+        }
+        else if ( value.type === 'component' && value.comp_name === 'ShowQuestion' ) {
+            value.arguments ||= {};
+            const name    = form.find(':input[name=name]').val();
+            const label   = form.find(':input[name=label]').val();
+            const choices = form.find(':input[name=choices]').val();
+
+            value.arguments.name    = name;
+            value.arguments.choices = choices;
+            value.arguments.label   = label;
+
+            const dependent_validation = form.find(':input[name=dependent_validation]');
+            if ( dependent_validation.length ) {
+                value.arguments.dependent_validation ||= {};
+                if ( dependent_validation.is(':checked') ) {
+                    value.arguments.dependent_validation.enabled = 1;
+                }
+                else {
+                    value.arguments.dependent_validation.enabled = 0;
+                }
+            }
+
+            const dependent_name = form.find(':input[name=dependent_name]');
+            if ( dependent_name.length ) {
+                value.arguments.dependent_validation ||= {};
+                value.arguments.dependent_validation.name = dependent_name.val();
+            }
+
+            const dependent_value = form.find(':input[name=dependent_value]');
+            if ( dependent_value.length ) {
+                value.arguments.dependent_validation ||= {};
+                value.arguments.dependent_validation.values = dependent_value.val();
+            }
+
+            const disable_submit = form.find(':input[name=disable_submit]');
+            if ( disable_submit.length ) {
+                value.arguments.disable_submit ||= {};
+                if ( disable_submit.is(':checked') ) {
+                    value.arguments.disable_submit.enabled = '1';
+                }
+                else if ( value.arguments.disable_submit.enabled === '1' ) {
+                    delete value.arguments.disable_submit.enabled;
+                }
+            }
+            const disable_submit_value = form.find(':input[name=disable_submit_value]');
+            if ( disable_submit_value.length ) {
+                value.arguments.disable_submit ||= {};
+                value.arguments.disable_submit.values = disable_submit_value.val();
+            }
+
+            element.find('span.content').text( 'ShowQuestion - ' + name );
         }
 
         const show_condition = form.find(':input[name=show_condition]');
