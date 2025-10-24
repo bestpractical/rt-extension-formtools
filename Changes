@@ -1,5 +1,9 @@
 Revision history for RT-Extension-FormTools
 
+1.20 2026-01-23
+ - Add ShowQuestion component
+ - Add callbacks before and after form content
+
 1.19 2025-11-13
  - Fix issue where conditionally shown fields would not be required when shown but configured as required
  - Add callback for additional validation (Thanks Grant Emsley)
