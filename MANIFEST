@@ -36,6 +36,7 @@ html/FormTools/Form
 html/FormTools/Next
 html/FormTools/ShowBanner
 html/FormTools/ShowChoices
+html/FormTools/ShowQuestion
 html/NoAuth/Helpers/FormLogo/dhandler
 html/NoAuth/js/form_tools.js
 html/Search/Elements/RoutingPickTicketCFs
