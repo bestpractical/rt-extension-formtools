@@ -38,6 +38,14 @@
   </div>
 </div>
 </form>
+% if ( my $config = RT->Config->Get('FormToolsCKEditorConfig') ) {
+<script type="text/javascript">
+jQuery(document).ready( function() {
+    formTools.setCKEditorConfig('<% JSON::to_json($config) |n %>');
+    formTools.enableCKEditorConfig('FormDescription');
+});
+</script>
+% }
 <%init>
 use Digest::MD5 'md5_hex';
 

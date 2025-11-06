@@ -403,5 +403,18 @@ formTools = {
             jQuery('.formtools-component-menu').find('hr').show();
             jQuery('.formtools-component-menu').find('.formtools-element').show();
         }
+    },
+
+    setCKEditorConfig: function(config) {
+        RT.Config.FormToolsCKEditorConfig = JSON.parse(config);
+    },
+    enableCKEditorConfig: function(name) {
+        if ( CKEDITOR.instances && CKEDITOR.instances[name] ) {
+            CKEDITOR.instances[name].destroy();
+            CKEDITOR.replace( name, RT.Config.FormToolsCKEditorConfig );
+        }
+        else {
+            setTimeout( formTools.enableCKEditorConfig, 100, name );
+        }
     }
 };
