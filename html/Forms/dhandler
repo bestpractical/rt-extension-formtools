@@ -6,6 +6,8 @@
     form_config => $form_config,
 &>
 
+% $m->callback( CallbackName => 'BeforeFormContent', ARGSRef => \%ARGS, FormConfig => $form_config, FormName => $form_name, PageName => $page, QueueObj => $queue_obj );
+
 % # Build the current page here dyamically from config
 % my $button_label = loc('Next');
 % foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
@@ -42,6 +44,8 @@
 </div>
 
 % }
+
+% $m->callback( CallbackName => 'AfterFormContent', ARGSRef => \%ARGS, FormConfig => $form_config, FormName => $form_name, PageName => $page, QueueObj => $queue_obj );
 
 % if ( $form_config->{'formtools-pages'}{$page}{'next'} ) {
  <& /FormTools/Next, Label => $button_label, Back => $show_back, Name => 'Submit' &>
