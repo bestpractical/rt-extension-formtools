@@ -413,7 +413,8 @@ formTools = {
                 }
             }
             else {
-                cfhints.removeClass().addClass('invalid-feedback');
+                const addClass = cfhints.hasClass('required') ? 'required invalid-feedback' : 'invalid-feedback';
+                cfhints.removeClass().addClass(addClass);
             }
         });
 
