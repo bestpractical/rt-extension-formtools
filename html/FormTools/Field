@@ -287,8 +287,11 @@ $Token              => ''
 %      if (my $msg = $m->notes('InvalidField-' . $cf->Id)) {
             <span class="cfinvalidfield my-1 d-inline-block"><% $msg %></span>
 %      } elsif ($cf->FriendlyPattern) {
-            <span class="cfhints my-1 d-inline-block">
-              <% $cf->FriendlyPattern %>
+%        my $cf_required          = $ARGS{validation} || ( $ARGS{dependent_validation} && $ARGS{dependent_validation}{enabled} && $ARGS{dependent_validation}{name} );
+%        my $pattern              = $cf->Pattern;
+%        my $pattern_allows_empty = '' =~ m/$pattern/ ? 1 : 0;
+            <span class="cfhints my-1 d-inline-block<% $cf_required ? ' required' : '' %>">
+              <% $cf->FriendlyPattern . ( $cf_required && $pattern_allows_empty ? ' - ' . loc('Required') : '' ) %>
             </span>
 %      }
 % } elsif ($render_as =~  /^boolean/i)  {
