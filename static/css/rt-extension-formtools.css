@@ -93,3 +93,9 @@ input[name=show_condition] {
 .formtools-item .value .custom-control.custom-checkbox {
     margin-top: 5px;
 }
+
+.formtools-item div.col:has(span.required:not(.hidden)) span.rt-label::after {
+    color: var(--bs-form-invalid-color);
+    content: ' *';
+}
+
