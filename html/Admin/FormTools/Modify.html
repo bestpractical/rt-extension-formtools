@@ -281,7 +281,7 @@
           <p class="m-1 p-2 border rounded">
             <span class="badge badge-primary align-text-bottom"><% $other_components{$item}{type} eq 'hidden' ? loc('Hidden') : loc('Component') %></span>
             <span class="content"><% loc($item) %></span>
-%         if ( $item eq 'Hidden' || ( $item =~ /ShowChoices|ShowBanner/ && %dependent_custom_fields ) ) {
+%         if ( $item eq 'Hidden' || ( $item eq 'ShowQuestion' ) || ( $item =~ /ShowChoices|ShowBanner/ && %dependent_custom_fields ) ) {
             <a href="#" class="edit" data-bs-toggle="modal" data-bs-target="#formtools-element-modal">
               <% GetSVGImage( Name => 'pencil', Title => loc('Edit') ) |n %>
             </a>
@@ -291,7 +291,7 @@
             </a>
           </p>
         </div>
-%       if ( $item eq 'Hidden' || ( $item =~ /ShowChoices|ShowBanner/ && %dependent_custom_fields ) ) {
+%       if ( $item eq 'Hidden' || ( $item eq 'ShowQuestion' ) || ( $item =~ /ShowChoices|ShowBanner/ && %dependent_custom_fields ) ) {
         <div class="modal fade formtools-element-modal" id="formtools-element-<% $item %>-modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -310,6 +310,10 @@
                   <&| /Elements/LabeledValue, Label => loc('Value') &>
                     <input name="value" type="text" class="form-control" value="" />
                   </&>
+%               } elsif ( $item eq 'ShowQuestion' ) {
+                  <& SELF:ShowQuestion &>
+                  <& SELF:RequireCondition, For => CSSClass($item), Options => \%dependent_custom_fields &>
+                  <& SELF:ShowCondition, For => CSSClass($item), Options => \%dependent_custom_fields &>
 %               } else {
                   <& SELF:ShowCondition, For => CSSClass($item), Options => \%dependent_custom_fields &>
 %               }
@@ -399,6 +403,8 @@
                     <% loc('Component') %>
 %                 } elsif ( ( $item->{comp_name} // '' ) eq 'ShowChoices' ) {
                     <% loc('Component') %>
+%                 } elsif ( ( $item->{comp_name} // '' ) eq 'ShowQuestion' ) {
+                    <% loc('Component') %>
 %                 } elsif ( $item->{type} eq 'hidden' ) {
                     <% loc('Hidden') %>
 %                 } elsif ( RT::Extension::FormTools::is_core_field($item->{arguments}{name}) ) {
@@ -423,11 +429,13 @@
                      )
                        || $item->{comp_name} %>
                   <span class="label"><% $item->{arguments}{label} ? "($item->{arguments}{label})" : '' %></span>
+%               } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'ShowQuestion' ) {
+                  ShowQuestion - <% $item->{arguments}{name} %>
 %               } else {
                   <% $item->{comp_name} %>
 %               }
                 </span>
-%             if ( ( $item->{type} eq 'raw_html' && ( ( $item->{wrapper} // '' ) ne 'hr' || %dependent_custom_fields ) ) || ( $item->{type} eq 'component' && ( $item->{comp_name} eq 'Field' || ( $item->{comp_name} =~ /ShowChoices|ShowBanner/ && %dependent_custom_fields ) ) ) || $item->{type} eq 'hidden' ) {
+%             if ( ( $item->{type} eq 'raw_html' && ( ( $item->{wrapper} // '' ) ne 'hr' || %dependent_custom_fields ) ) || ( $item->{type} eq 'component' && ( $item->{comp_name} eq 'Field' || ( $item->{comp_name} eq 'ShowQuestion' ) || ( $item->{comp_name} =~ /ShowChoices|ShowBanner/ && %dependent_custom_fields ) ) ) || $item->{type} eq 'hidden' ) {
                 <a href="#" class="edit" data-bs-toggle="modal" data-bs-target="#formtools-element-<% $form_page_id{$page_name} %>-<% $i %>-modal">
                   <% GetSVGImage( Name => 'pencil', Title => loc('Edit') ) |n %>
                 </a>
@@ -479,6 +487,10 @@
                         </select>
                       </&>
 %                     }
+                      <& SELF:ShowCondition, For => "$form_page_id{$page_name}-$i", Item => $item, Options => \%dependent_custom_fields &>
+%                   } elsif ( $item->{type} eq 'component' && $item->{comp_name} eq 'ShowQuestion' ) {
+                      <& SELF:ShowQuestion, Item => $item &>
+                      <& SELF:RequireCondition, For => "$form_page_id{$page_name}-$i", Item => $item, Options => \%dependent_custom_fields &>
                       <& SELF:ShowCondition, For => "$form_page_id{$page_name}-$i", Item => $item, Options => \%dependent_custom_fields &>
 %                   } elsif ( $item->{type} eq 'component' && $item->{comp_name} =~ /ShowChoices|ShowBanner/ ) {
                       <& SELF:ShowCondition, For => "$form_page_id{$page_name}-$i", Item => $item, Options => \%dependent_custom_fields &>
@@ -783,9 +795,10 @@ while ( my $cf = $cfs->Next ) {
 }
 
 my %other_components = (
-    ShowBanner  => { type => 'component', comp_name => 'ShowBanner' },
-    ShowChoices => { type => 'component', comp_name => 'ShowChoices' },
-    Hidden      => { type => 'hidden' },
+    ShowBanner   => { type => 'component', comp_name => 'ShowBanner' },
+    ShowChoices  => { type => 'component', comp_name => 'ShowChoices' },
+    ShowQuestion => { type => 'component', comp_name => 'ShowQuestion' },
+    Hidden       => { type => 'hidden' },
 );
 
 
@@ -826,6 +839,17 @@ my @form_pages
 
 my %form_page_id = map { $_ => CSSClass($_) } @form_pages;
 my $active_context = { tab => $ActiveTab || $form_page_id{$form_pages[0]} };
+
+# add any question components to dependent_custom_fields
+my @question_components;
+for my $page ( @form_pages ) {
+    push @question_components,
+        grep { $_->{comp_name} && ( $_->{comp_name} eq 'ShowQuestion' ) }
+            @{ $form->{'formtools-pages'}{$page}{content} || [] };
+}
+for my $question ( @question_components ) {
+    $dependent_custom_fields{ $question->{arguments}{name} } = [ grep { $_ } split "\n", $question->{arguments}{choices} ];
+}
 </%INIT>
 <%ARGS>
 $id => undef
@@ -906,5 +930,32 @@ return unless %$Options;
 $For  => ''
 $Item => {}
 $Options
+</%ARGS>
+</%METHOD>
+
+<%METHOD ShowQuestion>
+<&| /Elements/LabeledValue, Label => loc("Name") &>
+  <input name="name" class="form-control" value="<% $Item->{arguments}->{name} // '' %>" pattern="[\w\d ]+" />
+  <span class="form-text cfhints my-1 d-inline-block">
+    <% loc('Name can only contain letters, numbers, and spaces') %>
+  </span>
+</&>
+<&| /Elements/LabeledValue, Label => loc("Label") &>
+  <input name="label" class="form-control" value="<% $Item->{arguments}->{label} // '' %>" />
+</&>
+<&| /Elements/LabeledValue, Label => loc('Choices') &>
+  <textarea name="choices" class="form-control" rows="<% $choices_rows %>"><% $Item->{arguments}->{choices} // '' %></textarea>
+  <span class="form-text cfhints my-1 d-inline-block">
+    <% loc('Add each choice on its own line') %>
+  </span>
+</&>
+<%INIT>
+my $choices_rows = scalar( grep { $_ } split( "\n", $Item->{arguments}->{choices} // '' ) ) || 5;
+$choices_rows = 10
+  if $choices_rows > 10;
+</%INIT>
+
+<%ARGS>
+$Item => {}
 </%ARGS>
 </%METHOD>
