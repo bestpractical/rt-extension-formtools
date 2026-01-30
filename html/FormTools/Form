@@ -59,9 +59,13 @@ if ($real_next) {
         grep { ( $_->{comp_name} // '' ) eq 'Field' && $_->{arguments}{name} && $_->{arguments}{label} }
         map { @{ $_->{content} } } values %{ $form_config->{'formtools-pages'} };
 
+    # user filling out form needs SeeQueue right for TicketCustomFields to return cfs
+    # for validation we load the queue with system user to ensure it validates cfs
+    my $system_queue_obj = RT::Queue->new( RT->SystemUser );
+    $system_queue_obj->Load( $queue->Id );
     my ($status, @msg) = $m->comp(
         '/Elements/ValidateCustomFields',
-        CustomFields    => $queue->TicketCustomFields,
+        CustomFields    => $system_queue_obj->TicketCustomFields,
         ARGSRef         => \%request_args,
         Labels          => \%labels,
     );

@@ -373,9 +373,13 @@ if ( $ARGS{Back} and $ARGS{Back} eq 'Back' ) {
     $_form_tools_next = '';
     delete $ARGS{'_form_tools_next'} if $ARGS{'_form_tools_next'};
 
+    # user filling out form needs SeeQueue right for TicketCustomFields to return cfs
+    # for validation we load the queue with system user to ensure it validates cfs
+    my $system_queue_obj = RT::Queue->new( RT->SystemUser );
+    $system_queue_obj->Load( $queue_obj->Id );
     my ($status, @msg) = $m->comp(
         '/Elements/ValidateCustomFields',
-        CustomFields    => $queue_obj->TicketCustomFields,
+        CustomFields    => $system_queue_obj->TicketCustomFields,
         ARGSRef         => \%ARGS,
     );
 
