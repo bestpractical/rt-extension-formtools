@@ -801,6 +801,14 @@ my %other_components = (
     Hidden       => { type => 'hidden' },
 );
 
+$m->callback(
+    CallbackName    => 'MassageComponents',
+    HTMLComponents  => \@html_components,
+    CoreComponents  => \@core_components,
+    CustomFields    => \@custom_fields,
+    OtherComponents => \%other_components,
+    QueueObj        => $queue,
+);
 
 # if this is a new form without any pages create default pages and save
 unless ( $form->{'formtools-pages'} ) {
