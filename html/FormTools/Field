@@ -103,6 +103,15 @@ if ( $render_as !~ /readonly/ ) {
     }
 }
 
+$m->callback(
+    CallbackName => 'MassageFieldDefault',
+    Name         => $name,
+    FieldType    => $field_type,
+    Default      => \$default,
+    QueueObj     => $queue,
+    CustomField  => $cf,
+);
+
 $default = '' unless defined $default;
 
 </%init>
