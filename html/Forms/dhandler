@@ -362,7 +362,7 @@ foreach my $page_index ( @form_pages ) {
 $show_back = 1 if $index > 0;
 
 # Did the user click Back?
-if ( $ARGS{Back} and $ARGS{Back} eq 'Back' ) {
+if ( $ARGS{Back} ) {
     # Avoid trying to go back again
     delete $ARGS{Back};
 
