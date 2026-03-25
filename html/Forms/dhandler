@@ -10,7 +10,7 @@
 
 % # Build the current page here dyamically from config
 % my $button_label = loc('Next');
-% foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
+% foreach my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'} || []} ) {
 
 <div class="formtools-item"
 % my $args = $element->{arguments} || {};
@@ -453,7 +453,7 @@ for my $question ( @question_components ) {
 if ( $create_ticket ) {
     # Drop conditionally hidden fields
     for my $page ( keys %{ $form_config->{'formtools-pages'} || {} } ) {
-        for my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'}} ) {
+        for my $element ( @{$form_config->{'formtools-pages'}{$page}{'content'} || []} ) {
             my $args = $element->{arguments} || {};
             next unless $args->{name};
             if ( $args->{show_condition} && $args->{show_condition}{enabled} && $args->{show_condition}{name} ) {
