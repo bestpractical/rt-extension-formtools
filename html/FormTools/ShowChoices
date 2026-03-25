@@ -66,7 +66,7 @@
 <h4><% $pages->{ $page }{'name'} %></h4>
 <div>
 % foreach my $field (@fields) {
-<& /Elements/LabeledValue, Label => loc($field->{name}), ValueSpanClass => 'current-value', RawValue => $field->{raw_value}, Value => ref $field->{value} ? join(', ', @{$field->{value}}) : $field->{value} &>
+<& /Elements/LabeledValue, Label => loc($field->{name}), ValueSpanClass => 'current-value', RawValue => $field->{raw_value}, Value => ref $field->{value} eq 'ARRAY' ? join(', ', @{$field->{value}}) : ref $field->{value} ? "$field->{value}" : $field->{value} &>
 % }
 </div><br />
 % }
