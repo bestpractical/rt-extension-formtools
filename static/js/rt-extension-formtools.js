@@ -448,7 +448,8 @@ formTools = {
                 }
             }
             else {
-                const addClass = cfhints.hasClass('required') ? 'required invalid-feedback' : 'invalid-feedback';
+                const wasHidden = cfhints.hasClass('hidden');
+                const addClass = (cfhints.hasClass('required') ? 'required invalid-feedback' : 'invalid-feedback') + (wasHidden ? ' hidden' : '');
                 cfhints.removeClass().addClass(addClass);
             }
         });

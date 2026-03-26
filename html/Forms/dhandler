@@ -127,9 +127,9 @@ jQuery(function () {
                     target.find('input[type=radio][value=""]').prop('checked', false).attr('disabled', true);
                 }
                 target.find(':input:visible').attr('required', true);
-                target.find('.cfhints.required').removeClass('hidden');
+                target.find('span.required').removeClass('hidden');
                 if ( target.closest('form').hasClass('was-validated') ) {
-                    target.find('.cfhints.required').removeClass('').addClass('required invalid-feedback')
+                    target.find('span.required').addClass('invalid-feedback');
                 }
             }
             else {
@@ -140,7 +140,7 @@ jQuery(function () {
                     target.find('input[type=radio][value=""]').attr('disabled', false);
                 }
                 target.find(':input:visible').attr('required', false);
-                target.find('.cfhints.required').removeClass().addClass('form-text cfhints my-1 d-inline-block required hidden');
+                target.find('span.required').addClass('hidden');
             }
         };
         jQuery(':input[type!=hidden][name="' + dependent_name +'"]').change(syncValidation).change();
