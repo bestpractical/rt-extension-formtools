@@ -228,7 +228,6 @@ $Token              => ''
 <div>
 <& /Ticket/Elements/AddAttachments, Token => $Token, QueueObj => $queue, FullWidth => 1 &>
 </div>
-<input type="hidden" class="hidden" name="Token" value="<% $Token %>" />
 
 % } elsif ($render_as eq 'hidden') {
 

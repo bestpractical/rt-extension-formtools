@@ -283,9 +283,6 @@ else {
     Abort('Form not found');
 }
 
-if ( ref $ARGS{Token} && ref $ARGS{Token} eq 'ARRAY' ) {
-    $ARGS{Token} = $ARGS{Token}->[0];
-}
 if ( $ARGS{Attach} ) {
     my $cgi_object        = $m->cgi_object;
     my $attach_filehandle = $cgi_object->upload('Attach');
@@ -298,6 +295,7 @@ elsif ( ! $ARGS{Token} ) {
     # call ProcessAttachments to generate a unique token for this form load
     ProcessAttachments( ARGSRef => \%ARGS );
 }
+$DECODED_ARGS->{Token}   = $ARGS{Token};
 $ARGS{AttachedFilenames} = join ', ', keys %{ $session{'Attachments'}{ $ARGS{Token} } || {} };
 
 $m->callback( CallbackName => 'AfterFormConfigLoaded', ARGSRef => \%ARGS, FormConfig => $form_config );
