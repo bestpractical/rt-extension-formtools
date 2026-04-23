@@ -126,7 +126,7 @@ jQuery(function () {
                 else if ( target.find('input[type=radio]').length ) {
                     target.find('input[type=radio][value=""]').prop('checked', false).attr('disabled', true);
                 }
-                target.find(':input:visible').attr('required', true);
+                target.find(':input:visible').not('.items-placeholder').attr('required', true);
                 target.find('span.required').removeClass('hidden');
                 if ( target.closest('form').hasClass('was-validated') ) {
                     target.find('span.required').addClass('invalid-feedback');
@@ -139,7 +139,7 @@ jQuery(function () {
                 else if ( target.find('input[type=radio]').length ) {
                     target.find('input[type=radio][value=""]').attr('disabled', false);
                 }
-                target.find(':input:visible').attr('required', false);
+                target.find(':input:visible').not('.items-placeholder').attr('required', false);
                 target.find('span.required').addClass('hidden');
             }
         };
@@ -197,7 +197,7 @@ jQuery(function () {
                     target.closest('.formtools-item').removeClass('hidden');
 
                     // Set required attribute on newly visible required fields
-                    target.closest('.formtools-item').find('[data-name]:has(.required) :input, :input.required').attr('required', true);
+                    target.closest('.formtools-item').find('[data-name]:has(.required) :input:not(.items-placeholder), :input.required:not(.items-placeholder)').attr('required', true);
 
                     changed = 1;
                 }
