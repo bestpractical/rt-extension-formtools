@@ -176,7 +176,6 @@ $default = '' unless defined $default;
 % }
 % if ( $ARGS{dependent_validation} && $ARGS{dependent_validation}{enabled} && $ARGS{dependent_validation}{name} ) {
 %   my $dependent_cf = RT::CustomField->new($session{CurrentUser});
-%   $dependent_cf = RT::CustomField->new( $session{'CurrentUser'} );
 %   $dependent_cf->SetContextObject($ticket);
 
 %   # try loading CFs for this Queue, followed by Global, followed by any CF of given $name
