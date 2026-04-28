@@ -26,10 +26,13 @@ if ( Menu->child('admin')
     }
 }
 
-# Forms home page for all privileged users
-my $formtools = Menu->child('home')->child(
-    formtools => title => loc('Forms'),
-    path      => '/Forms.html',
-);
+# Forms home page — hidden only for non-superusers with HideFormsNav right
+unless ( $session{'CurrentUser'}->HasRight( Object => RT->System, Right => 'HideFormsNav' )
+    && !$session{'CurrentUser'}->HasRight( Object => RT->System, Right => 'SuperUser' ) ) {
+    Menu->child('home')->child(
+        formtools => title => loc('Forms'),
+        path      => '/Forms.html',
+    );
+}
 
 </%init>

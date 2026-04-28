@@ -1,4 +1,6 @@
 <%init>
+return if $session{'CurrentUser'}->HasRight( Object => RT->System, Right => 'HideFormsNav' )
+    && !$session{'CurrentUser'}->HasRight( Object => RT->System, Right => 'SuperUser' );
 
 my $formtools = Menu->child('home')->child(
     formtools => title => loc('Forms'),

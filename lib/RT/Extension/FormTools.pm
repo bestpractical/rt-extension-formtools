@@ -8,7 +8,8 @@ our $VERSION = '2.05';
 RT->AddStyleSheets('rt-extension-formtools.css');
 RT->AddJavaScript('rt-extension-formtools.js');
 
-RT::System->AddRight( Admin => AdminForm => 'Create, modify and disable forms' ); # loc
+RT::System->AddRight( Admin   => AdminForm    => 'Create, modify and disable forms' ); # loc
+RT::System->AddRight( General => HideFormsNav => 'Hide Forms link in navigation' ); # loc
 
 use Time::HiRes 'time';
 use Digest::SHA 'sha1_hex';
@@ -325,6 +326,14 @@ As with forms the form group Description tab allows you to upload an icon and
 provide text to show on this form groups listing page. Include an icon that
 represents what the forms in this group are intended for and include a
 description to help users pick the right form group for the right task.
+
+=head2 Hiding the Forms Navigation Link
+
+The B<Forms> link appears in the navigation menu for all users by default.
+To hide it for a specific user or group, grant the C<HideFormsNav> right to
+that user or group in the RT rights configuration.
+
+Users with this right will not see the Forms link in navigation menus.
 
 =head1 Internals
 
